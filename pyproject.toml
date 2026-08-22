@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "b4n1-boost"
+version = "0.1.0"
+description = "Transparent high-performance acceleration engine for Django, FastAPI, and Flask."
+authors = [
+    {name = "Bani Montoya", email = "banimontoya@gmail.com"}
+]
+license = {text = "BSL-1.1"}
+keywords = ["performance", "acceleration", "django", "fastapi", "flask", "json", "orm", "rust"]
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://b4n1.com"
+Repository = "https://github.com/B4N1-com/b4n1-boost"
+
+[tool.setuptools]
+packages = ["b4n1_boost"]

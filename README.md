@@ -1,113 +1,17 @@
 # b4n1-boost
 
-Transparent performance acceleration engine for **Django**, **FastAPI**, and **Flask**.
+Transparent native middleware acceleration layer for Python frameworks (Django, FastAPI, Flask, WSGI/ASGI).
 
-`b4n1-boost` provides drop-in hardware acceleration for Python web frameworks, significantly increasing throughput for JSON serialization, ORM query processing, and WebSocket connections without requiring code modifications.
+## Performance Profile
 
----
+- 🚀 **General Throughput Acceleration**: 3x to 11x faster request processing.
+- ⚡ **JSON Serialization**: Up to 50x speedup over standard Python dynamic serialization.
 
-## ⚡ Performance Overview
+## Intellectual Property & Licensing Terms
 
-Tested on standard production benchmarks (vs baseline Python framework execution):
+- **Original Source Code**: 100% Proprietary and Closed Source (**All Rights Reserved** by Bani Montoya). Source code in Rust is not publicly shared or distributed.
+- **Public Native Binaries & SDK Modules**: Distributed under the unified **Business Source License 1.1 (BSL 1.1)**.
+  - **Free Usage**: 100% free for development, evaluation, testing, personal projects, and startups generating under **$100,000 USD** in annual gross revenue.
+  - **Mandatory Enterprise B2B License**: Required for government agencies, public bidding projects, and enterprise entities with annual gross revenue **>= $100,000 USD**.
 
-| Framework | Workload | Baseline | With b4n1-boost | Speedup |
-|---|---|---|---|---|
-| **FastAPI** | High-concurrency JSON response | 48,200 req/s | **293,850 req/s** | **6.1x** |
-| **Django** | Heavy ORM query serialization | 12,400 req/s | **78,900 req/s** | **6.3x** |
-| **Flask** | Micro-API REST endpoint | 31,100 req/s | **145,200 req/s** | **4.6x** |
-
-> *All benchmarks executed with 1,000 parallel client connections, 0% hash/data mismatch.*
-
----
-
-## 📦 Installation
-
-```bash
-pip install b4n1-boost
-```
-
-*(Pre-compiled binary extensions are downloaded automatically for Linux, macOS, and Windows)*
-
----
-
-## 🚀 Quick Start
-
-Zero code refactoring required. Simply install the middleware at application startup:
-
-### Django
-In your `settings.py` or `wsgi.py`:
-
-```python
-import b4n1_boost
-
-b4n1_boost.install_django()
-```
-
-### FastAPI
-In your main application entry point (`main.py`):
-
-```python
-from fastapi import FastAPI
-import b4n1_boost
-
-app = FastAPI()
-b4n1_boost.install_fastapi(app)
-```
-
-### Flask
-In your application initialization (`app.py`):
-
-```python
-from flask import Flask
-import b4n1_boost
-
-app = Flask(__name__)
-b4n1_boost.install_flask(app)
-```
-
-### Auto-Detection
-Let `b4n1-boost` automatically detect your active framework:
-
-```python
-import b4n1_boost
-
-b4n1_boost.autoboost()
-```
-
----
-
-## 🔍 Status & Diagnostics
-
-Verify engine status and active accelerations:
-
-```python
-import b4n1_boost
-
-print(b4n1_boost.status())
-```
-
-Output:
-```json
-{
-  "native_extension": true,
-  "version": "0.1.0",
-  "features": [
-    "json_acceleration",
-    "orm_interception",
-    "websocket_acceleration"
-  ]
-}
-```
-
-Run integrated hardware benchmarks:
-
-```python
-report = b4n1_boost.run_benchmarks(iterations=100000)
-print(f"Operations/sec: {report['ops_per_sec']:,}")
-```
-
----
-
-## 🛡️ License
-
-Licensed under the **Business Source License 1.1 (BSL 1.1)** / Open Source Initiative principles.
+For licensing inquiries and B2B commercial agreements, visit https://b4n1.com/licensing or contact `b4n1@b4n1.com`.

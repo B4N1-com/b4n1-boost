@@ -1,6 +1,6 @@
 [build-system]
-requires = ["maturin>=1.0,<2.0"]
-build-backend = "maturin"
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "b4n1-boost"
@@ -8,8 +8,12 @@ version = "0.1.0"
 description = "B4N1-BOOST — Transparent middleware accelerator for Django, FastAPI and Flask"
 readme = "README.md"
 requires-python = ">=3.10"
+license = {text = "BSL-1.1"}
+authors = [
+    {name = "Bani Montoya", email = "banimontoya@gmail.com"}
+]
 
-[tool.maturin]
-features = ["python"]
-python-source = "python"
-module-name = "b4n1_boost._core"
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["b4n1_boost*"]
+

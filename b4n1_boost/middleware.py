@@ -124,20 +124,37 @@ class FastAPIBoostMiddleware:
             await self.app(scope, receive, send)
             return
 
+        body_messages: list[dict] = []
+        is_json = False
+
         async def _send(message: dict) -> None:
+            nonlocal body_messages, is_json
             if message["type"] == "http.response.start":
-                nonlocal content_type
-                for k, v in message.get("headers", []):
-                    if k.lower() == b"content-type" and b"application/json" in v:
-                        content_type = True
-            if message["type"] == "http.response.body" and content_type and message.get("body"):
-                native = _native_json_response(message["body"])
+                for key, value in message.get("headers", []):
+                    if key.lower() == b"content-type" and b"application/json" in value:
+                        is_json = True
+                await send(message)
+                return
+            if message["type"] == "http.response.body" and is_json:
+                body_messages.append(dict(message))
+                if message.get("more_body", False):
+                    return
+                body = b"".join(item.get("body", b"") for item in body_messages)
+                native = _native_json_response(body)
                 if native is not None:
-                    message["body"] = native
-                    message["more_body"] = False
+                    final_message = dict(message)
+                    final_message["body"] = native
+                    final_message["more_body"] = False
+                    body_messages.clear()
+                    await send(final_message)
+                    return
+                pending_messages = body_messages
+                body_messages = []
+                for pending in pending_messages:
+                    await send(pending)
+                return
             await send(message)
 
-        content_type = False
         await self.app(scope, receive, _send)
 
 

@@ -47,18 +47,22 @@ b4n1_boost.install_django()
 En tu archivo principal (`main.py`):
 
 ```python
+from fastapi import FastAPI
 import b4n1_boost
 
-b4n1_boost.install_fastapi()
+app = FastAPI()
+b4n1_boost.install_fastapi(app)
 ```
 
 ### Flask
 En la inicialización del servidor (`app.py`):
 
 ```python
+from flask import Flask
 import b4n1_boost
 
-b4n1_boost.install_flask()
+app = Flask(__name__)
+b4n1_boost.install_flask(app)
 ```
 
 ### Detección Automática
@@ -87,7 +91,7 @@ Salida esperada:
 ```json
 {
   "native_extension": true,
-  "version": "0.1.5",
+  "version": "0.1.6",
   "features": ["json_acceleration", "orm_interception", "websocket_acceleration"]
 }
 ```

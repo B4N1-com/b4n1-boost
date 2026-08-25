@@ -42,18 +42,31 @@ try:
 except ImportError:
     # Pure-Python fallback when the native extension is not compiled yet.
     _NATIVE = False
+    py_install_django = None
+    py_install_fastapi = None
+    py_install_flask = None
+    py_autoboost = None
+    py_run_benchmarks = None
+    py_json_dumps = None
+    py_json_loads = None
 
 
 def _parse(raw: str) -> dict:
     return _json.loads(raw)
 
 
-def _report(framework: str, installed: bool, reason: str = "", native: Optional[bool] = None) -> dict:
-    """Merge the native engine report with the real injection result."""
+def _report(
+    framework: str,
+    installed: bool,
+    reason: str = "",
+    native: Optional[bool] = None,
+    native_reporter: object = None,
+) -> dict:
+    """Merge the framework-specific native report with injection state."""
     report = {"framework": framework, "native": bool(native if native is not None else _NATIVE)}
-    if _NATIVE:
+    if _NATIVE and callable(native_reporter):
         try:
-            report.update(_parse(py_install_django()))
+            report.update(_parse(native_reporter()))
         except Exception:
             pass
     report["framework"] = framework
@@ -71,7 +84,12 @@ def install_django(app: object = None) -> dict:
     native engine.
     """
     installed = install_django_middleware()
-    return _report("Django", installed, "django not importable / not configured")
+    return _report(
+        "Django",
+        installed,
+        "django not importable / not configured",
+        native_reporter=py_install_django,
+    )
 
 
 def install_fastapi(app: object = None) -> dict:
@@ -81,7 +99,12 @@ def install_fastapi(app: object = None) -> dict:
     ``app.add_middleware``. Without ``app``, returns the engine report.
     """
     installed = install_fastapi_middleware(app) if app is not None else False
-    return _report("FastAPI", installed, "no app passed to install_fastapi(app)")
+    return _report(
+        "FastAPI",
+        installed,
+        "no app passed to install_fastapi(app)",
+        native_reporter=py_install_fastapi,
+    )
 
 
 def install_flask(app: object = None) -> dict:
@@ -91,7 +114,12 @@ def install_flask(app: object = None) -> dict:
     middleware. Without ``app``, returns the engine report.
     """
     installed = install_flask_middleware(app) if app is not None else False
-    return _report("Flask", installed, "no app passed to install_flask(app)")
+    return _report(
+        "Flask",
+        installed,
+        "no app passed to install_flask(app)",
+        native_reporter=py_install_flask,
+    )
 
 
 def autoboost() -> dict:
@@ -136,12 +164,12 @@ def status() -> dict:
     """Return the current b4n1-boost engine status."""
     return {
         "native_extension": _NATIVE,
-        "version": "0.1.5",
+        "version": "0.1.6",
         "features": ["json_acceleration", "orm_interception", "websocket_acceleration"],
     }
 
 
-__version__ = "0.1.5"
+__version__ = "0.1.6"
 __all__ = [
     "install_django",
     "install_fastapi",

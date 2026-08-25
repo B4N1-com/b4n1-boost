@@ -136,12 +136,12 @@ def status() -> dict:
     """Return the current b4n1-boost engine status."""
     return {
         "native_extension": _NATIVE,
-        "version": "0.1.4",
+        "version": "0.1.5",
         "features": ["json_acceleration", "orm_interception", "websocket_acceleration"],
     }
 
 
-__version__ = "0.1.4"
+__version__ = "0.1.5"
 __all__ = [
     "install_django",
     "install_fastapi",

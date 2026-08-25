@@ -95,7 +95,7 @@ Expected output:
 ```json
 {
   "native_extension": true,
-  "version": "0.1.4",
+  "version": "0.1.5",
   "features": ["json_acceleration", "orm_interception", "websocket_acceleration"]
 }
 ```

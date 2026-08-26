@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["maturin>=1.0,<2.0"]
+build-backend = "maturin"
 
 [project]
 name = "b4n1-boost"
@@ -9,11 +9,25 @@ description = "B4N1-BOOST — Transparent middleware accelerator for Django, Fas
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "BSL-1.1"}
+license-files = ["LICENSE"]
 authors = [
-    {name = "Bani Montoya", email = "banimontoya@gmail.com"}
+    {name = "Bani Montoya", email = "b4n1@b4n1.com"},
+]
+classifiers = [
+    "License :: Other/Proprietary License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Rust",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["b4n1_boost*"]
+[project.urls]
+Homepage = "https://b4n1.com"
+Repository = "https://github.com/B4N1-com/public-repos/tree/master/b4n1-boost"
+PyPI = "https://pypi.org/project/b4n1-boost"
 
+[tool.maturin]
+features = ["python"]
+python-source = "python"
+module-name = "b4n1_boost._core"

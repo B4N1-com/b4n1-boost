@@ -122,8 +122,8 @@ Distribuido bajo **Business Source License 1.1 (BSL 1.1)**.
 - **Licencia comercial** requerida para organizaciones con ingresos anuales **>= USD $100,000**, agencias gubernamentales y licitaciones públicas.
 - Tras la **Change Date** (4 años), el trabajo pasa a **Apache License 2.0**.
 
-Consulta [LICENSE](../LICENSE) para el texto legal completo.
+Consulta [LICENSE](LICENSE) para el texto legal completo.
 
 ---
 
-*[English](../README.md)*
+*[English](README.md)*

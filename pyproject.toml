@@ -24,7 +24,7 @@ classifiers = [
 
 [project.urls]
 Homepage = "https://b4n1.com"
-Repository = "https://github.com/B4N1-com/public-repos/tree/master/b4n1-boost"
+Repository = "https://github.com/B4N1-com/b4n1-boost"
 PyPI = "https://pypi.org/project/b4n1-boost"
 
 [tool.maturin]

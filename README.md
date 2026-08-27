@@ -37,7 +37,7 @@
 pip install b4n1-boost
 ```
 
-*Precompiled native binaries are bundled with the wheel for Linux x86_64 (Python 3.10+). Other platforms build from source with a Rust toolchain.*
+*Precompiled native wheels are provided for Linux (x86_64, ARM64), macOS (Intel & Apple Silicon) and Windows (x86_64) — no compiler required.*
 
 ---
 
@@ -155,7 +155,7 @@ This project is distributed under the **Business Source License 1.1 (BSL 1.1)**.
 - **Commercial license** required for organizations with annual gross revenue **>= $100,000 USD**, government agencies, and public bidding projects.
 - After the **Change Date** (4 years), the work converts to **Apache License 2.0**.
 
-See [LICENSE](LICENSE) for the full legal text.
+See [LICENSE](LICENSE) for the full legal text. Third-party component attributions are listed in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 
 ---
 

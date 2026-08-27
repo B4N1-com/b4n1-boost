@@ -2,21 +2,9 @@
 
 Motor de aceleración de rendimiento transparente para **Django**, **FastAPI** y **Flask**.
 
-`b4n1-boost` proporciona aceleración por hardware Plug-and-Play para frameworks web de Python, aumentando significativamente la capacidad de procesamiento de serialización JSON, consultas ORM y conexiones WebSocket sin requerir cambios en el código de tu aplicación.
+`b4n1-boost` proporciona un middleware nativo en Rust Plug-and-Play para frameworks web de Python: path de respuesta pass-through sin copia, compresión nativa gzip/Brotli sin GIL y motor JSON nativo, sin requerir cambios en el código de tu aplicación.
 
----
-
-## ⚡ Resumen de Rendimiento
-
-Probado en benchmarks de producción (frente a la ejecución estándar del framework en Python):
-
-| Framework | Carga de Trabajo | Base (Python) | Con b4n1-boost | Ganancia |
-|---|---|---|---|---|
-| **FastAPI** | Respuestas JSON alta concurrencia | 48,200 req/s | **293,850 req/s** | **6.1x** |
-| **Django** | Serialización de consultas ORM | 12,400 req/s | **78,900 req/s** | **6.3x** |
-| **Flask** | Micro-API REST endpoint | 31,100 req/s | **145,200 req/s** | **4.6x** |
-
-> *Benchmarks ejecutados con 1,000 conexiones en paralelo y 0% de discrepancia de datos.*
+> Mide la aceleración de extremo a extremo en tu propia aplicación — la ganancia real depende de tu carga de trabajo.
 
 ---
 
@@ -91,7 +79,7 @@ Salida esperada:
 ```json
 {
   "native_extension": true,
-  "version": "0.1.6",
+  "version": "0.1.8",
   "features": ["json_acceleration", "orm_interception", "websocket_acceleration"]
 }
 ```

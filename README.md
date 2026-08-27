@@ -13,18 +13,21 @@
 
 |  |  |  |  |
 |--|--|--|--|
-| 🇬🇧 [English](README.md) | 🇪🇸 [Español](README.es.md) | 🇫🇷 [Français](README.fr.md) | 🇩🇪 [Deutsch](README.de.md) |
-| 🇵🇹 [Português](README.pt-BR.md) | 🇨🇳 [简体中文](README.zh-CN.md) | 🇯🇵 [日本語](README.ja.md) | |
+| 🇬🇧 [English](README.md) | 🇪🇸 [Español](i18n/README.es.md) | 🇫🇷 [Français](i18n/README.fr.md) | 🇩🇪 [Deutsch](i18n/README.de.md) |
+| 🇵🇹 [Português](i18n/README.pt-BR.md) | 🇨🇳 [简体中文](i18n/README.zh-CN.md) | 🇯🇵 [日本語](i18n/README.ja.md) | |
 
 ---
 
 ## 🚀 Features
 
-- 🚀 **General Throughput Acceleration**: 3x to 11x faster request processing.
-- ⚡ **JSON Serialization**: Up to 50x speedup over standard Python dynamic serialization.
-- 🛡️ **Native Rust Middleware**: Zero-overhead FFI interop between Python and Rust.
+- 🛡️ **Native Rust Middleware**: transparent WSGI/ASGI/Django middleware with a zero-copy pass-through response path.
+- 🗜️ **Native Response Compression**: gzip & Brotli implemented in Rust (GIL-free), negotiated via `Accept-Encoding`.
+- ⚡ **Native JSON Engine**: canonical JSON serialization available for opt-in use.
+- 📊 **Framework Support**: Django, FastAPI, Flask, plain WSGI and ASGI apps.
+- 🐍 **Python Support**: 3.10, 3.11, 3.12 and 3.13 (abi3).
 - 🔐 **License Compliance**: BSL 1.1 with a clear free tier and enterprise licensing path.
-- 📊 **Framework Support**: Django, FastAPI, Flask, WSGI/ASGI integration.
+
+> Measure acceleration end-to-end in your own application — actual gains depend on your workload.
 
 ---
 
@@ -34,7 +37,7 @@
 pip install b4n1-boost
 ```
 
-*Precompiled native binaries are bundled with the wheel for Linux, macOS and Windows — no compiler required.*
+*Precompiled native binaries are bundled with the wheel for Linux x86_64 (Python 3.10+). Other platforms build from source with a Rust toolchain.*
 
 ---
 
@@ -84,6 +87,28 @@ b4n1_boost.autoboost()
 
 ---
 
+## 🗜️ Response Compression
+
+Wrap any WSGI app (Flask, Django, plain WSGI) with native gzip/Brotli compression:
+
+```python
+from b4n1_boost.middleware import B4N1BoostCompressionMiddleware
+
+app.wsgi_app = B4N1BoostCompressionMiddleware(app.wsgi_app)
+```
+
+For FastAPI/Starlette (ASGI):
+
+```python
+from b4n1_boost.middleware import FastAPIBoostCompressionMiddleware
+
+app = FastAPIBoostCompressionMiddleware(app)
+```
+
+The middleware negotiates `Accept-Encoding` (prefers Brotli), skips payloads under 1 KB, sets `Content-Encoding`, `Content-Length` and `Vary`, and falls back to the untouched body if the native engine is unavailable.
+
+---
+
 ## 🔍 Status & Diagnostics
 
 Check the engine state and active accelerations:
@@ -99,7 +124,7 @@ Expected output:
 ```json
 {
   "native_extension": true,
-  "version": "0.1.6",
+  "version": "0.1.8",
   "features": ["json_acceleration", "orm_interception", "websocket_acceleration"]
 }
 ```

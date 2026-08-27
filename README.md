@@ -137,3 +137,8 @@ See [LICENSE](LICENSE) for the full legal text.
 _b4n1-boost is a core component of the B4N1 sovereign computing stack, providing transparent native middleware acceleration for Python frameworks._
 
 _Built with ❤️ by the B4N1 team._
+---
+
+## 💖 Support
+
+Support our open-source research and systems engineering journey by sponsoring us on GitHub: https://github.com/sponsors/BaniMontoya

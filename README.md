@@ -6,6 +6,8 @@
 
 [![License](https://img.shields.io/badge/license-BSL%201.1-lightgrey)](LICENSE)
 [![PyPI](https://badge.fury.io/py/b4n1-boost.svg)](https://pypi.org/project/b4n1-boost/)
+[![PyPI Downloads](https://img.shields.io/pypi/dm/b4n1-boost?label=downloads%2Fmonth)](https://pypi.org/project/b4n1-boost/)
+[![Downloads](https://img.shields.io/pepy/n/b4n1-boost?label=downloads)](https://pepy.tech/project/b4n1-boost)
 [![Python](https://img.shields.io/pypi/pyversions/b4n1-boost)](https://pypi.org/project/b4n1-boost/)
 [![Tests](https://img.shields.io/badge/tests-772%20passing-brightgreen)](https://pypi.org/project/b4n1-boost/)
 

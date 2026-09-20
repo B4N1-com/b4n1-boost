@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "b4n1-boost"
-version = "0.1.6"
+version = "0.3.4"
 description = "B4N1-BOOST — Transparent middleware accelerator for Django, FastAPI and Flask"
 readme = "README.md"
 requires-python = ">=3.10"

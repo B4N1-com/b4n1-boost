@@ -44,7 +44,7 @@ dotnet add package B4N1.Boost   # .NET (netstandard2.0, native runtimes embedded
 <dependency>
   <groupId>com.b4n1</groupId>
   <artifactId>boost</artifactId>
-  <version>0.3.8</version>
+  <version>0.3.9</version>
 </dependency>
 ```
 

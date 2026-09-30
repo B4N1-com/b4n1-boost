@@ -10,8 +10,19 @@ Motor de aceleración de rendimiento transparente para **Django**, **FastAPI** y
 
 ## 📦 Instalación
 
+Disponible en los 4 registros (núcleo nativo + EULA incluidos):
+
 ```bash
-pip install b4n1-boost
+pip install b4n1-boost          # Python 3.10–3.13
+npm install b4n1-boost          # Node.js
+dotnet add package B4N1.Boost   # .NET
+```
+```xml
+<dependency>
+  <groupId>com.b4n1</groupId>
+  <artifactId>boost</artifactId>
+  <version>0.3.5</version>
+</dependency>
 ```
 
 *(Los binarios nativos precompilados se instalan automáticamente — no requiere compilador)*

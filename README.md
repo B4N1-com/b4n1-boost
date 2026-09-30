@@ -10,9 +10,6 @@
 [![Downloads](https://img.shields.io/pepy/dt/b4n1-boost)](https://pepy.tech/project/b4n1-boost)
 [![Python](https://img.shields.io/pypi/pyversions/b4n1-boost)](https://pypi.org/project/b4n1-boost/)
 [![Tests](https://img.shields.io/badge/tests-772%20passing-brightgreen)](https://pypi.org/project/b4n1-boost/)
-[![npm](https://img.shields.io/npm/v/b4n1-boost?label=npm)](https://www.npmjs.com/package/b4n1-boost)
-[![NuGet](https://img.shields.io/nuget/v/B4N1.Boost?label=nuget)](https://www.nuget.org/packages/B4N1.Boost)
-[![Maven](https://img.shields.io/maven-central/v/com.b4n1/boost?label=maven)](https://central.sonatype.com/artifact/com.b4n1/boost)
 
 </div>
 
@@ -47,7 +44,7 @@ dotnet add package B4N1.Boost   # .NET (netstandard2.0, native runtimes embedded
 <dependency>
   <groupId>com.b4n1</groupId>
   <artifactId>boost</artifactId>
-  <version>0.3.5</version>
+  <version>0.3.7</version>
 </dependency>
 ```
 
@@ -81,22 +78,6 @@ import b4n1_boost
 
 app = Flask(__name__)
 b4n1_boost.install_flask(app)
-```
-
-### Node.js
-```js
-const B4N1Boost = require('b4n1-boost');
-const gz = B4N1Boost.compressGzip(Buffer.from('hello'.repeat(1000)));
-```
-
-### .NET
-```csharp
-var gz = NativeBoost.CompressGzipManaged(data);
-```
-
-### Java
-```java
-byte[] gz = Boost.compressGzip(data, 4);
 ```
 
 ### Auto-detection

@@ -1,0 +1,1863 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>b4n1-boost — The Python Accelerator</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="Native acceleration for Django, FastAPI and Flask: JSON 10x faster, compression 28x faster">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-e96d0476.css">
+        <link rel="stylesheet" href="css/chrome-d279d366.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex-9dd2c732.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-237088b5.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">b4n1-boost — The Python Accelerator</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/B4N1-com/b4n1-boost" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="b4n1-boost"><a class="header" href="#b4n1-boost">b4n1-boost</a></h1>
+<p><strong>The Python Accelerator.</strong> Native middleware for Django, FastAPI and Flask — JSON 10x faster, compression 28x faster.</p>
+<p>b4n1-boost ships as a precompiled native extension, so there is nothing to compile on your machine. Drop it into an existing project and the hot paths — serialization, compression, static assets — run in native code while your application code stays exactly the same.</p>
+<h2 id="what-it-does"><a class="header" href="#what-it-does">What it does</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Area</th><th>What you get</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>JSON</strong></td><td>Up to 10.5x faster <code>dumps</code>, canonical form, validation, batch operations</td></tr>
+<tr><td><strong>Compression</strong></td><td>Gzip, Zstd (28x faster) and Brotli, with Content-Type awareness</td></tr>
+<tr><td><strong>Middleware</strong></td><td>ETag/304, security headers, CORS, rate limiting, health check, caching</td></tr>
+<tr><td><strong>ORM</strong></td><td>Bulk insert through PostgreSQL COPY, 5-10x faster than the ORM path</td></tr>
+<tr><td><strong>Serializers</strong></td><td>Django REST Framework output without the serializer overhead</td></tr>
+<tr><td><strong>Utilities</strong></td><td>JWT validation, HTML/CSS/JS minification, HTML → Markdown</td></tr>
+<tr><td><strong>Background</strong></td><td>Worker-thread offloading with no external queue broker</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="who-it-is-for"><a class="header" href="#who-it-is-for">Who it is for</a></h2>
+<ul>
+<li>Teams whose Django or FastAPI app is <strong>CPU-bound on serialization or compression</strong></li>
+<li>Applications serving <strong>large JSON payloads</strong> or heavy static assets</li>
+<li>Projects that want native speed <strong>without adding a service</strong> (no Redis, no broker)</li>
+</ul>
+<h2 id="where-to-go-next"><a class="header" href="#where-to-go-next">Where to go next</a></h2>
+<ul>
+<li><strong><a href="#quick-start">Quick Start</a></strong> — one import, running in under a minute</li>
+<li><strong><a href="#installation">Installation</a></strong> — supported platforms and Python versions</li>
+<li><strong><a href="#performance">Performance</a></strong> — the measured numbers and how to reproduce them</li>
+<li><strong><a href="#python-sdk">Python SDK</a></strong> — the full API surface</li>
+</ul>
+<h2 id="design-notes"><a class="header" href="#design-notes">Design notes</a></h2>
+<p>Everything runs in-process. There is no daemon, no sidecar and no network hop: b4n1-boost is a library you import. When the native core is unavailable, the documented fallbacks are explicit — the package never silently pretends a fast path is active. Call <code>status()</code> at any time to see exactly which engines are live (see <a href="#status--diagnostics">Status &amp; Diagnostics</a>).</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="quick-start"><a class="header" href="#quick-start">Quick Start</a></h1>
+<p>Install, import, and the accelerator is live.</p>
+<pre><code class="language-bash">pip install b4n1-boost
+</code></pre>
+<h2 id="django"><a class="header" href="#django">Django</a></h2>
+<pre><code class="language-python">import b4n1_boost
+
+report = b4n1_boost.install_django()
+# Appends DjangoBoostMiddleware to settings.MIDDLEWARE
+# {'framework': 'Django', 'middleware_installed': True, ...}
+</code></pre>
+<h2 id="fastapi"><a class="header" href="#fastapi">FastAPI</a></h2>
+<pre><code class="language-python">from fastapi import FastAPI
+import b4n1_boost
+
+app = FastAPI()
+b4n1_boost.install_fastapi(app)
+</code></pre>
+<h2 id="flask"><a class="header" href="#flask">Flask</a></h2>
+<pre><code class="language-python">from flask import Flask
+import b4n1_boost
+
+app = Flask(__name__)
+b4n1_boost.install_flask(app)
+</code></pre>
+<h2 id="auto-detection"><a class="header" href="#auto-detection">Auto-detection</a></h2>
+<p>If you would rather not name the framework, <code>autoboost()</code> detects it:</p>
+<pre><code class="language-python">import b4n1_boost
+b4n1_boost.autoboost()   # Detects Django/FastAPI/Flask automatically
+</code></pre>
+<h2 id="install-everything-at-once"><a class="header" href="#install-everything-at-once">Install everything at once</a></h2>
+<pre><code class="language-python">import b4n1_boost
+
+report = b4n1_boost.boost_all()
+# Applies: compression + ETag + security headers + CORS
+#          + rate limiting + health check
+# {'framework': 'Django',
+#  'applied': ['compression', 'etag', ...],
+#  'middleware_count': 6}
+</code></pre>
+<h2 id="use-the-fast-paths-directly"><a class="header" href="#use-the-fast-paths-directly">Use the fast paths directly</a></h2>
+<p>The installers wire up middleware. The utilities are usable on their own:</p>
+<pre><code class="language-python">from b4n1_boost import NativeJson, canonicalize_json, validate_json, compress
+
+payload = {"users": [{"id": i, "name": "user"} for i in range(500)]}
+
+body = NativeJson.dumps(payload)          # 10x faster than json.dumps
+assert validate_json(body)                # True
+assert canonicalize_json({"z": 1, "a": 2}) == '{"a":2,"z":1}'
+
+wire = compress(body, "zstd")             # 28x faster than gzip
+</code></pre>
+<h2 id="verify-it-loaded"><a class="header" href="#verify-it-loaded">Verify it loaded</a></h2>
+<pre><code class="language-python">import b4n1_boost
+
+print(b4n1_boost.status())
+# {'native_extension': True, 'version': '0.3.12', 'features': {...}}
+</code></pre>
+<p>If <code>native_extension</code> is <code>False</code>, the native core did not load — see
+<a href="#status--diagnostics">Status &amp; Diagnostics</a> for how to diagnose it before you
+chase performance numbers that will not materialise.</p>
+<h2 id="next"><a class="header" href="#next">Next</a></h2>
+<ul>
+<li><a href="#installation">Installation</a> for platform and Python version details</li>
+<li><a href="#performance">Performance</a> for the benchmark table and how to run it</li>
+<li><a href="#python-sdk">Python SDK</a> for the complete API</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="installation"><a class="header" href="#installation">Installation</a></h1>
+<pre><code class="language-bash">pip install b4n1-boost
+</code></pre>
+<p>Precompiled wheels are published for every supported platform. There is no
+compiler step, no build backend invocation and no system dependency to install
+first.</p>
+<h2 id="supported-platforms"><a class="header" href="#supported-platforms">Supported platforms</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Platform</th><th>Wheel tag</th><th>Status</th></tr>
+</thead>
+<tbody>
+<tr><td>Linux x86_64</td><td><code>manylinux2014_x86_64</code></td><td>✅ precompiled</td></tr>
+<tr><td>Linux aarch64</td><td><code>manylinux_2_17_aarch64</code></td><td>✅ precompiled</td></tr>
+<tr><td>macOS x86_64</td><td><code>macosx_10_13_x86_64</code></td><td>✅ precompiled</td></tr>
+<tr><td>macOS arm64 (Apple Silicon)</td><td><code>macosx_11_0_arm64</code></td><td>✅ precompiled</td></tr>
+<tr><td>Windows x86_64</td><td><code>win_amd64</code></td><td>✅ precompiled</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="supported-python-versions"><a class="header" href="#supported-python-versions">Supported Python versions</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Version</th><th>Status</th></tr>
+</thead>
+<tbody>
+<tr><td>3.10</td><td>✅</td></tr>
+<tr><td>3.11</td><td>✅</td></tr>
+<tr><td>3.12</td><td>✅</td></tr>
+<tr><td>3.13</td><td>✅</td></tr>
+</tbody>
+</table>
+</div>
+<p>The requirement is <code>&gt;=3.10</code>. Wheels are built against the stable ABI, so a
+single wheel per platform covers every supported interpreter.</p>
+<h2 id="verify-the-install"><a class="header" href="#verify-the-install">Verify the install</a></h2>
+<pre><code class="language-python">import b4n1_boost
+
+status = b4n1_boost.status()
+assert status["native_extension"] is True, (
+    "native core did not load: %s" % status
+)
+print("b4n1-boost", status["version"], "ready")
+</code></pre>
+<p>If <code>native_extension</code> is <code>False</code>, pip fell back to a pure-Python path. See
+<a href="#status--diagnostics">Status &amp; Diagnostics</a> — do not benchmark until this reads <code>True</code>.</p>
+<h2 id="pinning-a-version"><a class="header" href="#pinning-a-version">Pinning a version</a></h2>
+<pre><code class="language-bash">pip install b4n1-boost==0.3.12
+</code></pre>
+<h2 id="upgrading"><a class="header" href="#upgrading">Upgrading</a></h2>
+<pre><code class="language-bash">pip install --upgrade b4n1-boost
+</code></pre>
+<p>After an upgrade, re-run the verification snippet. A stale cached extension
+from a previous version is a common source of confusing benchmark results.</p>
+<h2 id="uninstalling"><a class="header" href="#uninstalling">Uninstalling</a></h2>
+<pre><code class="language-bash">pip uninstall b4n1-boost
+</code></pre>
+<p>No files are written outside the virtual environment, and no background
+process is left running.</p>
+<h2 id="installing-the-other-sdks"><a class="header" href="#installing-the-other-sdks">Installing the other SDKs</a></h2>
+<p>b4n1-boost shares one native core across several language SDKs:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>SDK</th><th>Package</th><th>Page</th></tr>
+</thead>
+<tbody>
+<tr><td>Python</td><td><code>b4n1-boost</code> (PyPI)</td><td><a href="#python-sdk">Python SDK</a></td></tr>
+<tr><td>Node.js</td><td><code>b4n1-boost</code> (npm)</td><td><a href="#nodejs-sdk">Node.js SDK</a></td></tr>
+<tr><td>.NET</td><td><code>B4N1.Boost</code> (NuGet)</td><td><a href="#net-sdk">.NET SDK</a></td></tr>
+<tr><td>Java</td><td><code>com.b4n1:boost</code> (Maven Central)</td><td><a href="#java-sdk">Java SDK</a></td></tr>
+<tr><td>Go</td><td>module import</td><td><a href="#go-sdk">Go SDK</a></td></tr>
+<tr><td>PHP</td><td>Composer package</td><td><a href="#php-sdk">PHP SDK</a></td></tr>
+<tr><td>Ruby</td><td>Gem</td><td><a href="#ruby-sdk">Ruby SDK</a></td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="performance"><a class="header" href="#performance">Performance</a></h1>
+<p>All figures below are measured against the Python standard library on the
+same machine, same input, same process. They are a starting point: your
+numbers depend on payload shape, hardware and interpreter version.</p>
+<h2 id="headline-numbers"><a class="header" href="#headline-numbers">Headline numbers</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Component</th><th>Metric</th><th>Compared against</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>JSON dumps</strong></td><td><strong>10.5x faster</strong></td><td><code>json.dumps</code>, medium dicts (20 users)</td></tr>
+<tr><td><strong>JSON dumps</strong></td><td><strong>8.5x faster</strong></td><td><code>json.dumps</code>, large dicts (500 users)</td></tr>
+<tr><td><strong>Gzip</strong></td><td><strong>1.47x faster</strong></td><td><code>zlib</code> on 1 MB payloads</td></tr>
+<tr><td><strong>Zstd</strong></td><td><strong>28x faster</strong></td><td><code>gzip</code> on 1 MB payloads</td></tr>
+<tr><td><strong>Brotli</strong></td><td>best ratio</td><td>1 MB payloads</td></tr>
+<tr><td><strong>DRF serializer</strong></td><td><strong>5-10x faster</strong></td><td>queryset → JSON</td></tr>
+<tr><td><strong>Django ORM bulk insert</strong></td><td><strong>5-10x faster</strong></td><td>PostgreSQL COPY vs ORM path</td></tr>
+<tr><td><strong>Wheel size</strong></td><td>~1.4 MB</td><td>single native extension</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="running-the-benchmarks-yourself"><a class="header" href="#running-the-benchmarks-yourself">Running the benchmarks yourself</a></h2>
+<pre><code class="language-python">import b4n1_boost
+
+report = b4n1_boost.run_benchmarks(iterations=100_000)
+print(report)
+</code></pre>
+<p>Run it on the hardware you actually deploy on. A laptop benchmark does not
+predict production throughput, and the ratio between native and stdlib paths
+moves with payload size.</p>
+<h2 id="what-makes-json-fast"><a class="header" href="#what-makes-json-fast">What makes JSON fast</a></h2>
+<pre><code class="language-python">from b4n1_boost import NativeJson
+
+# Standard path — uses the fastest available backend
+body = NativeJson.dumps(users)
+
+# Direct path — skips the intermediate conversion entirely
+body = NativeJson.dumps_direct(users)
+
+# Batch: N serializations inside a single interpreter-lock acquire
+bodies = NativeJson.batch_dumps([obj1, obj2, obj3])
+</code></pre>
+<p><code>batch_dumps</code> is where the largest wins appear for list-shaped workloads,
+because the per-call overhead that dominates small serializations is paid
+once rather than N times.</p>
+<h2 id="what-makes-compression-fast"><a class="header" href="#what-makes-compression-fast">What makes compression fast</a></h2>
+<pre><code class="language-python">from b4n1_boost import compress
+
+wire = compress(payload, "zstd")     # 28x faster than stdlib gzip
+wire = compress(payload, "gzip")     # 1.47x faster than stdlib
+wire = compress(payload, "brotli")   # best ratio
+</code></pre>
+<p>Compression also runs <strong>without holding the interpreter lock</strong>, so a large
+payload being compressed on a worker thread does not stall other requests.</p>
+<h3 id="choosing-an-algorithm"><a class="header" href="#choosing-an-algorithm">Choosing an algorithm</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Algorithm</th><th>Speed</th><th>Ratio</th><th>Use when</th></tr>
+</thead>
+<tbody>
+<tr><td><code>gzip</code></td><td>fast</td><td>good</td><td>widest compatibility, already-encoded responses</td></tr>
+<tr><td><code>zstd</code></td><td><strong>fastest</strong></td><td>very good</td><td>API responses, JSON bodies, internal traffic</td></tr>
+<tr><td><code>brotli</code></td><td>slower</td><td><strong>best</strong></td><td>static assets served from disk</td></tr>
+</tbody>
+</table>
+</div>
+<p>For static assets the decision is usually automatic — see
+<code>compress_static_dir</code> in the <a href="#python-sdk">Python SDK</a>.</p>
+<h2 id="static-files"><a class="header" href="#static-files">Static files</a></h2>
+<pre><code class="language-python">from b4n1_boost import compress_static_file, compress_static_dir
+
+compress_static_file("app/static/app.js", algorithm="zstd")
+compress_static_dir("app/static/", algorithm="zstd")
+</code></pre>
+<p>Already-compressed formats are skipped automatically: images, video, audio,
+fonts and archives are left alone, because re-compressing them costs CPU and
+yields nothing.</p>
+<h2 id="measuring-honestly"><a class="header" href="#measuring-honestly">Measuring honestly</a></h2>
+<p>A few rules that keep benchmark numbers meaningful:</p>
+<ol>
+<li><strong>Compare like with like.</strong> Same payload, same machine, same process.</li>
+<li><strong>Warm up first.</strong> The first call pays import and allocation costs that
+do not recur.</li>
+<li><strong>Report percentiles, not just the mean.</strong> A 10x mean improvement with a
+worse p99 is not an improvement for a user-facing endpoint.</li>
+<li><strong>State the payload.</strong> “10x faster” means nothing without the size and
+shape of the input that produced it.</li>
+<li><strong>Verify the native core loaded.</strong> Benchmarking a fallback path measures
+the wrong thing — check <code>status()["native_extension"]</code> first.</li>
+</ol>
+<h2 id="next-1"><a class="header" href="#next-1">Next</a></h2>
+<ul>
+<li><a href="#status--diagnostics">Status &amp; Diagnostics</a> to confirm what is actually running</li>
+<li><a href="#python-sdk">Python SDK</a> for the API surface behind these numbers</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="python-sdk"><a class="header" href="#python-sdk">Python SDK</a></h1>
+<p>The primary SDK. Everything here is importable directly from <code>b4n1_boost</code>.</p>
+<pre><code class="language-python">import b4n1_boost
+</code></pre>
+<h2 id="setup-helpers"><a class="header" href="#setup-helpers">Setup helpers</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Function</th><th>What it does</th></tr>
+</thead>
+<tbody>
+<tr><td><code>install_django()</code></td><td>Appends the boost middleware to <code>settings.MIDDLEWARE</code></td></tr>
+<tr><td><code>install_fastapi(app)</code></td><td>Registers compression and boost middleware on an ASGI app</td></tr>
+<tr><td><code>install_flask(app)</code></td><td>Wraps the WSGI app</td></tr>
+<tr><td><code>autoboost()</code></td><td>Detects Django / FastAPI / Flask and installs for it</td></tr>
+<tr><td><code>boost_all()</code></td><td>Applies compression, ETag, security headers, CORS, rate limiting and health check</td></tr>
+</tbody>
+</table>
+</div>
+<pre><code class="language-python">import b4n1_boost
+
+report = b4n1_boost.boost_all()
+print(report["applied"], report["middleware_count"])
+</code></pre>
+<h2 id="json"><a class="header" href="#json">JSON</a></h2>
+<pre><code class="language-python">from b4n1_boost import NativeJson, canonicalize_json, validate_json
+
+NativeJson.dumps(data)            # fastest available backend
+NativeJson.dumps_direct(data)     # skips the intermediate conversion
+NativeJson.batch_dumps([a, b, c]) # N serializations, one lock acquire
+NativeJson.batch_loads(bodies)
+NativeJson.batch_validate(bodies)
+
+canonicalize_json({"z": 1, "a": 2})   # '{"a":2,"z":1}' — sorted, compact
+validate_json('{"valid": true}')      # True
+</code></pre>
+<p><code>canonicalize_json</code> accepts either a <code>str</code> or a <code>dict</code> and returns a stable,
+sorted-key, compact representation. Two equivalent objects produce byte-identical
+output, which is what makes it useful for cache keys and signatures.</p>
+<h3 id="batch-helpers"><a class="header" href="#batch-helpers">Batch helpers</a></h3>
+<pre><code class="language-python">from b4n1_boost import batch_dumps, batch_dumps_direct, batch_loads, batch_validate
+
+bodies = batch_dumps(objects)
+valid  = batch_validate(bodies)
+objs   = batch_loads(bodies)
+</code></pre>
+<h2 id="compression"><a class="header" href="#compression">Compression</a></h2>
+<pre><code class="language-python">from b4n1_boost import compress
+
+compress(payload, "zstd")     # 28x faster than stdlib gzip
+compress(payload, "brotli")   # best ratio
+compress(payload, "gzip")     # 1.47x faster than stdlib
+</code></pre>
+<h3 id="static-assets"><a class="header" href="#static-assets">Static assets</a></h3>
+<pre><code class="language-python">from b4n1_boost import compress_static_file, compress_static_dir
+
+compress_static_file("app/static/app.js", algorithm="zstd")
+compress_static_dir("app/static/", algorithm="zstd")
+</code></pre>
+<p>Images, video, audio, fonts and archives are skipped automatically.</p>
+<h2 id="html--markdown"><a class="header" href="#html--markdown">HTML → Markdown</a></h2>
+<pre><code class="language-python">from b4n1_boost import html_to_markdown
+
+html_to_markdown("&lt;h1&gt;Title&lt;/h1&gt;&lt;p&gt;Content with &lt;b&gt;bold&lt;/b&gt;&lt;/p&gt;")
+# '# Title\n\nContent with **bold**'
+</code></pre>
+<p>Useful when you want to hand a page to a language model as text rather than
+as markup.</p>
+<h2 id="minification"><a class="header" href="#minification">Minification</a></h2>
+<pre><code class="language-python">from b4n1_boost.advanced import minify_html, minify_css, minify_js
+
+minify_html("&lt;html&gt;  &lt;body&gt;  Hello  &lt;/body&gt;  &lt;/html&gt;")
+minify_css(css_source)
+minify_js(js_source)
+</code></pre>
+<h2 id="jwt-validation"><a class="header" href="#jwt-validation">JWT validation</a></h2>
+<pre><code class="language-python">from b4n1_boost.advanced import validate_jwt
+
+payload = validate_jwt(token, secret=JWT_SECRET, algorithm="HS256")
+</code></pre>
+<p>Validates HMAC-SHA256 tokens natively, so a service does not need a separate
+JWT library just to verify incoming tokens.</p>
+<h2 id="worker-thread-api"><a class="header" href="#worker-thread-api">Worker-thread API</a></h2>
+<pre><code class="language-python">from b4n1_boost import worker_compress, worker_decompress
+from b4n1_boost import worker_minify, worker_jwt_validate, worker_shutdown
+
+future = worker_compress(data, "zstd")
+compressed = future.result()
+</code></pre>
+<p>Heavy operations run on a background thread. The calling thread is not
+blocked and the interpreter lock is not held for the duration of the work.</p>
+<h2 id="background-tasks"><a class="header" href="#background-tasks">Background tasks</a></h2>
+<pre><code class="language-python">from b4n1_boost import background, pending_tasks, native_async
+</code></pre>
+<p>See <a href="#background-tasks-1">Background Tasks</a>.</p>
+<h2 id="telemetry"><a class="header" href="#telemetry">Telemetry</a></h2>
+<pre><code class="language-python">from b4n1_boost import telemetry_init, capture_error, log_info, log_phase, flush
+
+telemetry_init(dsn="https://...")
+capture_error(Exception("something"), context={"user": "123"})
+log_info("Request processed", phase="http")
+flush()
+</code></pre>
+<p>Telemetry is opt-in. Without an explicit <code>telemetry_init(...)</code> call nothing
+is emitted.</p>
+<h2 id="introspection"><a class="header" href="#introspection">Introspection</a></h2>
+<pre><code class="language-python">import b4n1_boost
+
+b4n1_boost.__version__       # package version
+b4n1_boost.status()          # engines and features actually loaded
+b4n1_boost.run_benchmarks()  # hardware benchmarks on this machine
+</code></pre>
+<h2 id="full-export-list"><a class="header" href="#full-export-list">Full export list</a></h2>
+<pre><code class="language-python">import b4n1_boost
+print(b4n1_boost.__all__)
+</code></pre>
+<p><code>__all__</code> is the authoritative list of public names. Anything not in it is
+internal and may change between minor versions.</p>
+<h2 id="see-also"><a class="header" href="#see-also">See also</a></h2>
+<ul>
+<li><a href="#middleware-reference">Middleware Reference</a> — every middleware class in detail</li>
+<li><a href="#django--drf-accelerators">Django &amp; DRF Accelerators</a> — ORM and serializer speedups</li>
+<li><a href="#status--diagnostics">Status &amp; Diagnostics</a> — verifying what loaded</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="middleware-reference"><a class="header" href="#middleware-reference">Middleware Reference</a></h1>
+<p>Middleware is where most of the practical speedup lives. Each class is
+independent — use one, or stack them.</p>
+<h2 id="compression-1"><a class="header" href="#compression-1">Compression</a></h2>
+<pre><code class="language-python">from b4n1_boost.middleware import B4N1BoostCompressionMiddleware
+
+app.wsgi_app = B4N1BoostCompressionMiddleware(app.wsgi_app, min_size=1024)
+</code></pre>
+<p>Content-Type aware: it compresses what benefits from it and skips what does
+not — images, video, audio, fonts, archives and anything already compressed.
+<code>min_size</code> avoids spending CPU on payloads too small to gain.</p>
+<h3 id="asgi--fastapi"><a class="header" href="#asgi--fastapi">ASGI / FastAPI</a></h3>
+<pre><code class="language-python">from b4n1_boost.middleware import FastAPIBoostCompressionMiddleware
+
+app.add_middleware(FastAPIBoostCompressionMiddleware)
+</code></pre>
+<p>Streaming responses are compressed incrementally rather than buffered, so a
+large streamed response does not have to be materialized in memory first.</p>
+<h2 id="etag--304-caching"><a class="header" href="#etag--304-caching">ETag / 304 caching</a></h2>
+<pre><code class="language-python">from b4n1_boost.middleware import ETagMiddleware
+
+app.wsgi_app = ETagMiddleware(app.wsgi_app)
+</code></pre>
+<p>Clients that already hold a valid copy get <code>304 Not Modified</code> and no body,
+saving both bandwidth and serialization work on repeat requests.</p>
+<p>ASGI variant: <code>ASGIETagMiddleware</code>.</p>
+<h2 id="security-headers"><a class="header" href="#security-headers">Security headers</a></h2>
+<pre><code class="language-python">from b4n1_boost.middleware import SecurityHeadersMiddleware
+
+app.wsgi_app = SecurityHeadersMiddleware(app.wsgi_app)
+</code></pre>
+<p>Adds <code>X-Content-Type-Options</code>, <code>X-Frame-Options</code>, <code>Strict-Transport-Security</code>,
+<code>X-XSS-Protection</code> and related headers.</p>
+<p>ASGI variant: <code>ASGISecurityHeadersMiddleware</code>.</p>
+<h2 id="cors"><a class="header" href="#cors">CORS</a></h2>
+<pre><code class="language-python">from b4n1_boost.middleware import CORSMiddleware
+
+app.wsgi_app = CORSMiddleware(app.wsgi_app,
+                              allow_origins=["https://example.com"])
+</code></pre>
+<p>ASGI variant: <code>ASGICORSMiddleware</code>.</p>
+<h2 id="rate-limiting"><a class="header" href="#rate-limiting">Rate limiting</a></h2>
+<pre><code class="language-python">from b4n1_boost.middleware import RateLimitMiddleware
+
+app.wsgi_app = RateLimitMiddleware(app.wsgi_app,
+                                   max_requests=100,
+                                   window_seconds=60)
+</code></pre>
+<p>Fixed-window limiting held in process. It is a guard against accidental
+abuse and hot loops, not a distributed quota — for limits that must hold
+across many processes, enforce them at the edge.</p>
+<p>ASGI variant: <code>ASGIRateLimitMiddleware</code>.</p>
+<h2 id="health-check"><a class="header" href="#health-check">Health check</a></h2>
+<pre><code class="language-python">from b4n1_boost.middleware import HealthCheckMiddleware
+
+app.wsgi_app = HealthCheckMiddleware(app.wsgi_app, path="/health")
+# GET /health -&gt; 200 {"status": "ok"}
+</code></pre>
+<p>Answers without touching application code, which keeps a health probe from
+consuming a worker.</p>
+<p>ASGI variant: <code>ASGIHealthCheckMiddleware</code>.</p>
+<h2 id="response-cache"><a class="header" href="#response-cache">Response cache</a></h2>
+<pre><code class="language-python">from b4n1_boost.advanced import ResponseCache
+from b4n1_boost.middleware import CacheMiddleware
+
+cache = ResponseCache(max_size=1000, ttl_seconds=300)
+app.wsgi_app = CacheMiddleware(app.wsgi_app, cache=cache)
+</code></pre>
+<p><code>max_size</code> is a hard bound on entries held — the cache never grows without
+limit. Entries expire after <code>ttl_seconds</code>.</p>
+<h2 id="request-logging"><a class="header" href="#request-logging">Request logging</a></h2>
+<pre><code class="language-python">from b4n1_boost.middleware import RequestLoggingMiddleware
+
+app.wsgi_app = RequestLoggingMiddleware(app.wsgi_app)
+</code></pre>
+<p>ASGI variant: <code>ASGIRequestLoggingMiddleware</code>.</p>
+<h2 id="decompression"><a class="header" href="#decompression">Decompression</a></h2>
+<pre><code class="language-python">from b4n1_boost.middleware import DecompressionMiddleware
+
+app.wsgi_app = DecompressionMiddleware(app.wsgi_app)
+</code></pre>
+<p>Handles incoming <code>Content-Encoding</code> so endpoints can accept compressed
+request bodies.</p>
+<h2 id="metrics"><a class="header" href="#metrics">Metrics</a></h2>
+<pre><code class="language-python">from b4n1_boost.middleware import CompressionMetrics, detect_proxy, metrics
+</code></pre>
+<p><code>CompressionMetrics</code> tracks what was compressed and by how much, which is
+the fastest way to find out whether compression is earning its CPU time.</p>
+<h2 id="proxy-detection"><a class="header" href="#proxy-detection">Proxy detection</a></h2>
+<pre><code class="language-python">from b4n1_boost.middleware import detect_proxy
+</code></pre>
+<p>Determines whether a reverse proxy is in front of the app, so headers such
+as <code>X-Forwarded-For</code> are only trusted when they came from one.</p>
+<h2 id="ordering"><a class="header" href="#ordering">Ordering</a></h2>
+<p>Apply middleware in this order of intent:</p>
+<ol>
+<li><strong>Proxy / trust boundary</strong> — establish what headers you believe</li>
+<li><strong>Security headers</strong> — applied to every response</li>
+<li><strong>Rate limiting</strong> — reject early, before expensive work</li>
+<li><strong>Compression</strong> — last transform before bytes leave</li>
+<li><strong>ETag / cache</strong> — after the body is final</li>
+</ol>
+<p>Reversing 4 and 5 produces incorrect ETags, because the validator would be
+computed over a body that no longer matches what the client receives.</p>
+<h2 id="see-also-1"><a class="header" href="#see-also-1">See also</a></h2>
+<ul>
+<li><a href="#quick-start">Quick Start</a> — the one-line installers</li>
+<li><a href="#python-sdk">Python SDK</a> — utilities alongside the middleware</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="background-tasks-1"><a class="header" href="#background-tasks-1">Background Tasks</a></h1>
+<p>Run heavy work off the request path <strong>without standing up a queue broker</strong>.</p>
+<h2 id="why-not-a-broker"><a class="header" href="#why-not-a-broker">Why not a broker</a></h2>
+<p>A task queue is the right answer when work must survive a machine failure or
+be shared across many hosts. It is the wrong answer when the work is local,
+frequently, and a lost task costs a retry.</p>
+<p>b4n1-boost targets the second case: work is handed to a worker thread
+immediately, and optionally journaled to disk so a restart can pick it up.</p>
+<h2 id="python"><a class="header" href="#python">Python</a></h2>
+<pre><code class="language-python">from b4n1_boost import background, pending_tasks
+
+@background
+def build_report(user_id):
+    # heavy work: render, aggregate, upload...
+    return f"report-{user_id}"
+
+handle = build_report(42)
+result = handle.result()      # block only when you need the value
+</code></pre>
+<h3 id="crash-recovery"><a class="header" href="#crash-recovery">Crash recovery</a></h3>
+<pre><code class="language-python">from b4n1_boost import pending_tasks
+
+pending = pending_tasks("./b4n1-tasks.jsonl")
+for task in pending:
+    ...   # re-run what a restart interrupted
+</code></pre>
+<p>When a journal path is configured, every submission is written before the
+task runs. A process restart therefore never silently loses a record.</p>
+<h2 id="nodejs"><a class="header" href="#nodejs">Node.js</a></h2>
+<pre><code class="language-js">const { background, pendingTasks } = require('b4n1-boost/background');
+
+const sendReport = background(async (userId) =&gt; {
+  // build PDF, send email...
+  return `report-${userId}`;
+}, { journal: './b4n1-tasks.jsonl' });
+
+const handle = sendReport(42);
+const result = await handle;                     // wait when you need it
+console.log(pendingTasks('./b4n1-tasks.jsonl')); // crash recovery
+</code></pre>
+<p>Returns in about a millisecond; the heavy work runs in a worker thread.</p>
+<h2 id="worker-thread-primitives"><a class="header" href="#worker-thread-primitives">Worker-thread primitives</a></h2>
+<p>For single operations rather than whole functions:</p>
+<pre><code class="language-python">from b4n1_boost import worker_compress, worker_decompress
+from b4n1_boost import worker_minify, worker_jwt_validate, worker_shutdown
+
+future = worker_compress(data, "zstd")
+compressed = future.result()
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Function</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>worker_compress</code> / <code>worker_decompress</code></td><td>Compression off the calling thread</td></tr>
+<tr><td><code>worker_minify</code></td><td>HTML/CSS/JS minification</td></tr>
+<tr><td><code>worker_jwt_validate</code></td><td>Token verification</td></tr>
+<tr><td><code>worker_shutdown</code></td><td>Stop the worker pool during graceful exit</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="when-to-reach-for-something-else"><a class="header" href="#when-to-reach-for-something-else">When to reach for something else</a></h2>
+<p>Use an external queue instead when <strong>any</strong> of these hold:</p>
+<ul>
+<li>Tasks must survive losing the whole machine, not just the process</li>
+<li>More than one host needs to pull from the same queue</li>
+<li>You need delayed delivery, retries with backoff, or scheduled runs</li>
+<li>A lost task is unacceptable without a durable record elsewhere</li>
+<li>You need per-task visibility for operators</li>
+</ul>
+<p>Journaling gives you restart safety on one host. It is not distributed
+coordination, and it does not pretend to be.</p>
+<h2 id="graceful-shutdown"><a class="header" href="#graceful-shutdown">Graceful shutdown</a></h2>
+<p>Always stop the pool before the process exits, otherwise in-flight work can
+be cut mid-write:</p>
+<pre><code class="language-python">from b4n1_boost import worker_shutdown
+
+worker_shutdown()
+</code></pre>
+<p>Wire this to your framework’s shutdown hook — see the Django and FastAPI
+examples in the <a href="#python-sdk">Python SDK</a>.</p>
+<h2 id="see-also-2"><a class="header" href="#see-also-2">See also</a></h2>
+<ul>
+<li><a href="#python-sdk">Python SDK</a> — where <code>background</code> and <code>pending_tasks</code> live</li>
+<li><a href="#nodejs-sdk">Node.js SDK</a> — the JavaScript surface</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="django--drf-accelerators"><a class="header" href="#django--drf-accelerators">Django &amp; DRF Accelerators</a></h1>
+<p>Two modules target the places Django spends the most time under load: bulk
+writes and serialization.</p>
+<h2 id="django-orm-accelerator"><a class="header" href="#django-orm-accelerator">Django ORM accelerator</a></h2>
+<pre><code class="language-python">from b4n1_boost.django_accelerator import bulk_insert_native, FastModelMixin
+
+bulk_insert_native(MyModel, [
+    {"name": "Alice", "email": "alice@example.com"},
+    {"name": "Bob",   "email": "bob@example.com"},
+])
+</code></pre>
+<p><code>bulk_insert_native</code> writes through PostgreSQL <code>COPY</code> instead of generating
+one <code>INSERT</code> statement per row. For bulk loads this is typically <strong>5-10x
+faster</strong> than the ORM path.</p>
+<h3 id="when-it-helps"><a class="header" href="#when-it-helps">When it helps</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Situation</th><th>Gain</th></tr>
+</thead>
+<tbody>
+<tr><td>Seeding, migrations backfill, imports</td><td><strong>Large</strong></td></tr>
+<tr><td>Periodic ETL / aggregation reloads</td><td><strong>Large</strong></td></tr>
+<tr><td>Inserting a handful of rows per request</td><td>Negligible — use the ORM</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="when-not-to-use-it"><a class="header" href="#when-not-to-use-it">When not to use it</a></h3>
+<ul>
+<li>The table has triggers or constraints that <code>COPY</code> bypasses or handles differently</li>
+<li>You depend on per-row <code>save()</code> overrides, signals or <code>auto_now</code> behaviour</li>
+<li>You need the objects back with their assigned primary keys</li>
+</ul>
+<p>In those cases the ORM path is the correct one. <code>COPY</code> is a bulk transport,
+not a drop-in replacement for <code>Model.save()</code>.</p>
+<h3 id="fastmodelmixin"><a class="header" href="#fastmodelmixin">FastModelMixin</a></h3>
+<pre><code class="language-python">from b4n1_boost.django_accelerator import FastModelMixin
+
+class MyModel(FastModelMixin, models.Model):
+    class Meta:
+        model = MyModel
+        fields = ["id", "name"]
+</code></pre>
+<p>Mix into an existing model to gain the fast path without rewriting call
+sites.</p>
+<h2 id="drf-serializer-accelerator"><a class="header" href="#drf-serializer-accelerator">DRF serializer accelerator</a></h2>
+<pre><code class="language-python">from b4n1_boost.drf_accelerator import fast_serialize, FastSerializerMixin
+
+json_bytes = fast_serialize(queryset, fields=["id", "name", "email"])
+</code></pre>
+<p>Serializes a queryset straight to JSON without walking the serializer
+pipeline — typically <strong>5-10x faster</strong> than the equivalent DRF serializer.</p>
+<pre><code class="language-python">from b4n1_boost.drf_accelerator import FastSerializerMixin
+from rest_framework import serializers
+
+class MySerializer(FastSerializerMixin, serializers.ModelSerializer):
+    class Meta:
+        model = MyModel
+        fields = ["id", "name"]
+</code></pre>
+<p>Existing serializers keep their class declaration and gain the fast path.</p>
+<h3 id="trade-off"><a class="header" href="#trade-off">Trade-off</a></h3>
+<p>Fast serialization means fewer hooks. If a serializer relies on
+<code>to_representation()</code> overrides, per-field sources or custom nesting, verify
+the output matches byte for byte before switching — a serializer that is
+faster but emits different JSON is a bug, not an optimization.</p>
+<p>A practical check:</p>
+<pre><code class="language-python">slow = DefaultSerializer(queryset, many=True).data
+fast = fast_serialize(queryset, fields=[...])
+assert json.loads(slow) == json.loads(fast)
+</code></pre>
+<h2 id="applying-both"><a class="header" href="#applying-both">Applying both</a></h2>
+<pre><code class="language-python">import b4n1_boost
+
+b4n1_boost.install_django()      # middleware: compression, ETag, headers...
+# plus, in the views that write or read bulk data:
+#   bulk_insert_native(...)      for writes
+#   fast_serialize(...)          for list endpoints
+</code></pre>
+<p>List endpoints are usually where both meet: a paginated response pulls a
+queryset and serializes it on every request.</p>
+<h2 id="see-also-3"><a class="header" href="#see-also-3">See also</a></h2>
+<ul>
+<li><a href="#python-sdk">Python SDK</a> — the rest of the API surface</li>
+<li><a href="#middleware-reference">Middleware Reference</a> — compression, caching and headers</li>
+<li><a href="#performance">Performance</a> — how the numbers were measured</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="nodejs-sdk"><a class="header" href="#nodejs-sdk">Node.js SDK</a></h1>
+<pre><code class="language-bash">npm install b4n1-boost
+</code></pre>
+<pre><code class="language-js">const B4N1Boost = require('b4n1-boost');
+</code></pre>
+<h2 id="platform-support"><a class="header" href="#platform-support">Platform support</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Platform</th><th>Status</th></tr>
+</thead>
+<tbody>
+<tr><td>linux-x64, linux-arm64</td><td>native included</td></tr>
+<tr><td>macos-x64, macos-arm64</td><td>native included</td></tr>
+<tr><td>windows-x64</td><td>native included</td></tr>
+<tr><td>anything else</td><td>pure-JS fallback (slower, same API)</td></tr>
+</tbody>
+</table>
+</div>
+<p>The native core is bundled inside the package. There is no post-install
+download and no compiler requirement.</p>
+<h2 id="checking-that-the-native-core-loaded"><a class="header" href="#checking-that-the-native-core-loaded">Checking that the native core loaded</a></h2>
+<pre><code class="language-js">B4N1Boost.isAvailable();   // true only when genuinely bound, not a fallback
+B4N1Boost.libraryPath();   // absolute path of the binary actually loaded
+</code></pre>
+<p><code>isAvailable()</code> is the JavaScript equivalent of Python’s
+<code>status()["native_extension"]</code>. Check it before you benchmark anything.</p>
+<h2 id="api"><a class="header" href="#api">API</a></h2>
+<h3 id="compressgzipbuffer-level--4"><a class="header" href="#compressgzipbuffer-level--4"><code>compressGzip(buffer, level = 4)</code></a></h3>
+<pre><code class="language-js">const gz = B4N1Boost.compressGzip(Buffer.from('hello'.repeat(1000)));
+</code></pre>
+<p>Falls back to <code>zlib.gzipSync</code> when the native core is unavailable, so this
+call always works.</p>
+<h3 id="compresszstdbuffer-level--3"><a class="header" href="#compresszstdbuffer-level--3"><code>compressZstd(buffer, level = 3)</code></a></h3>
+<pre><code class="language-js">const zst = B4N1Boost.compressZstd(payload);
+</code></pre>
+<p><strong>Throws</strong> if the native core is unavailable — there is no pure-JS Zstd.
+Failing loudly here is deliberate: silently returning a different
+compression format would corrupt data expectations.</p>
+<h3 id="decompresszstdbuffer"><a class="header" href="#decompresszstdbuffer"><code>decompressZstd(buffer)</code></a></h3>
+<pre><code class="language-js">const raw = B4N1Boost.decompressZstd(zst);
+</code></pre>
+<p>Also throws when the native core is unavailable.</p>
+<h3 id="minifyhtmlhtmlstring"><a class="header" href="#minifyhtmlhtmlstring"><code>minifyHtml(htmlString)</code></a></h3>
+<pre><code class="language-js">B4N1Boost.minifyHtml('&lt;p&gt;  hi  &lt;/p&gt;');
+</code></pre>
+<p>Falls back to whitespace collapsing without the native core.</p>
+<h3 id="isjsonvalidjsonstring"><a class="header" href="#isjsonvalidjsonstring"><code>isJsonValid(jsonString)</code></a></h3>
+<pre><code class="language-js">B4N1Boost.isJsonValid('{"a":1}');   // true
+</code></pre>
+<p>Falls back to <code>JSON.parse</code> in a try/catch.</p>
+<h2 id="express-middleware"><a class="header" href="#express-middleware">Express middleware</a></h2>
+<pre><code class="language-js">const express = require('express');
+require('b4n1-boost/express');
+
+const app = express();
+app.use(boostMiddleware());
+</code></pre>
+<p>The middleware handles compression and minification for you; see
+<code>express.js</code> in the package for the options it accepts.</p>
+<h2 id="background-tasks-2"><a class="header" href="#background-tasks-2">Background tasks</a></h2>
+<pre><code class="language-js">const { background, pendingTasks } = require('b4n1-boost/background');
+
+const sendReport = background(async (userId) =&gt; {
+  return `report-${userId}`;
+}, { journal: './b4n1-tasks.jsonl' });
+
+const handle = sendReport(42);
+const result = await handle;
+console.log(pendingTasks('./b4n1-tasks.jsonl'));
+</code></pre>
+<p>Returns immediately; work runs in a worker thread. Every submission is
+journaled to disk, so a restart never loses a record. Full details in
+<a href="#background-tasks-1">Background Tasks</a>.</p>
+<h2 id="testing"><a class="header" href="#testing">Testing</a></h2>
+<pre><code class="language-bash">npm test
+</code></pre>
+<p>Runs a four-state matrix: valid input, invalid input, an expected entry that
+must be present, and an unknown entry that must be rejected. It must report
+4/4.</p>
+<h2 id="fallback-behaviour-summary"><a class="header" href="#fallback-behaviour-summary">Fallback behaviour summary</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Call</th><th>Without native core</th></tr>
+</thead>
+<tbody>
+<tr><td><code>compressGzip</code></td><td><code>zlib.gzipSync</code> (slower, correct output)</td></tr>
+<tr><td><code>compressZstd</code></td><td><strong>throws</strong></td></tr>
+<tr><td><code>decompressZstd</code></td><td><strong>throws</strong></td></tr>
+<tr><td><code>minifyHtml</code></td><td>whitespace collapse (approximate)</td></tr>
+<tr><td><code>isJsonValid</code></td><td><code>JSON.parse</code> in try/catch</td></tr>
+</tbody>
+</table>
+</div>
+<p>Nothing degrades silently into something that merely looks like success.</p>
+<h2 id="see-also-4"><a class="header" href="#see-also-4">See also</a></h2>
+<ul>
+<li><a href="#b4n1-boost">Introduction</a> — what the shared core provides</li>
+<li><a href="#status--diagnostics">Status &amp; Diagnostics</a> — diagnosing a failed native load</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="net-sdk"><a class="header" href="#net-sdk">.NET SDK</a></h1>
+<pre><code class="language-bash">dotnet add package B4N1.Boost
+</code></pre>
+<p>Package ID: <strong><code>B4N1.Boost</code></strong> · NuGet.</p>
+<h2 id="platform-support-1"><a class="header" href="#platform-support-1">Platform support</a></h2>
+<p>Native binaries are bundled for every supported runtime:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Runtime identifier</th><th>Status</th></tr>
+</thead>
+<tbody>
+<tr><td><code>linux-x64</code></td><td>✅ included</td></tr>
+<tr><td><code>linux-arm64</code></td><td>✅ included</td></tr>
+<tr><td><code>osx-x64</code></td><td>✅ included</td></tr>
+<tr><td><code>osx-arm64</code></td><td>✅ included</td></tr>
+<tr><td><code>win-x64</code></td><td>✅ included</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="compression-2"><a class="header" href="#compression-2">Compression</a></h2>
+<pre><code class="language-csharp">using B4N1.Boost;
+
+byte[] gz  = NativeBoost.CompressGzipManaged(data, level: 4);
+byte[] zst = NativeBoost.CompressZstdManaged(data, level: 3);
+</code></pre>
+<p>The <code>Managed</code> overloads take and return plain <code>byte[]</code> and handle allocation
+and freeing for you. The raw <code>CompressGzip</code> / <code>CompressZstd</code> P/Invoke
+signatures are also available if you are working with pinned buffers.</p>
+<pre><code class="language-csharp">string compact = NativeBoost.MinifyHtmlManaged(html);
+bool   ok      = NativeBoost.IsJsonValidManaged(json);
+</code></pre>
+<h2 id="response-cache-1"><a class="header" href="#response-cache-1">Response cache</a></h2>
+<pre><code class="language-csharp">using var cache = new NativeResponseCache(capacity: 1024);
+
+cache.Set("GET:/users", body, status: 200, ttlSeconds: 300);
+
+if (cache.Get("GET:/users") is (byte[] hit, ushort status))
+{
+    // serve directly
+}
+</code></pre>
+<p><code>capacity</code> is a hard bound — the cache never grows past it. <code>Invalidate(key)</code>
+removes a single entry, <code>Clear()</code> drops everything, and <code>Dispose()</code> releases
+the native handle.</p>
+<pre><code class="language-csharp">cache.Invalidate("GET:/users");
+cache.Clear();
+</code></pre>
+<p>Because the type implements <code>IDisposable</code>, prefer <code>using</code> or an explicit
+<code>Dispose()</code>. Leaked handles keep native memory alive past the request.</p>
+<h2 id="bloom-filter"><a class="header" href="#bloom-filter">Bloom filter</a></h2>
+<pre><code class="language-csharp">using var bloom = new NativeBloomFilter(expectedItems: 10_000, fpRate: 0.01);
+
+if (!bloom.CheckAndSet(item))
+{
+    // first time we have seen this item
+}
+</code></pre>
+<p><code>CheckAndSet</code> returns <code>true</code> if the item was <strong>already</strong> present, <code>false</code> if
+it was absent and has now been recorded. Size the filter with
+<code>expectedItems</code> up front: a filter sized for 100 items will produce false
+positives quickly under a real workload.</p>
+<p>A Bloom filter can report that an item is present when it is not. It never
+reports an absent item as present. Use it to skip expensive work, not to
+decide correctness on its own.</p>
+<h2 id="circuit-breaker"><a class="header" href="#circuit-breaker">Circuit breaker</a></h2>
+<pre><code class="language-csharp">using var breaker = new NativeCircuitBreaker(
+    threshold: 5, successThreshold: 1, timeoutSeconds: 30);
+
+if (breaker.Allows)
+{
+    try { CallDependency(); breaker.RecordSuccess(); }
+    catch { breaker.RecordFailure(); }
+}
+</code></pre>
+<p>After <code>threshold</code> consecutive failures the breaker stops allowing calls for
+<code>timeoutSeconds</code>. A success during the half-open probe reopens it.</p>
+<h2 id="background-tasks-3"><a class="header" href="#background-tasks-3">Background tasks</a></h2>
+<pre><code class="language-csharp">var handle = Background.Run(() =&gt; BuildReport(userId), journal: "tasks.jsonl");
+
+var result = handle.Result();          // blocking
+var task    = handle.AsTask();         // or await it
+</code></pre>
+<p>Passing a <code>journal</code> path makes each submission durable across restarts.
+<code>Background.PendingTasks(journal)</code> returns what was interrupted, for replay.</p>
+<h2 id="aspnet-middleware"><a class="header" href="#aspnet-middleware">ASP.NET middleware</a></h2>
+<pre><code class="language-csharp">app.UseMiddleware&lt;BoostMiddleware&gt;();
+</code></pre>
+<p>Applies compression and optional HTML minification. Constructor options:
+<code>minifyHtml</code> (default <code>true</code>) and <code>gzipLevel</code> (default <code>4</code>).</p>
+<h2 id="unload-safety"><a class="header" href="#unload-safety">Unload safety</a></h2>
+<p>Cache, Bloom filter and circuit breaker wrappers own native handles. Always
+dispose them — a long-running process that creates and abandons them will
+grow its native memory without bound.</p>
+<h2 id="see-also-5"><a class="header" href="#see-also-5">See also</a></h2>
+<ul>
+<li><a href="#status--diagnostics">Status &amp; Diagnostics</a> — verifying the native core</li>
+<li><a href="#background-tasks-1">Background Tasks</a> — the shared task model</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="java-sdk"><a class="header" href="#java-sdk">Java SDK</a></h1>
+<pre><code class="language-xml">&lt;dependency&gt;
+  &lt;groupId&gt;com.b4n1&lt;/groupId&gt;
+  &lt;artifactId&gt;boost&lt;/artifactId&gt;
+  &lt;version&gt;0.3.12&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>Gradle:</p>
+<pre><code class="language-groovy">implementation 'com.b4n1:boost:0.3.12'
+</code></pre>
+<p>Published on Maven Central as <strong><code>com.b4n1:boost</code></strong>.</p>
+<h2 id="platform-support-2"><a class="header" href="#platform-support-2">Platform support</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Platform</th><th>Status</th></tr>
+</thead>
+<tbody>
+<tr><td>Linux x64 / arm64</td><td>✅ bundled</td></tr>
+<tr><td>macOS x64 / arm64</td><td>✅ bundled</td></tr>
+<tr><td>Windows x64</td><td>✅ bundled</td></tr>
+</tbody>
+</table>
+</div>
+<p>Native binaries ship inside the JAR under <code>runtimes/</code> and are selected at
+load time from the OS and architecture.</p>
+<h2 id="loading-the-native-library"><a class="header" href="#loading-the-native-library">Loading the native library</a></h2>
+<p>The static initializer picks the library for you:</p>
+<pre><code class="language-java">// Explicit path (optional)
+System.getenv("B4N1_BOOST_LIB_PATH");
+</code></pre>
+<p>When <code>B4N1_BOOST_LIB_PATH</code> is set, the file name is validated against the
+three accepted names — <code>libb4n1_boost.so</code>, <code>libb4n1_boost.dylib</code>,
+<code>b4n1_boost.dll</code>. Anything else is rejected with a <code>SecurityException</code>
+rather than loaded. That check exists so an unexpected file cannot be
+resolved into the JVM.</p>
+<p>If the variable is unset, the library is resolved through the standard
+<code>System.loadLibrary</code> search path.</p>
+<h2 id="api-1"><a class="header" href="#api-1">API</a></h2>
+<p>All methods are <code>static</code> on <code>com.b4n1.boost.Boost</code>:</p>
+<pre><code class="language-java">import com.b4n1.boost.Boost;
+
+byte[]  gz  = Boost.compressGzip(data, 4);
+byte[]  zst = Boost.compressZstd(data, 3);
+byte[]  raw = Boost.decompressZstd(zst);
+String  min = Boost.minifyHtml(html);
+boolean ok  = Boost.isJsonValid(json);
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Method</th><th>Signature</th></tr>
+</thead>
+<tbody>
+<tr><td><code>compressGzip</code></td><td><code>(byte[] data, int level)</code> → <code>byte[]</code></td></tr>
+<tr><td><code>compressZstd</code></td><td><code>(byte[] data, int level)</code> → <code>byte[]</code></td></tr>
+<tr><td><code>decompressZstd</code></td><td><code>(byte[] data)</code> → <code>byte[]</code></td></tr>
+<tr><td><code>minifyHtml</code></td><td><code>(String html)</code> → <code>String</code></td></tr>
+<tr><td><code>isJsonValid</code></td><td><code>(String json)</code> → <code>boolean</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>These are JNI calls: arguments are copied to native memory and results
+copied back. For tight loops, prefer fewer larger calls over many small
+ones — the marshalling cost per call can exceed the work for tiny payloads.</p>
+<h2 id="response-cache-bloom-filter-circuit-breaker"><a class="header" href="#response-cache-bloom-filter-circuit-breaker">Response cache, Bloom filter, circuit breaker</a></h2>
+<pre><code class="language-java">import com.b4n1.boost.NativeResponseCache;
+import com.b4n1.boost.NativeBloomFilter;
+import com.b4n1.boost.NativeCircuitBreaker;
+</code></pre>
+<p>The three wrappers mirror the .NET API exactly:</p>
+<pre><code class="language-java">try (var cache = new NativeResponseCache(1024)) {
+    cache.set("GET:/users", body, (short) 200, 300);
+    var hit = cache.get("GET:/users");
+}
+
+try (var bloom = new NativeBloomFilter(10_000L, 0.01)) {
+    boolean alreadySeen = bloom.checkAndSet(item);
+}
+
+try (var breaker = new NativeCircuitBreaker(5, 1, 30L)) {
+    if (breaker.allows()) { /* call */ }
+}
+</code></pre>
+<p>All three are <code>AutoCloseable</code>, so use try-with-resources. Without it the
+native handle leaks until finalization — which may never run promptly enough
+in a busy process.</p>
+<h2 id="background-tasks-4"><a class="header" href="#background-tasks-4">Background tasks</a></h2>
+<pre><code class="language-java">import com.b4n1.boost.Background;
+
+var handle = Background.run(() -&gt; buildReport(userId), "tasks.jsonl");
+var result = handle.result();
+</code></pre>
+<p>Passing a journal path makes submissions durable across restarts.</p>
+<h2 id="testing-1"><a class="header" href="#testing-1">Testing</a></h2>
+<pre><code class="language-bash">mvn test
+</code></pre>
+<p>The suite covers the four-state matrix: valid input succeeds, invalid input
+fails with a typed error, an expected entry missing is caught, and an unknown
+entry is rejected.</p>
+<h2 id="see-also-6"><a class="header" href="#see-also-6">See also</a></h2>
+<ul>
+<li><a href="#net-sdk">.NET SDK</a> — the same wrappers for .NET</li>
+<li><a href="#status--diagnostics">Status &amp; Diagnostics</a> — diagnosing a failed native load</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="go-sdk"><a class="header" href="#go-sdk">Go SDK</a></h1>
+<p>A small, dependency-free wrapper over the shared native core.</p>
+<pre><code class="language-go">import "github.com/B4N1-com/b4n1-boost/polyglot/go"
+</code></pre>
+<h2 id="api-2"><a class="header" href="#api-2">API</a></h2>
+<p>Four functions, all in the package root:</p>
+<pre><code class="language-go">package main
+
+import (
+    "fmt"
+
+    boost "github.com/B4N1-com/b4n1-boost/polyglot/go"
+)
+
+func main() {
+    gz, err := boost.CompressGzip(data, 4)
+    if err != nil {
+        // handle
+    }
+
+    zst, err := boost.CompressZstd(data, 3)
+    if err != nil {
+        // handle
+    }
+
+    html := boost.MinifyHTML(rawHTML)
+
+    ok := boost.IsJSONValid(body)
+    fmt.Println(ok)
+}
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Function</th><th>Signature</th></tr>
+</thead>
+<tbody>
+<tr><td><code>CompressGzip</code></td><td><code>(data []byte, level uint32) ([]byte, error)</code></td></tr>
+<tr><td><code>CompressZstd</code></td><td><code>(data []byte, level int32) ([]byte, error)</code></td></tr>
+<tr><td><code>MinifyHTML</code></td><td><code>(htmlStr string) string</code></td></tr>
+<tr><td><code>IsJSONValid</code></td><td><code>(jsonStr string) bool</code></td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="error-handling"><a class="header" href="#error-handling">Error handling</a></h3>
+<p>Both compression functions return <code>([]byte, error)</code> rather than panicking.
+A failure inside the native core — an invalid level, an allocation problem —
+surfaces as an ordinary Go error, so callers can handle it without recovering
+from a panic.</p>
+<p><code>MinifyHTML</code> and <code>IsJSONValid</code> return values directly because they have no
+meaningful failure mode at this layer: an unminifiable document returns
+unchanged, and an invalid JSON string returns <code>false</code>.</p>
+<h3 id="levels"><a class="header" href="#levels">Levels</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Function</th><th>Default / typical level</th></tr>
+</thead>
+<tbody>
+<tr><td><code>CompressGzip</code></td><td><code>4</code></td></tr>
+<tr><td><code>CompressZstd</code></td><td><code>3</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>Levels outside the valid range produce an error rather than being clamped
+silently — a caller who asks for level <code>99</code> has a bug worth surfacing.</p>
+<h2 id="testing-2"><a class="header" href="#testing-2">Testing</a></h2>
+<pre><code class="language-bash">go test ./...
+</code></pre>
+<p>The test file encodes the four-state matrix as <code>TestState1ExistsAndCorrect</code>,
+<code>TestState2ExistsAndIncorrect</code>, <code>TestState3ShouldExistAndMissing</code> and
+<code>TestState4ShouldNotExistAndCorrectlyAbsent</code>, so a regression in any of the
+four shows up by name.</p>
+<h2 id="design-notes-1"><a class="header" href="#design-notes-1">Design notes</a></h2>
+<ul>
+<li><strong>Plain Go types at the boundary.</strong> Callers work with ordinary <code>[]byte</code>
+and <code>string</code> values; marshalling happens inside the wrapper.</li>
+<li><strong>No hidden global state.</strong> Each call is independent, so the package is
+safe for concurrent use from multiple goroutines.</li>
+<li><strong>Errors, not panics.</strong> Native failures become Go errors.</li>
+</ul>
+<h2 id="see-also-7"><a class="header" href="#see-also-7">See also</a></h2>
+<ul>
+<li><a href="#php-sdk">PHP SDK</a> and <a href="#ruby-sdk">Ruby SDK</a> — the other thin wrappers</li>
+<li><a href="#status--diagnostics">Status &amp; Diagnostics</a> — verifying the core loaded</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="php-sdk"><a class="header" href="#php-sdk">PHP SDK</a></h1>
+<pre><code class="language-bash">composer require b4n1/boost
+</code></pre>
+<h2 id="api-3"><a class="header" href="#api-3">API</a></h2>
+<p>Static methods on the <code>Boost</code> class:</p>
+<pre><code class="language-php">use B4N1\Boost\Boost;
+
+$gz   = Boost::compressGzip($data, 4);
+$zst  = Boost::compressZstd($data, 3);
+$html = Boost::minifyHtml($rawHtml);
+$ok   = Boost::isJsonValid($json);
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Method</th><th>Signature</th></tr>
+</thead>
+<tbody>
+<tr><td><code>compressGzip</code></td><td><code>(string $data, int $level = 4): string</code></td></tr>
+<tr><td><code>compressZstd</code></td><td><code>(string $data, int $level = 3): string</code></td></tr>
+<tr><td><code>minifyHtml</code></td><td><code>(string $html): string</code></td></tr>
+<tr><td><code>isJsonValid</code></td><td><code>(string $json): bool</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>The extension is loaded lazily on first use — there is no manual
+<code>bootstrap</code> call to remember.</p>
+<h2 id="middleware"><a class="header" href="#middleware">Middleware</a></h2>
+<pre><code class="language-php">use B4N1\Boost\Middleware\BoostMiddleware;
+
+$app-&gt;add(new BoostMiddleware(minifyHtml: true, gzipLevel: 4));
+</code></pre>
+<p>The middleware compresses outgoing responses and optionally minifies HTML,
+following the PSR-15 request/response flow.</p>
+<pre><code class="language-php">$middleware = new BoostMiddleware(
+    minifyHtml: true,
+    gzipLevel: 4,
+);
+
+$response = $middleware-&gt;handle($request, $next);
+</code></pre>
+<h3 id="options"><a class="header" href="#options">Options</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Default</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td><code>minifyHtml</code></td><td><code>true</code></td><td>Minify HTML responses before sending</td></tr>
+<tr><td><code>gzipLevel</code></td><td><code>4</code></td><td>Compression level, 1 (fastest) – 9 (smallest)</td></tr>
+</tbody>
+</table>
+</div>
+<p>Set <code>minifyHtml</code> to <code>false</code> when responses already arrive minified, or when
+the body is not HTML at all — re-minifying JSON or a binary stream wastes CPU
+and can corrupt payloads that are not markup.</p>
+<h2 id="testing-3"><a class="header" href="#testing-3">Testing</a></h2>
+<pre><code class="language-bash">php test.php
+</code></pre>
+<p>Covers the four-state matrix: valid input, invalid input, an expected entry
+that must be present, and an unknown entry that must be rejected.</p>
+<h2 id="see-also-8"><a class="header" href="#see-also-8">See also</a></h2>
+<ul>
+<li><a href="#ruby-sdk">Ruby SDK</a> — the equivalent Rack integration</li>
+<li><a href="#go-sdk">Go SDK</a> — the same core from Go</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="ruby-sdk"><a class="header" href="#ruby-sdk">Ruby SDK</a></h1>
+<pre><code class="language-bash">gem install b4n1-boost
+</code></pre>
+<h2 id="api-4"><a class="header" href="#api-4">API</a></h2>
+<p>Class methods under the <code>B4N1</code> module namespace:</p>
+<pre><code class="language-ruby">require 'b4n1_boost'
+
+gz   = B4N1::Boost.compress_gzip(data, level: 4)
+zst  = B4N1::Boost.compress_zstd(data, level: 3)
+html = B4N1::Boost.minify_html(raw_html)
+ok   = B4N1::Boost.json_valid?(json)
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Method</th><th>Signature</th></tr>
+</thead>
+<tbody>
+<tr><td><code>compress_gzip</code></td><td><code>(data, level: 4)</code></td></tr>
+<tr><td><code>compress_zstd</code></td><td><code>(data, level: 3)</code></td></tr>
+<tr><td><code>minify_html</code></td><td><code>(html)</code></td></tr>
+<tr><td><code>json_valid?</code></td><td><code>(json)</code> → <code>true</code> / <code>false</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>The trailing <code>?</code> on <code>json_valid?</code> follows Ruby convention: the method returns
+a boolean and is safe to use in a conditional.</p>
+<h2 id="rack-middleware"><a class="header" href="#rack-middleware">Rack middleware</a></h2>
+<pre><code class="language-ruby">require 'b4n1_boost/rack'
+
+use B4N1::Boost::RackMiddleware
+run MyApp
+</code></pre>
+<p>Insert it with <code>use</code> rather than wrapping the application manually — Rack
+orders middleware outermost-first, and compression belongs near the outside
+of the stack so it applies to everything below it.</p>
+<pre><code class="language-ruby">use B4N1::Boost::RackMiddleware, minify_html: true, gzip_level: 4
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Option</th><th>Default</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td><code>minify_html</code></td><td><code>true</code></td><td>Minify HTML responses before sending</td></tr>
+<tr><td><code>gzip_level</code></td><td><code>4</code></td><td>Compression level, 1 (fastest) – 9 (smallest)</td></tr>
+</tbody>
+</table>
+</div>
+<p>Turn <code>minify_html</code> off for non-HTML responses; minifying something that is
+not markup wastes CPU and gains nothing.</p>
+<h2 id="concurrency"><a class="header" href="#concurrency">Concurrency</a></h2>
+<p>Each call is independent and holds no shared mutable state, so it is safe to
+call from multiple threads. Nothing needs a global lock around it.</p>
+<h2 id="testing-4"><a class="header" href="#testing-4">Testing</a></h2>
+<pre><code class="language-bash">ruby test.rb
+</code></pre>
+<p>Covers the four-state matrix: valid input, invalid input, an expected entry
+that must be present, and an unknown entry that must be rejected.</p>
+<h2 id="see-also-9"><a class="header" href="#see-also-9">See also</a></h2>
+<ul>
+<li><a href="#php-sdk">PHP SDK</a> — the equivalent Composer integration</li>
+<li><a href="#middleware-reference">Middleware Reference</a> — the Python middleware stack</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="status--diagnostics"><a class="header" href="#status--diagnostics">Status &amp; Diagnostics</a></h1>
+<p>Before you benchmark, migrate or file a performance bug, confirm what is
+actually running. Most “it isn’t faster” reports turn out to be a fallback
+path that was never replaced.</p>
+<h2 id="the-one-call-that-answers-everything"><a class="header" href="#the-one-call-that-answers-everything">The one call that answers everything</a></h2>
+<pre><code class="language-python">import b4n1_boost
+
+print(b4n1_boost.status())
+</code></pre>
+<pre><code class="language-python">{
+    "native_extension": True,
+    "version": "0.3.12",
+    "features": {
+        "json_acceleration": True,
+        "json_canonicalize": True,
+        "compression": ["gzip", "brotli", "zstd"],
+        "middleware": ["django", "fastapi", "flask"],
+    },
+    "compression_engines": {
+        "gzip": True,
+        "brotli": True,
+        "zstd": True,
+    },
+}
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Field</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td><code>native_extension</code></td><td><code>True</code> only when the native core genuinely loaded</td></tr>
+<tr><td><code>version</code></td><td>installed package version</td></tr>
+<tr><td><code>features</code></td><td>what this build supports</td></tr>
+<tr><td><code>compression_engines</code></td><td>which engines are actually live</td></tr>
+</tbody>
+</table>
+</div>
+<p>If <code>native_extension</code> is <code>False</code>, stop. Every performance figure in
+<a href="#performance">Performance</a> is measured against the native core and does
+not apply to a fallback.</p>
+<h2 id="diagnosing-a-failed-load"><a class="header" href="#diagnosing-a-failed-load">Diagnosing a failed load</a></h2>
+<p>Work through these in order:</p>
+<p><strong>1. Confirm the wheel matched your platform</strong></p>
+<pre><code class="language-bash">pip show b4n1-boost
+python -c "import sys; print(sys.version)"
+</code></pre>
+<p>The requirement is <code>&gt;=3.10</code>. A platform without a published wheel will not
+have a native core to load.</p>
+<p><strong>2. Confirm the extension file exists</strong></p>
+<pre><code class="language-bash">python -c "import b4n1_boost, pathlib; p = pathlib.Path(b4n1_boost.__file__).parent; print(p); print(list(p.glob('_core*')))"
+</code></pre>
+<p>An empty list means the package installed without its native module —
+usually a truncated download or an interrupted install. Reinstall:</p>
+<pre><code class="language-bash">pip install --force-reinstall --no-cache-dir b4n1-boost
+</code></pre>
+<p><strong>3. Import it directly to surface the real error</strong></p>
+<pre><code class="language-bash">python -c "import b4n1_boost._core"
+</code></pre>
+<p>An import error here prints the underlying cause, which is far more useful
+than a <code>native_extension: False</code> summary.</p>
+<p><strong>4. Check for a stale copy</strong></p>
+<pre><code class="language-bash">python -c "import b4n1_boost; print(b4n1_boost.__file__)"
+</code></pre>
+<p>A path outside the current virtual environment means an older global install
+is shadowing the one you think you are testing.</p>
+<p><strong>5. Verify after any upgrade</strong></p>
+<pre><code class="language-python">import b4n1_boost
+assert b4n1_boost.status()["native_extension"] is True
+assert b4n1_boost.__version__ == "0.3.12"
+</code></pre>
+<p>A cached extension from a previous version is a common source of confusing
+results.</p>
+<h2 id="per-sdk-availability-checks"><a class="header" href="#per-sdk-availability-checks">Per-SDK availability checks</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>SDK</th><th>Check</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td>Python</td><td><code>b4n1_boost.status()["native_extension"]</code></td><td>authoritative</td></tr>
+<tr><td>Node.js</td><td><code>B4N1Boost.isAvailable()</code></td><td><code>true</code> only when genuinely bound</td></tr>
+<tr><td>Node.js</td><td><code>B4N1Boost.libraryPath()</code></td><td>path of the binary actually loaded</td></tr>
+<tr><td>.NET</td><td>see <a href="#net-sdk">page</a></td><td>handles must be disposed</td></tr>
+<tr><td>Java</td><td>see <a href="#java-sdk">page</a></td><td><code>B4N1_BOOST_LIB_PATH</code> validated on load</td></tr>
+<tr><td>Go / PHP / Ruby</td><td>see their pages</td><td>thin wrappers over the same core</td></tr>
+</tbody>
+</table>
+</div>
+<p>Node’s <code>libraryPath()</code> is particularly useful when more than one copy of the
+package is installed: it names the exact binary in use, so you can tell
+whether you are loading the one you edited.</p>
+<h2 id="health-check-as-a-runtime-probe"><a class="header" href="#health-check-as-a-runtime-probe">Health check as a runtime probe</a></h2>
+<pre><code class="language-python">from b4n1_boost.middleware import HealthCheckMiddleware
+
+app.wsgi_app = HealthCheckMiddleware(app.wsgi_app, path="/health")
+</code></pre>
+<pre><code class="language-bash">curl -i http://localhost:8000/health
+# HTTP/1.1 200 OK
+# {"status": "ok"}
+</code></pre>
+<p>Wire this to your process supervisor. A 200 confirms the app is serving; it
+does <strong>not</strong> confirm the native core loaded — pair it with <code>status()</code> at
+startup if you want that assertion too.</p>
+<h2 id="assert-at-startup-not-in-production"><a class="header" href="#assert-at-startup-not-in-production">Assert at startup, not in production</a></h2>
+<p>Fail loudly the moment the core is missing, rather than discovering it under
+load:</p>
+<pre><code class="language-python">import b4n1_boost
+
+if not b4n1_boost.status()["native_extension"]:
+    raise RuntimeError("b4n1-boost native core failed to load")
+</code></pre>
+<p>This is the difference between a deploy that fails immediately and one that
+runs for a week at half speed.</p>
+<h2 id="reporting-a-problem"><a class="header" href="#reporting-a-problem">Reporting a problem</a></h2>
+<p>Include all of the following — it is the difference between a one-reply fix
+and a week of questions:</p>
+<ol>
+<li><code>b4n1_boost.status()</code> output, verbatim</li>
+<li>Python version and operating system / architecture</li>
+<li>Output of <code>pip show b4n1-boost</code></li>
+<li>Output of <code>python -c "import b4n1_boost._core"</code> if it fails</li>
+<li>The command you ran and what you expected</li>
+</ol>
+<h2 id="see-also-10"><a class="header" href="#see-also-10">See also</a></h2>
+<ul>
+<li><a href="#installation">Installation</a> — platform and version support</li>
+<li><a href="#performance">Performance</a> — what the numbers assume</li>
+<li><a href="#frequently-asked-questions">FAQ</a> — common questions</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="frequently-asked-questions"><a class="header" href="#frequently-asked-questions">Frequently Asked Questions</a></h1>
+<h2 id="does-it-really-work-without-changing-my-code"><a class="header" href="#does-it-really-work-without-changing-my-code">Does it really work without changing my code?</a></h2>
+<p>Yes. <code>install_django()</code>, <code>install_fastapi(app)</code> and <code>install_flask(app)</code> wire
+middleware around your application. Views, templates, models and serializers
+stay as they are.</p>
+<p>The two exceptions are the accelerators, which you opt into explicitly:
+<a href="#django--drf-accelerators">Django &amp; DRF Accelerators</a> replace a specific call site
+(<code>bulk_insert_native</code>, <code>fast_serialize</code>) because they produce the same result
+by a different route.</p>
+<h2 id="do-i-need-to-compile-anything"><a class="header" href="#do-i-need-to-compile-anything">Do I need to compile anything?</a></h2>
+<p>No. Wheels are precompiled for Linux (x86_64, aarch64), macOS (x86_64,
+arm64) and Windows x86_64. <code>pip install b4n1-boost</code> is the whole step — no
+compiler, no build backend, no system libraries.</p>
+<h2 id="how-do-i-know-it-actually-loaded"><a class="header" href="#how-do-i-know-it-actually-loaded">How do I know it actually loaded?</a></h2>
+<pre><code class="language-python">import b4n1_boost
+assert b4n1_boost.status()["native_extension"] is True
+</code></pre>
+<p>Do this before benchmarking. See <a href="#status--diagnostics">Status &amp; Diagnostics</a>.</p>
+<h2 id="do-i-need-redis-or-a-broker"><a class="header" href="#do-i-need-redis-or-a-broker">Do I need Redis or a broker?</a></h2>
+<p>No, for <a href="#background-tasks-1">background tasks</a>. Work is dispatched to a worker
+thread with optional disk journaling.</p>
+<p>You should still use a real queue when tasks must survive losing the machine,
+be shared across hosts, or need scheduled delivery. Journaling gives restart
+safety on one host — it is not distributed coordination.</p>
+<h2 id="which-compression-algorithm-should-i-use"><a class="header" href="#which-compression-algorithm-should-i-use">Which compression algorithm should I use?</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Algorithm</th><th>Choose it for</th></tr>
+</thead>
+<tbody>
+<tr><td><code>zstd</code></td><td>API responses and JSON bodies — fastest</td></tr>
+<tr><td><code>gzip</code></td><td>widest compatibility</td></tr>
+<tr><td><code>brotli</code></td><td>static assets — best ratio</td></tr>
+</tbody>
+</table>
+</div>
+<p>For static files, <code>compress_static_dir</code> skips already-compressed formats
+(images, video, audio, fonts, archives) automatically.</p>
+<h2 id="will-it-help-if-my-app-is-not-cpu-bound"><a class="header" href="#will-it-help-if-my-app-is-not-cpu-bound">Will it help if my app is not CPU-bound?</a></h2>
+<p>Probably not. b4n1-boost removes CPU time spent on serialization, compression
+and static assets. If your bottleneck is database latency, network I/O or an
+external API, the headroom is elsewhere.</p>
+<p>Measure first: if <code>run_benchmarks()</code> shows no meaningful gap against the
+standard library on your payloads, there is nothing to gain.</p>
+<h2 id="is-it-safe-to-run-behind-a-reverse-proxy"><a class="header" href="#is-it-safe-to-run-behind-a-reverse-proxy">Is it safe to run behind a reverse proxy?</a></h2>
+<p>Yes. <code>detect_proxy()</code> determines whether a proxy is in front of the app so
+headers like <code>X-Forwarded-For</code> are only trusted when they came from one.</p>
+<pre><code class="language-python">from b4n1_boost.middleware import detect_proxy
+</code></pre>
+<p>Never trust forwarded headers unconditionally — a client can forge them.</p>
+<h2 id="does-it-support-async-frameworks"><a class="header" href="#does-it-support-async-frameworks">Does it support async frameworks?</a></h2>
+<p>Yes. Every middleware has an ASGI variant (<code>ASGIETagMiddleware</code>,
+<code>ASGICORSMiddleware</code>, <code>ASGISecurityHeadersMiddleware</code>,
+<code>ASGIRateLimitMiddleware</code>, <code>ASGIHealthCheckMiddleware</code>,
+<code>ASGIRequestLoggingMiddleware</code>,
+<code>FastAPIBoostCompressionMiddleware</code>), and compression streams responses
+rather than buffering them.</p>
+<h2 id="can-i-use-only-part-of-it"><a class="header" href="#can-i-use-only-part-of-it">Can I use only part of it?</a></h2>
+<p>Yes. The pieces are independent — compression, ETag, security headers, CORS,
+rate limiting, health check and the utilities can each be used alone.
+<code>boost_all()</code> installs the common set in one call; individual middleware can
+be added by hand when you want a different configuration.</p>
+<h2 id="what-happens-on-an-unsupported-platform"><a class="header" href="#what-happens-on-an-unsupported-platform">What happens on an unsupported platform?</a></h2>
+<p>The Python package falls back to a pure-Python path: correct output, no
+native speed. Node.js does the same, except for <code>compressZstd</code> and
+<code>decompressZstd</code>, which <strong>throw</strong> rather than silently producing a different
+format.</p>
+<p>Check <code>status()["native_extension"]</code> (Python) or <code>isAvailable()</code> (Node) to
+know which path you are on.</p>
+<h2 id="what-is-the-difference-between-dumps-and-dumps_direct"><a class="header" href="#what-is-the-difference-between-dumps-and-dumps_direct">What is the difference between <code>dumps</code> and <code>dumps_direct</code>?</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Call</th><th>Path</th></tr>
+</thead>
+<tbody>
+<tr><td><code>NativeJson.dumps(data)</code></td><td>fastest available backend, general purpose</td></tr>
+<tr><td><code>NativeJson.dumps_direct(data)</code></td><td>skips the intermediate conversion entirely</td></tr>
+<tr><td><code>NativeJson.batch_dumps([...])</code></td><td>N serializations inside one lock acquire</td></tr>
+</tbody>
+</table>
+</div>
+<p><code>batch_dumps</code> is where the largest wins appear for list-shaped workloads,
+because per-call overhead is paid once instead of N times.</p>
+<h2 id="which-license-applies"><a class="header" href="#which-license-applies">Which license applies?</a></h2>
+<p>The SDK wrapper source is
+<a href="#license">Business Source License 1.1 (BUSL-1.1)</a>. The precompiled native
+binaries are covered by a separate <code>EULA.txt</code> that ships inside each artifact.</p>
+<p>Production use is free for organizations with total annual gross revenue up
+to USD $100,000. Above that, or for reselling it as a managed service, a
+commercial license is required.</p>
+<h2 id="where-do-i-report-bugs"><a class="header" href="#where-do-i-report-bugs">Where do I report bugs?</a></h2>
+<p>Open an issue on
+<a href="https://github.com/B4N1-com/b4n1-boost">github.com/B4N1-com/b4n1-boost</a>.
+Include the diagnostic output listed in
+<a href="#status--diagnostics">Status &amp; Diagnostics</a> — status, Python version, OS/architecture
+and the exact failing command.</p>
+<h2 id="see-also-11"><a class="header" href="#see-also-11">See also</a></h2>
+<ul>
+<li><a href="#quick-start">Quick Start</a></li>
+<li><a href="#performance">Performance</a></li>
+<li><a href="#license">License</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="changelog"><a class="header" href="#changelog">Changelog</a></h1>
+<p>Notable changes per release, following
+<a href="https://keepachangelog.com/en/1.1.0/">Keep a Changelog</a> and
+<a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
+<p>The full detail lives in <code>CHANGELOG.md</code> in the repository. This page is the
+curated view.</p>
+<h2 id="0312--current"><a class="header" href="#0312--current">[0.3.12] — current</a></h2>
+<p>Fourth registry released: the Java SDK is now on Maven Central as
+<code>com.b4n1:boost</code>, alongside PyPI, npm and NuGet. Release verification suite:
+38 checks passing.</p>
+<h2 id="0311"><a class="header" href="#0311">[0.3.11]</a></h2>
+<p>Packaging and record-correctness fixes across the published artifacts:
+wheel metadata now matches its archive contents exactly, so registries
+accept uploads without post-hoc warnings.</p>
+<h2 id="030--2026-09-01"><a class="header" href="#030--2026-09-01">[0.3.0] — 2026-09-01</a></h2>
+<p>The middleware and accelerator release.</p>
+<h3 id="added"><a class="header" href="#added">Added</a></h3>
+<p><strong>Middleware</strong></p>
+<ul>
+<li><code>SecurityHeadersMiddleware</code> — <code>X-Content-Type-Options</code>, <code>X-Frame-Options</code>,
+<code>Strict-Transport-Security</code>, <code>X-XSS-Protection</code>, <code>Referrer-Policy</code>,
+<code>Permissions-Policy</code></li>
+<li><code>CORSMiddleware</code> with configurable origins, methods and headers</li>
+<li><code>HealthCheckMiddleware</code> — <code>GET /health</code> returns 200 JSON</li>
+<li><code>DecompressionMiddleware</code> — accepts gzip/brotli/zstd request bodies</li>
+<li><code>CacheMiddleware</code> backed by <code>ResponseCache</code> (LRU + TTL)</li>
+<li><code>RequestLoggingMiddleware</code> and its ASGI variant</li>
+<li><code>ETagMiddleware</code> with 304 handling</li>
+<li><code>RateLimitMiddleware</code> — token bucket per client IP</li>
+<li>Content-Type aware compression</li>
+<li><code>CompressionMetrics</code> — bytes in/out, request count, ratio</li>
+<li><code>detect_proxy()</code> — forwarded-header trust detection</li>
+<li><code>boost_all()</code> — install the common set in one call</li>
+</ul>
+<p><strong>Acceleration</strong></p>
+<ul>
+<li><code>NativeJson.batch_dumps()</code> — N serializations in a single lock acquire</li>
+<li>Worker thread for compression, minification and JWT — heavy work off the
+calling thread</li>
+<li><code>fast_serialize()</code> + <code>FastSerializerMixin</code> — 5-10x faster queryset → JSON</li>
+<li><code>bulk_insert_native()</code> (PostgreSQL <code>COPY</code>) + <code>FastModelMixin</code> — 5-10x
+faster bulk writes</li>
+<li><code>html_to_markdown()</code> — HTML to clean Markdown for LLM consumption</li>
+<li><code>minify_html()</code>, <code>minify_css()</code>, <code>minify_js()</code></li>
+<li>JWT validation with an HMAC-SHA256/512 path and a fallback</li>
+<li><code>ResponseCache</code> (LRU, TTL), <code>BloomRateLimiter</code>, <code>CircuitBreaker</code></li>
+<li><code>compress_static_file()</code> / <code>compress_static_dir()</code></li>
+<li>Telemetry bindings: init, capture_error, log_info, log_phase, flush</li>
+</ul>
+<h3 id="changed"><a class="header" href="#changed">Changed</a></h3>
+<ul>
+<li>JSON path moved to a substantially faster backend — 10.5x over <code>json.dumps</code>
+on medium payloads</li>
+<li>Middleware refactored onto unified WSGI/ASGI base classes</li>
+</ul>
+<h3 id="fixed"><a class="header" href="#fixed">Fixed</a></h3>
+<ul>
+<li>Middleware installs are idempotent — a double install no longer stacks
+duplicates</li>
+<li>Native JSON path used directly in middleware, removing an intermediate
+conversion</li>
+<li>README installation URL</li>
+</ul>
+<h2 id="020--2026-08-28"><a class="header" href="#020--2026-08-28">[0.2.0] — 2026-08-28</a></h2>
+<h3 id="added-1"><a class="header" href="#added-1">Added</a></h3>
+<ul>
+<li>Zstd compression — 28x faster than stdlib gzip</li>
+<li>Content-Type aware middleware</li>
+<li>ETag generation and 304 caching</li>
+<li>Rate limiting (token bucket)</li>
+<li>Proxy detection headers</li>
+<li>Compression metrics collection</li>
+</ul>
+<h3 id="changed-1"><a class="header" href="#changed-1">Changed</a></h3>
+<ul>
+<li>Improved middleware architecture</li>
+</ul>
+<h2 id="010"><a class="header" href="#010">[0.1.0]</a></h2>
+<p>Initial release: native JSON serialization, gzip/brotli compression, and the
+Django / FastAPI / Flask installers.</p>
+<h2 id="see-also-12"><a class="header" href="#see-also-12">See also</a></h2>
+<ul>
+<li><a href="#status--diagnostics">Status &amp; Diagnostics</a> — how to check your installed version</li>
+<li><a href="#license">License</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="license"><a class="header" href="#license">License</a></h1>
+<p>b4n1-boost uses a <strong>dual-layer license</strong>. Two artifacts, two instruments —
+read both before you distribute anything.</p>
+<h2 id="1-sdk-wrapper-source--business-source-license-11"><a class="header" href="#1-sdk-wrapper-source--business-source-license-11">1. SDK wrapper source — Business Source License 1.1</a></h2>
+<p>The per-language SDK wrappers (the thin bindings for Python, Node.js, .NET,
+Java, Go, PHP and Ruby) are licensed under
+<strong>Business Source License 1.1 (<code>BUSL-1.1</code>)</strong>, with the full text in <code>LICENSE</code>
+at the repository root.</p>
+<h3 id="parameters"><a class="header" href="#parameters">Parameters</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Field</th><th>Value</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Licensor</strong></td><td>B4N1 (b4n1.com)</td></tr>
+<tr><td><strong>Licensed Work</strong></td><td>b4n1-boost — Python SDK and native acceleration libraries for Django, FastAPI, Flask, WSGI and ASGI</td></tr>
+<tr><td><strong>Additional Use Grant</strong></td><td>Production use is free of charge, provided your organization’s total annual gross revenue does not exceed <strong>USD $100,000</strong></td></tr>
+<tr><td><strong>Change Date</strong></td><td>Four years after the first publicly available distribution</td></tr>
+<tr><td><strong>Change License</strong></td><td>Apache License, Version 2.0</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="what-that-means-in-practice"><a class="header" href="#what-that-means-in-practice">What that means in practice</a></h3>
+<ul>
+<li><strong>You may use it in production for free</strong> if your organization’s total
+annual gross revenue is at or below USD $100,000.</li>
+<li><strong>Above that threshold</strong>, or if you want to resell or provide b4n1-boost as
+a managed commercial service, you need a commercial license from the
+Licensor.</li>
+<li><strong>On the Change Date</strong>, the Licensed Work converts to the Apache License
+2.0 and becomes openly licensed.</li>
+<li>You may study and modify the source for any purpose; the production
+restriction above is the binding term.</li>
+</ul>
+<blockquote>
+<p><code>BUSL-1.1</code> is the correct SPDX identifier for Business Source License 1.1.
+Note that <code>BSL-1.1</code> in SPDX denotes an unrelated permissive license —
+always check which one a manifest actually declares.</p>
+</blockquote>
+<h2 id="2-native-binaries--end-user-license-agreement"><a class="header" href="#2-native-binaries--end-user-license-agreement">2. Native binaries — End User License Agreement</a></h2>
+<p>The <strong>precompiled native binaries</strong> are licensed separately under a EULA that
+ships <em>inside</em> every binary artifact:</p>
+<ul>
+<li>the compiled native libraries (<code>libb4n1_boost.so</code>, <code>b4n1_boost.dylib</code>,
+<code>b4n1_boost.dll</code>)</li>
+<li>the packaged per-language bindings (<code>*.node</code>, <code>*.jar</code>, <code>*.nupkg</code>, <code>*.gem</code>,
+<code>*.phar</code>, platform wheels)</li>
+<li>the <code>b4n1-boost</code> standalone executable</li>
+</ul>
+<p>The <code>EULA.txt</code> travels with each artifact — a wheel, npm tarball, NuGet
+package, Maven artifact or gem each carry their own copy. There is no separate
+download step, and an artifact without its EULA is incomplete.</p>
+<h2 id="3-combining-the-two"><a class="header" href="#3-combining-the-two">3. Combining the two</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>If you are…</th><th>You are governed by…</th></tr>
+</thead>
+<tbody>
+<tr><td>Reading or modifying the SDK source</td><td><code>LICENSE</code> (BUSL-1.1)</td></tr>
+<tr><td>Installing from a registry and running it</td><td>the <code>EULA.txt</code> inside that artifact</td></tr>
+<tr><td>Redistributing either</td><td>both — carry <code>LICENSE</code> and <code>EULA.txt</code> unchanged</td></tr>
+</tbody>
+</table>
+</div>
+<p>Any redistribution must keep <strong>both</strong> documents intact, together with all
+copyright and trademark notices. Removing or altering the license metadata of
+a published artifact is not permitted.</p>
+<h2 id="4-trademarks"><a class="header" href="#4-trademarks">4. Trademarks</a></h2>
+<p>“Business Source License” is a trademark of MariaDB Corporation Ab; the
+license text is copyright (c) 2017 MariaDB Corporation Ab, All Rights
+Reserved, and is used here under its published terms. The B4N1 name, logos
+and marks remain the property of B4N1.</p>
+<h2 id="5-no-warranty"><a class="header" href="#5-no-warranty">5. No warranty</a></h2>
+<p>Both instruments are provided <strong>as is</strong>, without warranty of any kind,
+express or implied, including but not limited to the warranties of
+merchantability, fitness for a particular purpose and non-infringement. In no
+event shall the Licensor be liable for any claim, damages or other liability
+arising from use of the software.</p>
+<h2 id="commercial-licensing"><a class="header" href="#commercial-licensing">Commercial licensing</a></h2>
+<p>For licensing terms beyond the Additional Use Grant — enterprise deployment,
+managed service delivery, or redistribution arrangements — contact
+<strong>dev@b4n1.com</strong>.</p>
+<h2 id="see-also-13"><a class="header" href="#see-also-13">See also</a></h2>
+<ul>
+<li><a href="#b4n1-boost">Introduction</a></li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#changelog">Changelog</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-09f2665d.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+
+    </div>
+    </body>
+</html>

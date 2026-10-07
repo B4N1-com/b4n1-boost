@@ -1,0 +1,40 @@
+[book]
+title = "b4n1-boost — The Python Accelerator"
+description = "Native acceleration for Django, FastAPI and Flask: JSON 10x faster, compression 28x faster"
+language = "en"
+src = "src"
+
+[output.html]
+default-theme = "light"
+smart-punctuation = true
+mathjax-support = false
+no-section-label = false
+git-repository-url = "https://github.com/B4N1-com/b4n1-boost"
+git-repository-icon = "fab-github"
+edit-url-template = "https://github.com/B4N1-com/b4n1-boost/edit/master/docs/src/{path}"
+
+[output.html.fold]
+enable = true
+level = 1
+
+[output.html.search]
+enable = true
+limit-results = 10
+teaser-word-count = 30
+use-boolean-and = true
+boost-title = 3
+boost-hierarchy = 2
+boost-paragraph = 1
+expand = true
+heading-split-level = 3
+
+[build]
+build-dir = "book"
+create-missing = false
+
+# Playground desactivado: mdBook lo implementa llamando a un servicio de
+# terceros desde el navegador del visitante. El sitio de documentacion no
+# debe disparar peticiones externas a quien lo visita.
+[output.html.playground]
+runnable = false
+editable = false

@@ -1,3 +1,10 @@
-__pycache__/\n*.egg-info/\n.git/\n
+__pycache__/
+*.egg-info/
+.git/
+
 *.tar.gz
 dist/
+
+# Artefacto de build del libro mdBook — se genera al desplegar y vive en
+# la rama gh-pages, nunca en master (en master solo van fuentes).
+docs/book/

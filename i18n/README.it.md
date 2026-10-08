@@ -8,14 +8,14 @@
 
 | Componente | Metrica | rispetto a stdlib |
 |---|---|---|
-| **JSON dumps** (orjson) | 10.5x più veloce | dict medi (20 utenti) |
-| **JSON dumps** (orjson) | 8.5x più veloce | dict grandi (500 utenti) |
+| **JSON dumps** (native engine) | 10.5x più veloce | dict medi (20 utenti) |
+| **JSON dumps** (native engine) | 8.5x più veloce | dict grandi (500 utenti) |
 | **Gzip** (nativo) | 1.47x più veloce | payload da 1MB |
 | **Zstd** (nativo) | 28x più veloce | payload da 1MB |
 | **Brotli** (nativo) | miglior rapporto | payload da 1MB |
 | **DRF serializer** | 5-10x più veloce | queryset → JSON |
 | **Django ORM** | PostgreSQL COPY | inserimento nativo in blocco |
-| **Dimensione wheel** | ~1.4MB | simd-json + zstd |
+| **Dimensione wheel** | ~1.4MB | native, no compiler needed |
 
 ---
 

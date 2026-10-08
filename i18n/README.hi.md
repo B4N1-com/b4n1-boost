@@ -8,14 +8,14 @@
 
 | घटक | माप | stdlib की तुलना में |
 |---|---|---|
-| **JSON dumps** (orjson) | 10.5x तेज़ | मध्यम dicts (20 उपयोगकर्ता) |
-| **JSON dumps** (orjson) | 8.5x तेज़ | बड़े dicts (500 उपयोगकर्ता) |
+| **JSON dumps** (native engine) | 10.5x तेज़ | मध्यम dicts (20 उपयोगकर्ता) |
+| **JSON dumps** (native engine) | 8.5x तेज़ | बड़े dicts (500 उपयोगकर्ता) |
 | **Gzip** (native) | 1.47x तेज़ | 1MB payloads |
 | **Zstd** (native) | 28x तेज़ | 1MB payloads |
 | **Brotli** (native) | सर्वश्रेष्ठ अनुपात | 1MB payloads |
 | **DRF serializer** | 5-10x तेज़ | queryset → JSON |
 | **Django ORM** | PostgreSQL COPY | bulk insert native |
-| **Wheel आकार** | ~1.4MB | simd-json + zstd |
+| **Wheel आकार** | ~1.4MB | native, no compiler needed |
 
 ---
 

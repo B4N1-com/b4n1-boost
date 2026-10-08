@@ -10,16 +10,16 @@
 
 | Componente | Métrica | vs stdlib |
 |---|---|---|
-| **JSON dumps** (orjson) | 10.5x más rápido | Dicts medianos (20 usuarios) |
-| **JSON dumps** (orjson) | 8.5x más rápido | Dicts grandes (500 usuarios) |
+| **JSON dumps** (motor nativo) | 10.5x más rápido | Dicts medianos (20 usuarios) |
+| **JSON dumps** (motor nativo) | 8.5x más rápido | Dicts grandes (500 usuarios) |
 | **Gzip** (nativo) | 1.47x más rápido | Payloads de 1MB |
 | **Zstd** (nativo) | 28x más rápido | Payloads de 1MB |
 | **Brotli** (nativo) | 0.0% ratio | Mejor ratio de compresión |
 | **DRF serializer** | 5-10x más rápido | queryset → JSON |
 | **Django ORM** | PostgreSQL COPY | bulk insert nativo |
-| **Tamaño wheel** | 1.4MB | simd-json + zstd |
-| **PyO3** | 0.28 | Free-threading soportado |
-| **Tests** | 86 total | 75 Python + 11 Rust |
+| **Tamaño wheel** | 1.4MB | nativo, sin compilador |
+| **Sin-GIL listo** | Python 3.13+ | Free-threading soportado |
+| **Tests** | 86 total | 75 Python + 11 nativos |
 
 ---
 
@@ -74,10 +74,10 @@ b4n1_boost.autoboost()
 ```python
 from b4n1_boost import NativeJson, canonicalize_json, validate_json
 
-# JSON rápido (usa orjson cuando está disponible, 10x más rápido)
+# JSON rápido (motor nativo, 10x más rápido)
 result = NativeJson.dumps({"users": [...]})
 
-# Ruta directa PyO3 (sin conversión intermedia)
+# Ruta directa nativa (sin conversión intermedia)
 result = NativeJson.dumps_direct(data)
 
 # Canonicalizar: keys ordenadas, forma compacta (acepta str o dict)

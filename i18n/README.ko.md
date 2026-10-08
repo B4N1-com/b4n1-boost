@@ -8,14 +8,14 @@
 
 | 구성 요소 | 지표 | stdlib 대비 |
 |---|---|---|
-| **JSON dumps** (orjson) | 10.5배 빠름 | 중간 dict (20명) |
-| **JSON dumps** (orjson) | 8.5배 빠름 | 큰 dict (500명) |
+| **JSON dumps** (native engine) | 10.5배 빠름 | 중간 dict (20명) |
+| **JSON dumps** (native engine) | 8.5배 빠름 | 큰 dict (500명) |
 | **Gzip** (네이티브) | 1.47배 빠름 | 1MB 페이로드 |
 | **Zstd** (네이티브) | 28배 빠름 | 1MB 페이로드 |
 | **Brotli** (네이티브) | 최고 압축률 | 1MB 페이로드 |
 | **DRF serializer** | 5-10배 빠름 | queryset → JSON |
 | **Django ORM** | PostgreSQL COPY | 네이티브 벌크 삽입 |
-| **휠 크기** | ~1.4MB | simd-json + zstd |
+| **휠 크기** | ~1.4MB | native, no compiler needed |
 
 ---
 

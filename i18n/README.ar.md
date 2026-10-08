@@ -8,14 +8,14 @@
 
 | المكوّن | القياس | مقارنة بـ stdlib |
 |---|---|---|
-| **JSON dumps** (orjson) | أسرع 10.5x | قوائم متوسطة (20 مستخدماً) |
-| **JSON dumps** (orjson) | أسرع 8.5x | قوائم كبيرة (500 مستخدم) |
+| **JSON dumps** (native engine) | أسرع 10.5x | قوائم متوسطة (20 مستخدماً) |
+| **JSON dumps** (native engine) | أسرع 8.5x | قوائم كبيرة (500 مستخدم) |
 | **Gzip** (أصلي) | أسرع 1.47x | حزم 1MB |
 | **Zstd** (أصلي) | أسرع 28x | حزم 1MB |
 | **Brotli** (أصلي) | أفضل نسبة ضغط | حزم 1MB |
 | **DRF serializer** | أسرع 5-10x | queryset → JSON |
 | **Django ORM** | PostgreSQL COPY | إدراج دفعة واحد |
-| **حجم العجلة (wheel)** | ~1.4MB | simd-json + zstd |
+| **حجم العجلة (wheel)** | ~1.4MB | native, no compiler needed |
 
 ---
 

@@ -12,17 +12,20 @@
 [![Python](https://img.shields.io/pypi/pyversions/b4n1-boost)](https://pypi.org/project/b4n1-boost/)
 [![Tests](https://img.shields.io/badge/tests-772%20passing-brightgreen)](https://pypi.org/project/b4n1-boost/)
 
+> 📚 **Full manual (installation, middleware, accelerators, performance):**
+> **[https://b4n1-com.github.io/b4n1-boost/](https://b4n1-com.github.io/b4n1-boost/)**
+
 </div>
 
 ## 🖥 Platform Support
 
-| Platform | Architectures | Binary |
-|----------|---------------|--------|
-| **Linux** | x86_64, aarch64 | `musl` (static, no glibc) |
-| **macOS** | x86_64, arm64 | `Mach-O` |
-| **Windows** | x86_64 | `gnu` (MinGW) |
+| Platform | Architectures |
+|----------|---------------|
+| **Linux** | x86_64, aarch64 |
+| **macOS** | x86_64, arm64 (Apple Silicon) |
+| **Windows** | x86_64 |
 
-**Total: 7 pre-compiled artifacts** — works everywhere, no runtime dependencies.
+**Pre-compiled binaries for every platform** — no compiler required, works out of the box.
 
 ---
 
@@ -35,6 +38,9 @@
 | **NuGet** | `B4N1.Boost` | `dotnet add package B4N1.Boost` |
 | **Maven** | `com.b4n1:boost` | `implementation 'com.b4n1:boost:0.3.12'` |
 
+> 📚 Usage examples for **Node.js, .NET and Java**, middleware reference and
+> benchmarks live in the **[full manual](https://b4n1-com.github.io/b4n1-boost/)**.
+
 ---
 
 **Languages:** [العربية](i18n/README.ar.md) · [Deutsch](i18n/README.de.md) · [Español](i18n/README.es.md) · [Français](i18n/README.fr.md) · [हिन्दी](i18n/README.hi.md) · [Italiano](i18n/README.it.md) · [日本語](i18n/README.ja.md) · [한국어](i18n/README.ko.md) · [Português (BR)](i18n/README.pt-BR.md) · [Русский](i18n/README.ru.md) · [中文](i18n/README.zh-CN.md)
@@ -43,20 +49,20 @@
 
 | Component | Metric | vs stdlib |
 |---|---|---|
-| **JSON dumps** (orjson) | 10.5x faster | Medium dicts (20 users) |
-| **JSON dumps** (orjson) | 8.5x faster | Large dicts (500 users) |
+| **JSON dumps** (native engine) | 10.5x faster | Medium dicts (20 users) |
+| **JSON dumps** (native engine) | 8.5x faster | Large dicts (500 users) |
 | **Gzip** (native) | 1.47x faster | 1MB payloads |
 | **Zstd** (native) | 28x faster | 1MB payloads |
 | **Brotli** (native) | Best ratio | 1MB payloads |
 | **DRF serializer** | 5-10x faster | queryset → JSON |
 | **Django ORM** | PostgreSQL COPY | bulk insert native |
-| **Wheel size** | ~1.4MB | simd-json + zstd |
-| **PyO3** | 0.28 | Free-threading support |
+| **Wheel size** | ~1.4MB | native, no compiler needed |
+| **No-GIL ready** | Python 3.13+ | Free-threading support |
 | **Tests** | 772 passing | Unit + Integration + ASGI + Edge Cases |
 
 ---
 
-## 📦 Installation
+### Python (pip)
 
 ```bash
 pip install b4n1-boost
@@ -118,10 +124,10 @@ report = b4n1_boost.boost_all()
 ```python
 from b4n1_boost import NativeJson, canonicalize_json, validate_json
 
-# Fast JSON dumps (uses orjson when available, 10x faster)
+# Fast JSON dumps (native engine, 10x faster)
 result = NativeJson.dumps({"users": [...]})
 
-# Direct PyO3 path (no intermediate conversion)
+# Direct native path (no intermediate conversion)
 result = NativeJson.dumps_direct(data)
 
 # Batch: serialize N objects in a single GIL acquire
@@ -230,7 +236,7 @@ class MySerializer(FastSerializerMixin, serializers.ModelSerializer):
 ```python
 from b4n1_boost.advanced import validate_jwt
 
-# Rust-native HMAC-SHA256 (no PyJWT dependency required)
+# Native HMAC-SHA256 (no PyJWT dependency required)
 payload = validate_jwt(token, secret="my-secret", algorithm="HS256")
 ```
 

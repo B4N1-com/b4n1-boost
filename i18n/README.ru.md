@@ -8,14 +8,14 @@
 
 | Компонент | Метрика | относительно stdlib |
 |---|---|---|
-| **JSON dumps** (orjson) | в 10.5x быстрее | средние dict (20 пользователей) |
-| **JSON dumps** (orjson) | в 8.5x быстрее | большие dict (500 пользователей) |
+| **JSON dumps** (native engine) | в 10.5x быстрее | средние dict (20 пользователей) |
+| **JSON dumps** (native engine) | в 8.5x быстрее | большие dict (500 пользователей) |
 | **Gzip** (нативный) | в 1.47x быстрее | payload 1 МБ |
 | **Zstd** (нативный) | в 28x быстрее | payload 1 МБ |
 | **Brotli** (нативный) | лучшее сжатие | payload 1 МБ |
 | **DRF serializer** | в 5-10x быстрее | queryset → JSON |
 | **Django ORM** | PostgreSQL COPY | пакетная вставка |
-| **Размер wheel** | ~1.4 МБ | simd-json + zstd |
+| **Размер wheel** | ~1.4 МБ | native, no compiler needed |
 
 ---
 

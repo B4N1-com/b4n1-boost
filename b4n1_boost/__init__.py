@@ -74,6 +74,8 @@ from b4n1_boost.advanced import (
     CircuitBreakerMiddleware,
 )
 
+from b4n1_boost.background import background, native_async, pending_tasks
+
 try:
     from b4n1_boost._core import (
         py_install_django,
@@ -359,21 +361,30 @@ def boost_all(
     # Django
     if framework == "Django":
         try:
+            import sys
+            if sys.modules.get("django") is None:
+                return {
+                    "framework": "none",
+                    "native": _NATIVE,
+                    "applied": [],
+                    "error": "no supported framework detected or no app passed",
+                }
             from django.conf import settings
-            current = list(getattr(settings, "MIDDLEWARE", []) or [])
-            if compression or True:  # Django always gets compression
-                path = "b4n1_boost.middleware.DjangoBoostMiddleware"
-                if path not in current:
-                    current.append(path)
-                    settings.MIDDLEWARE = current
-                applied.append("compression")
-            return {
-                "framework": "Django",
-                "native": _NATIVE,
-                "applied": applied,
-                "middleware_count": len(applied),
-            }
-        except ImportError:
+            if getattr(settings, "configured", False):
+                current = list(getattr(settings, "MIDDLEWARE", []) or [])
+                if compression or True:  # Django always gets compression
+                    path = "b4n1_boost.middleware.DjangoBoostMiddleware"
+                    if path not in current:
+                        current.append(path)
+                        settings.MIDDLEWARE = current
+                    applied.append("compression")
+                return {
+                    "framework": "Django",
+                    "native": _NATIVE,
+                    "applied": applied,
+                    "middleware_count": len(applied),
+                }
+        except Exception:
             pass
 
     return {
@@ -386,24 +397,26 @@ def boost_all(
 
 def _detect_framework() -> str:
     """Best-effort framework detection (no imports executed)."""
-    try:
-        import django  # noqa: F401
-
-        return "Django"
-    except ImportError:
-        pass
-    try:
-        import fastapi  # noqa: F401
-
-        return "FastAPI"
-    except ImportError:
-        pass
-    try:
-        import flask  # noqa: F401
-
-        return "Flask"
-    except ImportError:
-        return "none"
+    import sys
+    if sys.modules.get("django") is not None:
+        try:
+            import django  # noqa: F401
+            return "Django"
+        except ImportError:
+            pass
+    if sys.modules.get("fastapi") is not None:
+        try:
+            import fastapi  # noqa: F401
+            return "FastAPI"
+        except ImportError:
+            pass
+    if sys.modules.get("flask") is not None:
+        try:
+            import flask  # noqa: F401
+            return "Flask"
+        except ImportError:
+            pass
+    return "none"
 
 
 def run_benchmarks(iterations: Optional[int] = None) -> dict:
@@ -414,7 +427,7 @@ def run_benchmarks(iterations: Optional[int] = None) -> dict:
     return {"status": "pure-python-fallback", "native": False}
 
 
-__version__ = "0.3.2"
+__version__ = "0.3.12"
 
 
 # ── Batch JSON API ─────────────────────────────────────────────────────
@@ -633,6 +646,10 @@ __all__ = [
     "run_benchmarks",
     "status",
     "__version__",
+    # Background tasks (no Redis, no Celery)
+    "background",
+    "native_async",
+    "pending_tasks",
     # Middleware classes
     "NativeJson",
     "BoostWSGIMiddleware",

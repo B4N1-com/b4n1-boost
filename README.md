@@ -4,14 +4,40 @@
 
 **The Native Accelerator. One Rust core, SDKs for Python, Node.js, .NET and Java — JSON 10x faster, compression 28x faster.**
 
-[![License](https://img.shields.io/badge/license-BSL%201.1-lightgrey)](LICENSE)
+[![License](https://img.shields.io/badge/license-BUSL--1.1-blue.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/version-0.3.12-blue.svg)](https://pypi.org/project/b4n1-boost/)
+[![Docs](https://img.shields.io/badge/docs-mdBook-blue)](https://b4n1-com.github.io/b4n1-boost/)
 [![PyPI](https://badge.fury.io/py/b4n1-boost.svg)](https://pypi.org/project/b4n1-boost/)
-[![PyPI Downloads](https://img.shields.io/pypi/dm/b4n1-boost?label=downloads%2Fmonth)](https://pypi.org/project/b4n1-boost/)
-[![Downloads](https://img.shields.io/pepy/dt/b4n1-boost)](https://pepy.tech/project/b4n1-boost)
+[![npm](https://img.shields.io/npm/v/b4n1-boost.svg)](https://www.npmjs.com/package/b4n1-boost)
 [![Python](https://img.shields.io/pypi/pyversions/b4n1-boost)](https://pypi.org/project/b4n1-boost/)
 [![Tests](https://img.shields.io/badge/tests-772%20passing-brightgreen)](https://pypi.org/project/b4n1-boost/)
 
 </div>
+
+## 🖥 Platform Support
+
+| Platform | Architectures | Binary |
+|----------|---------------|--------|
+| **Linux** | x86_64, aarch64 | `musl` (static, no glibc) |
+| **macOS** | x86_64, arm64 | `Mach-O` |
+| **Windows** | x86_64 | `gnu` (MinGW) |
+
+**Total: 7 pre-compiled artifacts** — works everywhere, no runtime dependencies.
+
+---
+
+## 📦 Installation
+
+| Registry | Package | Command |
+|----------|---------|---------|
+| **PyPI** | `b4n1-boost` | `pip install b4n1-boost` |
+| **npm** | `b4n1-boost` | `npm install b4n1-boost` |
+| **NuGet** | `B4N1.Boost` | `dotnet add package B4N1.Boost` |
+| **Maven** | `com.b4n1:boost` | `implementation 'com.b4n1:boost:0.3.12'` |
+
+---
+
+**Languages:** [العربية](i18n/README.ar.md) · [Deutsch](i18n/README.de.md) · [Español](i18n/README.es.md) · [Français](i18n/README.fr.md) · [हिन्दी](i18n/README.hi.md) · [Italiano](i18n/README.it.md) · [日本語](i18n/README.ja.md) · [한국어](i18n/README.ko.md) · [Português (BR)](i18n/README.pt-BR.md) · [Русский](i18n/README.ru.md) · [中文](i18n/README.zh-CN.md)
 
 ## ⚡ Performance at a Glance
 
@@ -259,7 +285,7 @@ compressed = future.result()
 ```python
 import b4n1_boost
 print(b4n1_boost.status())
-# {'version': '0.3.4', 'native_extension': True, 'features': [...]}
+# {'version': '0.3.5', 'native_extension': True, 'features': [...]}
 ```
 
 ```python
@@ -286,7 +312,7 @@ report = b4n1_boost.run_benchmarks(iterations=100_000)
 
 ## 📄 License
 
-**Business Source License 1.1 (BSL 1.1)**.
+**Business Source License 1.1 (`BUSL-1.1`)** — note this is *not* the SPDX id `BSL-1.1`, which denotes the Boost Software License.
 
 - **Free** for development, evaluation, testing, personal projects, and startups under **$100K USD** annual revenue.
 - **Commercial license** required for organizations >= **$100K USD**, government agencies, and public bidding.

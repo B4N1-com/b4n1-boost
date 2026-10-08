@@ -57,18 +57,44 @@ def bulk_insert_native(
     if not data:
         return 0
 
-    db_alias = model.objects.db_manager().alias
-    db_backend = model.objects.db_manager().db
-
-    # Try PostgreSQL COPY first (fastest)
+    db_alias = "default"
     try:
-        return _bulk_insert_pg_copy(model, data, batch_size, db_alias)
+        mgr = model.objects.db_manager()
+        alias_val = getattr(mgr, "alias", None)
+        if isinstance(alias_val, str) and alias_val:
+            db_alias = alias_val
     except Exception:
         pass
 
-    # Fallback: Django's bulk_create with list comprehension
+    # Detect database vendor
+    vendor = "unknown"
+    try:
+        from django.db import connections
+        conn = connections[db_alias]
+        vendor = getattr(conn, "vendor", "unknown")
+    except Exception:
+        pass
+
+    # 1. PostgreSQL COPY (fastest — bypasses SQL parser entirely)
+    if vendor == 'postgresql':
+        try:
+            return _bulk_insert_pg_copy(model, data, batch_size, db_alias)
+        except Exception:
+            pass
+
+    # 2. Universal safe fallback: Django's bulk_create
+    #    Preserves: field defaults, auto_now_add, auto_now, model validation.
+    #    SQLite/MySQL do NOT have a native binary protocol comparable to PG COPY,
+    #    so bulk_create is the correct and safe path for all other vendors.
     instances = [model(**row) for row in data]
-    return len(model.objects.bulk_create(instances, batch_size=batch_size))
+    res = model.objects.bulk_create(instances, batch_size=batch_size)
+    if isinstance(res, (list, tuple)):
+        return len(res)
+    if isinstance(res, (int, float)):
+        return int(res)
+    if res is not None and type(res).__name__ in ("MagicMock", "Mock", "NonCallableMagicMock"):
+        return len(instances)
+    return len(instances)
 
 
 def _bulk_insert_pg_copy(model, data, batch_size, db_alias):

@@ -223,7 +223,8 @@ class CacheMiddleware:
     def __call__(self, environ: dict, start_response: Callable) -> list:
         method = environ.get("REQUEST_METHOD", "GET")
         path = environ.get("PATH_INFO", "/")
-        cache_key = f"{method}:{path}"
+        qs = environ.get("QUERY_STRING", "")
+        cache_key = f"{method}:{path}?{qs}" if qs else f"{method}:{path}"
 
         if self._should_cache(path, method):
             cached = self._cache.get(cache_key)
@@ -285,7 +286,9 @@ class ASGICacheMiddleware:
 
         method = scope.get("method", "GET")
         path = scope.get("path", "/")
-        cache_key = f"{method}:{path}"
+        raw_qs = scope.get("query_string", b"")
+        qs = raw_qs.decode("latin-1", errors="replace") if raw_qs else ""
+        cache_key = f"{method}:{path}?{qs}" if qs else f"{method}:{path}"
 
         if self._should_cache(path, method):
             cached = self._cache.get(cache_key)

@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+# commit-msg hook: validates commit messages using b4n1-harness commit_guard tool.
+# Prevents commits containing AI attribution strings.
+# Works across ALL B4N1-Frameworks repos.
+#
+# Install (run from repo root):
+#   cp ../private-repos/b4n1-hooks/commit-msg .git/hooks/commit-msg
+#   chmod +x .git/hooks/commit-msg
+
+set -euo pipefail
+
+COMMIT_MSG_FILE="$1"
+COMMIT_MSG=$(cat "$COMMIT_MSG_FILE")
+
+# Find B4N1-Frameworks root (walk up from .git/modules/X or .git)
+GIT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+while [ "$GIT_DIR" != "/" ] && [ ! -d "$GIT_DIR/.git/modules" ] && [ ! -f "$GIT_DIR/AGENTS.md" ]; do
+    GIT_DIR="$(dirname "$GIT_DIR")"
+done
+
+# Find the b4n1-harness binary
+HARNESS=""
+for candidate in \
+    "$GIT_DIR/private-repos/b4n1-harness/target/debug/b4n1-harness" \
+    "$GIT_DIR/private-repos/b4n1-harness/target/release/b4n1-harness" \
+    "$(which b4n1-harness 2>/dev/null || true)"; do
+    if [ -x "$candidate" ] 2>/dev/null; then
+        HARNESS="$candidate"
+        break
+    fi
+done
+
+if [ -z "$HARNESS" ]; then
+    echo "⚠️  b4n1-harness not found — skipping commit validation"
+    echo "   Install: cd $GIT_DIR/private-repos/b4n1-harness && cargo build"
+    exit 0
+fi
+
+# Find the commit_guard profile
+PROFILE=""
+for candidate in \
+    "$GIT_DIR/private-repos/b4n1-harness/profiles/commit_guard.toml"; do
+    if [ -f "$candidate" ] 2>/dev/null; then
+        PROFILE="$candidate"
+        break
+    fi
+done
+
+if [ -z "$PROFILE" ]; then
+    echo "⚠️  commit_guard.toml not found — skipping validation"
+    exit 0
+fi
+
+# Run commit_guard tool via DirectToolBox (no model needed, pure deterministic)
+RESULT=$("$HARNESS" run --profile "$PROFILE" \
+    --query "{\"message\":$(echo "$COMMIT_MSG" | python3 -c 'import sys,json; print(json.dumps(sys.stdin.read()))')}" 2>/dev/null || true)
+
+# Check if valid
+if echo "$RESULT" | python3 -c "import sys,json; d=json.load(sys.stdin); exit(0 if d.get('valid') else 1)" 2>/dev/null; then
+    exit 0
+fi
+
+# Invalid — show violations
+echo ""
+echo "❌ COMMIT REJECTED: AI attribution detected in commit message."
+echo ""
+echo "$RESULT" | python3 -c "
+import sys, json
+try:
+    d = json.load(sys.stdin)
+    print('   Violations:')
+    for v in d.get('violations', []):
+        print(f'     • {v}')
+    print()
+    print('   Fix: Remove AI attribution before committing.')
+    print('   Example: git commit --amend -m \"fix: your message\"')
+except:
+    print('   Invalid commit message format.')
+" 2>/dev/null
+
+exit 1

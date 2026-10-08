@@ -284,12 +284,32 @@ def _native_json_response(body: bytes) -> Optional[bytes]:
 
 
 class BoostWSGIMiddleware:
-    """Generic WSGI middleware: transparent zero-copy pass-through."""
+    """Generic WSGI middleware (Flask etc.) with native compression.
 
-    def __init__(self, app: Callable) -> None:
+    Compresses responses (brotli > zstd > gzip) when the client sends
+    ``Accept-Encoding`` and the body is at least ``min_size`` bytes; behaves
+    as a transparent pass-through otherwise (no encoding accepted, small
+    bodies, already-compressed content types, native engine unavailable).
+    """
+
+    def __init__(
+        self,
+        app: Callable,
+        min_size: int = 1024,
+        fast_mode: bool = False,
+    ) -> None:
         self.app = app
+        self.min_size = min_size
+        self.fast_mode = fast_mode
 
     def __call__(self, environ: dict, start_response: Callable) -> list:
+        accept_encoding = environ.get("HTTP_ACCEPT_ENCODING", "")
+        pick = _pick_compressor_fast if self.fast_mode else _pick_compressor
+        if pick(accept_encoding) is None:
+            return self._passthrough(environ, start_response)
+        return B4N1BoostCompressionMiddleware.__call__(self, environ, start_response)
+
+    def _passthrough(self, environ: dict, start_response: Callable) -> list:
         captured: dict = {}
 
         def _capture(status: str, headers: list, exc_info: Any = None) -> None:
@@ -390,16 +410,39 @@ class B4N1BoostCompressionMiddleware:
 
 
 class FastAPIBoostMiddleware:
-    """ASGI middleware for FastAPI/Starlette — zero-copy pass-through."""
+    """ASGI middleware for FastAPI/Starlette with native compression.
 
-    def __init__(self, app: Any) -> None:
+    Compresses responses (brotli > zstd > gzip) when the client sends
+    ``Accept-Encoding`` and the body is at least ``min_size`` bytes;
+    transparent pass-through otherwise.
+    """
+
+    def __init__(
+        self,
+        app: Any,
+        min_size: int = 1024,
+        fast_mode: bool = False,
+    ) -> None:
         self.app = app
+        self.min_size = min_size
+        self.fast_mode = fast_mode
 
     async def __call__(self, scope: dict, receive: Callable, send: Callable) -> None:
         if scope["type"] != "http":
             await self.app(scope, receive, send)
             return
-        await self.app(scope, receive, send)
+        accept_encoding = ""
+        for key, value in scope.get("headers", []):
+            if key.lower() == b"accept-encoding":
+                try:
+                    accept_encoding = value.decode("latin-1")
+                except Exception:
+                    pass
+        pick = _pick_compressor_fast if self.fast_mode else _pick_compressor
+        if pick(accept_encoding) is None:
+            await self.app(scope, receive, send)
+            return
+        await FastAPIBoostCompressionMiddleware.__call__(self, scope, receive, send)
 
 
 class FastAPIBoostCompressionMiddleware:
@@ -514,16 +557,59 @@ class FastAPIBoostCompressionMiddleware:
 
 
 class DjangoBoostMiddleware:
-    """Django middleware (Django 2+ style callable).
+    """Django middleware (Django 2+ style callable) with native compression.
 
-    Zero-copy pass-through: responses flow through untouched.
+    Compresses non-streaming responses (brotli > zstd > gzip) when the
+    client sends ``Accept-Encoding`` and the body is at least ``min_size``
+    bytes; transparent pass-through otherwise (streaming responses,
+    ``Content-Encoding`` already present, error responses without body,
+    no native engine).
     """
 
-    def __init__(self, get_response: Callable) -> None:
+    ACCEPTED_STATUSES = frozenset({200, 203})
+
+    def __init__(
+        self,
+        get_response: Callable,
+        min_size: int = 1024,
+        fast_mode: bool = False,
+    ) -> None:
         self.get_response = get_response
+        self.min_size = min_size
+        self.fast_mode = fast_mode
 
     def __call__(self, request: Any) -> Any:
-        return self.get_response(request)
+        response = self.get_response(request)
+        if getattr(response, "streaming", False) or response.has_header("Content-Encoding"):
+            return response
+        return self._compress(request, response)
+
+    def _compress(self, request: Any, response: Any) -> Any:
+        accept_encoding = request.META.get("HTTP_ACCEPT_ENCODING", "")
+        pick = _pick_compressor_fast if self.fast_mode else _pick_compressor
+        compressor = pick(accept_encoding)
+        if compressor is None:
+            return response
+        if response.status_code not in self.ACCEPTED_STATUSES:
+            return response
+        body = response.content
+        if len(body) < self.min_size or not _should_compress(
+            response.get("Content-Type", "")
+        ):
+            return response
+        compressed = compressor(body)
+        if compressed is None:
+            return response
+        response.content = compressed
+        response["Content-Encoding"] = _encoding_name(compressor)
+        response["Content-Length"] = str(len(compressed))
+        if response.has_header("Vary"):
+            vary = response["Vary"]
+            if "accept-encoding" not in vary.lower():
+                response["Vary"] = f"{vary}, Accept-Encoding"
+        else:
+            response["Vary"] = "Accept-Encoding"
+        return response
 
 
 # ── Middleware injection helpers ─────────────────────────────────────────
@@ -535,10 +621,12 @@ def install_django_middleware() -> bool:
     Idempotent: checks for existing presence before appending.
     """
     try:
+        import sys
+        if sys.modules.get("django") is None:
+            return False
         from django.conf import settings
-    except ImportError:
-        return False
-    try:
+        if not getattr(settings, "configured", False):
+            return False
         path = "b4n1_boost.middleware.DjangoBoostMiddleware"
         current = list(getattr(settings, "MIDDLEWARE", []) or [])
         if path not in current:
@@ -618,7 +706,7 @@ class ETagMiddleware:
 
     Args:
         app: The WSGI application to wrap.
-        hash_fn: Hash function to use. Default: hashlib.md5 (fast, built-in).
+        hash_fn: Hash function to use. Default: hashlib.sha256 (secure).
     """
 
     def __init__(self, app: Callable, hash_fn: Any = None) -> None:
@@ -629,7 +717,8 @@ class ETagMiddleware:
         if self._hash_fn is not None:
             return self._hash_fn(body)
         import hashlib
-        return hashlib.md5(body).hexdigest()
+        return hashlib.sha256(body).hexdigest()
+
 
     def __call__(self, environ: dict, start_response: Callable) -> list:
         if_none_match = environ.get("HTTP_IF_NONE_MATCH", "")
@@ -677,7 +766,8 @@ class ASGIETagMiddleware:
         if self._hash_fn is not None:
             return self._hash_fn(body)
         import hashlib
-        return hashlib.md5(body).hexdigest()
+        return hashlib.sha256(body).hexdigest()
+
 
     async def __call__(self, scope: dict, receive: Callable, send: Callable) -> None:
         if scope["type"] != "http":

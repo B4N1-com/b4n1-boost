@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/cover.png" alt="B4N1 Boost — More speed. More power. Greater potential." width="100%" />
+</p>
+
 <div align="center">
 
 # 📦 b4n1-boost
@@ -5,7 +9,7 @@
 **The Python Accelerator. Native middleware for Django, FastAPI, Flask — JSON 10x faster, compression 28x faster.**
 
 [![License](https://img.shields.io/badge/license-BUSL--1.1-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.3.12-blue.svg)](https://pypi.org/project/b4n1-boost/)
+[![Version](https://img.shields.io/badge/version-0.3.13-blue.svg)](https://pypi.org/project/b4n1-boost/)
 [![Docs](https://img.shields.io/badge/docs-mdBook-blue)](https://b4n1-com.github.io/b4n1-boost/)
 [![PyPI](https://badge.fury.io/py/b4n1-boost.svg)](https://pypi.org/project/b4n1-boost/)
 [![npm](https://img.shields.io/npm/v/b4n1-boost.svg)](https://www.npmjs.com/package/b4n1-boost)
@@ -36,7 +40,7 @@
 | **PyPI** | `b4n1-boost` | `pip install b4n1-boost` |
 | **npm** | `b4n1-boost` | `npm install b4n1-boost` |
 | **NuGet** | `B4N1.Boost` | `dotnet add package B4N1.Boost` |
-| **Maven** | `com.b4n1:boost` | `implementation 'com.b4n1:boost:0.3.12'` |
+| **Maven** | `com.b4n1:boost` | `implementation 'com.b4n1:boost:0.3.13'` |
 
 > 📚 Usage examples for **Node.js, .NET and Java**, middleware reference and
 > benchmarks live in the **[full manual](https://b4n1-com.github.io/b4n1-boost/)**.

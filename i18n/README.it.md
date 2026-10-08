@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../docs/cover.png" alt="B4N1 Boost — More speed. More power. Greater potential." width="100%" />
+</p>
+
 # b4n1-boost
 
 **Acceleratore Python.** Middleware nativo ad alte prestazioni per Django, FastAPI e Flask — JSON 10x più veloce, compressione 28x più veloce.
@@ -92,7 +96,7 @@ b4n1_boost.install()   # rileva il framework e installa il middleware giusto
 ```python
 import b4n1_boost
 print(b4n1_boost.status())
-# {'version': '0.3.12', 'native_extension': True, 'features': [...]}
+# {'version': '0.3.13', 'native_extension': True, 'features': [...]}
 ```
 
 ---

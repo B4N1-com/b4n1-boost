@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../docs/cover.png" alt="B4N1 Boost — More speed. More power. Greater potential." width="100%" />
+</p>
+
 # b4n1-boost
 
 **파이썬 가속기.** Django·FastAPI·Flask용 고속 네이티브 미들웨어 — JSON 10배, 압축 28배 빠릅니다.
@@ -92,7 +96,7 @@ b4n1_boost.install()   # 프레임워크를 감지하고 알맞은 미들웨어�
 ```python
 import b4n1_boost
 print(b4n1_boost.status())
-# {'version': '0.3.12', 'native_extension': True, 'features': [...]}
+# {'version': '0.3.13', 'native_extension': True, 'features': [...]}
 ```
 
 ---

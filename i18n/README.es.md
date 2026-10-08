@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../docs/cover.png" alt="B4N1 Boost — More speed. More power. Greater potential." width="100%" />
+</p>
+
 # b4n1-boost
 
 **El Acelerador de Python.** JSON 10x más rápido. Compresión 28x más rápida. Middleware transparente.

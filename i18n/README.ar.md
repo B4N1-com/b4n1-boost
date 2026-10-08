@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../docs/cover.png" alt="B4N1 Boost — More speed. More power. Greater potential." width="100%" />
+</p>
+
 # b4n1-boost
 
 **مسرّع بايثون.** وسيط أصلي سريع لـ Django وFastAPI وFlask — JSON أسرع 10 مرات، وضغط أسرع 28 مرة.
@@ -92,7 +96,7 @@ b4n1_boost.install()   # يكتشف الإطار تلقائياً ويثبّت �
 ```python
 import b4n1_boost
 print(b4n1_boost.status())
-# {'version': '0.3.12', 'native_extension': True, 'features': [...]}
+# {'version': '0.3.13', 'native_extension': True, 'features': [...]}
 ```
 
 ---

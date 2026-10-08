@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../docs/cover.png" alt="B4N1 Boost — More speed. More power. Greater potential." width="100%" />
+</p>
+
 # b4n1-boost
 
 **पायथन एक्सेलरेटर।** Django, FastAPI, Flask के लिए तेज़ मिडलवेयर — JSON 10x तेज़, कंप्रेशन 28x तेज़।
@@ -92,7 +96,7 @@ b4n1_boost.install()   # फ्रेमवर्क पहचानता ह�
 ```python
 import b4n1_boost
 print(b4n1_boost.status())
-# {'version': '0.3.12', 'native_extension': True, 'features': [...]}
+# {'version': '0.3.13', 'native_extension': True, 'features': [...]}
 ```
 
 ---

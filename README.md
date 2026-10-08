@@ -2,7 +2,7 @@
 
 # 📦 b4n1-boost
 
-**The Native Accelerator. One Rust core, SDKs for Python, Node.js, .NET and Java — JSON 10x faster, compression 28x faster.**
+**The Python Accelerator. Native middleware for Django, FastAPI, Flask — JSON 10x faster, compression 28x faster.**
 
 [![License](https://img.shields.io/badge/license-BUSL--1.1-blue.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-0.3.12-blue.svg)](https://pypi.org/project/b4n1-boost/)
@@ -58,21 +58,11 @@
 
 ## 📦 Installation
 
-Available on all 4 registries (all include the precompiled native core + EULA):
-
 ```bash
-pip install b4n1-boost          # Python 3.10–3.13 (wheels: linux x64/arm64, macOS x64/arm64, Windows x64)
-npm install b4n1-boost          # Node.js (native lib embedded per platform, JS fallback included)
-dotnet add package B4N1.Boost   # .NET (netstandard2.0, native runtimes embedded)
+pip install b4n1-boost
 ```
 
-```xml
-<dependency>
-  <groupId>com.b4n1</groupId>
-  <artifactId>boost</artifactId>
-  <version>0.3.10</version>
-</dependency>
-```
+Precompiled native wheels for Linux (x86_64 + aarch64), macOS (x86_64 + Apple Silicon), and Windows (x86_64). No compiler required.
 
 **Supported Python versions:** 3.10, 3.11, 3.12, 3.13
 

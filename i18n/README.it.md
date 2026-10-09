@@ -6,6 +6,20 @@
 
 **Acceleratore Python.** Middleware nativo ad alte prestazioni per Django, FastAPI e Flask — JSON 10x più veloce, compressione 28x più veloce.
 
+[![License](https://img.shields.io/badge/license-BUSL--1.1-blue.svg)](LICENSE)
+[![Docs](https://img.shields.io/badge/docs-mdBook-blue)](https://b4n1-com.github.io/b4n1-boost/)
+[![PyPI](https://badge.fury.io/py/b4n1-boost.svg)](https://pypi.org/project/b4n1-boost/)
+[![npm](https://img.shields.io/npm/v/b4n1-boost.svg)](https://www.npmjs.com/package/b4n1-boost)
+[![NuGet](https://img.shields.io/nuget/v/B4N1.Boost.svg)](https://www.nuget.org/packages/B4N1.Boost)
+[![Python](https://img.shields.io/pypi/pyversions/b4n1-boost)](https://pypi.org/project/b4n1-boost/)
+[![Tests](https://img.shields.io/badge/tests-772%20passing-brightgreen)](https://pypi.org/project/b4n1-boost/)
+
+[![Total downloads](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FB4N1-com%2Fpublic-repos%2Fmaster%2Fb4n1-boost%2Fbadges%2Fdownloads.json&query=%24.total&label=total%20downloads&color=blue)](https://pypi.org/project/b4n1-boost/)
+[![PyPI Downloads/month](https://img.shields.io/pypi/dm/b4n1-boost)](https://pypi.org/project/b4n1-boost/)
+[![npm Downloads/month](https://img.shields.io/npm/dm/b4n1-boost)](https://www.npmjs.com/package/b4n1-boost)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/B4N1.Boost)](https://www.nuget.org/packages/B4N1.Boost)
+[![PyPI total](https://img.shields.io/pepy/dt/b4n1-boost)](https://pepy.tech/project/b4n1-boost)
+
 ---
 
 ## ⚡ Panoramica delle prestazioni

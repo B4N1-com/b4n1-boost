@@ -16,7 +16,6 @@
 <!-- Registry badges: include a store badge ONLY once the package is actually
      published there. Regenerate the downloads aggregate with the B4N1 badges
      tool before release. -->
-[![Total downloads](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2FB4N1-com%2Fpublic-repos%2Fmaster%2Fb4n1-%3Cname%3E%2Fbadges%2Fdownloads.json&query=%24.total&label=total%20downloads&color=blue)](https://pypi.org/project/b4n1-<name>/)
 [![PyPI Downloads/month](https://img.shields.io/pypi/dm/b4n1-<name>)](https://pypi.org/project/b4n1-<name>/)
 [![npm Downloads/month](https://img.shields.io/npm/dm/b4n1-<name>)](https://www.npmjs.com/package/b4n1-<name>)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/B4n1<Name>)](https://www.nuget.org/packages/B4n1<Name>)

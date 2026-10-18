@@ -227,7 +227,7 @@ zstd rust:    0.569s (3,513 ops/s) = 28x más rápido que gzip py
 
 ## 🛡️ Licencia
 
-Distribuido bajo **Business Source License 1.1 (BSL 1.1)**.
+Distribuido bajo **Business Source License 1.1 (BUSL-1.1)**.
 
 - **Gratis** para desarrollo, evaluación, testing, proyectos personales y startups con ingresos anuales inferiores a **USD $100,000**.
 - **Licencia comercial** requerida para organizaciones con ingresos anuales **>= USD $100,000**, agencias gubernamentales y licitaciones públicas.

@@ -109,7 +109,7 @@ b4n1_boost.install()   # 프레임워크를 감지하고 알맞은 미들웨어�
 ```python
 import b4n1_boost
 print(b4n1_boost.status())
-# {'version': '0.3.13', 'native_extension': True, 'features': [...]}
+# {'version': '0.3.15', 'native_extension': True, 'features': [...]}
 ```
 
 ---

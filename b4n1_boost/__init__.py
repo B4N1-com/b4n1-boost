@@ -74,7 +74,7 @@ from b4n1_boost.advanced import (
     CircuitBreakerMiddleware,
 )
 
-from b4n1_boost.background import background, native_async, pending_tasks
+from b4n1_boost.background import background, native_async, pending_tasks, thread_async
 
 try:
     from b4n1_boost._core import (
@@ -427,7 +427,7 @@ def run_benchmarks(iterations: Optional[int] = None) -> dict:
     return {"status": "pure-python-fallback", "native": False}
 
 
-__version__ = "0.3.13"
+__version__ = "0.4.1"
 
 
 # ── Batch JSON API ─────────────────────────────────────────────────────
@@ -648,7 +648,8 @@ __all__ = [
     "__version__",
     # Background tasks (no Redis, no Celery)
     "background",
-    "native_async",
+    "thread_async",
+    "native_async",  # deprecated alias
     "pending_tasks",
     # Middleware classes
     "NativeJson",

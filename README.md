@@ -9,7 +9,6 @@
 **The polyglot accelerator. One native core, seven SDKs — Python, Node.js, Ruby, PHP, Java, .NET and Go. JSON 10x faster, compression 28x faster, response cache, bloom filter and circuit breaker in every core SDK.**
 
 [![License](https://img.shields.io/badge/license-BUSL--1.1-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.4.1-blue.svg)](https://pypi.org/project/b4n1-boost/)
 [![Docs](https://img.shields.io/badge/docs-mdBook-blue)](https://b4n1-com.github.io/b4n1-boost/)
 [![PyPI](https://badge.fury.io/py/b4n1-boost.svg)](https://pypi.org/project/b4n1-boost/)
 [![npm](https://img.shields.io/npm/v/b4n1-boost.svg)](https://www.npmjs.com/package/b4n1-boost)

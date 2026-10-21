@@ -48,7 +48,7 @@ If `native_extension` is `False`, pip fell back to a pure-Python path. See
 ## Pinning a version
 
 ```bash
-pip install b4n1-boost==0.3.12
+pip install b4n1-boost==0.4.1
 ```
 
 ## Upgrading

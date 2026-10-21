@@ -80,7 +80,7 @@ wire = compress(body, "zstd")             # 28x faster than gzip
 import b4n1_boost
 
 print(b4n1_boost.status())
-# {'native_extension': True, 'version': '0.3.12', 'features': {...}}
+# {'native_extension': True, 'version': '0.4.1', 'features': {...}}
 ```
 
 If `native_extension` is `False`, the native core did not load — see

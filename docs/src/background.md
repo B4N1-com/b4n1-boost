@@ -55,6 +55,26 @@ console.log(pendingTasks('./b4n1-tasks.jsonl')); // crash recovery
 
 Returns in about a millisecond; the heavy work runs in a worker thread.
 
+## Async offload (`thread_async`)
+
+For async code that needs to call a blocking function without stalling the
+event loop:
+
+```python
+from b4n1_boost import thread_async
+
+@thread_async
+def heavy(n):
+    # CPU-bound or blocking I/O — runs in a worker thread
+    return n * 2
+
+result = await heavy(21)   # event loop stays responsive
+```
+
+`thread_async` is a stdlib wrapper around `asyncio.to_thread` — **not** a
+native (compiled) implementation. The former name `native_async` is deprecated
+and emits a `DeprecationWarning`.
+
 ## Worker-thread primitives
 
 For single operations rather than whole functions:

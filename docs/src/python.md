@@ -122,7 +122,7 @@ blocked and the interpreter lock is not held for the duration of the work.
 ## Background tasks
 
 ```python
-from b4n1_boost import background, pending_tasks, native_async
+from b4n1_boost import background, pending_tasks, thread_async
 ```
 
 See [Background Tasks](background.md).

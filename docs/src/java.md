@@ -4,14 +4,14 @@
 <dependency>
   <groupId>com.b4n1</groupId>
   <artifactId>boost</artifactId>
-  <version>0.3.12</version>
+  <version>0.4.1</version>
 </dependency>
 ```
 
 Gradle:
 
 ```groovy
-implementation 'com.b4n1:boost:0.3.12'
+implementation 'com.b4n1:boost:0.4.1'
 ```
 
 Published on Maven Central as **`com.b4n1:boost`**.

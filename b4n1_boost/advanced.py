@@ -118,15 +118,39 @@ class _CacheEntry:
     ttl: float
 
 
+def copy_escape(value: str) -> str:
+    """Escape a value for PostgreSQL's text COPY format.
+
+    In that format a backslash escapes the NEXT character, so the
+    backslash itself must be escaped FIRST - otherwise it eats the
+    character after it ("C:\\temp" would land as "C:tem..."), and a
+    literal ``\\N`` would be read as NULL. The carriage return needs
+    escaping too: PostgreSQL treats a raw CR as a row terminator.
+
+    Shared by the Django and the SQLAlchemy accelerators, which write the
+    same format.
+    """
+    return (
+        value.replace("\\", "\\\\")
+        .replace("\t", "\\t")
+        .replace("\n", "\\n")
+        .replace("\r", "\\r")
+    )
+
+
 class ResponseCache:
     """In-memory LRU response cache with TTL.
 
     Caches responses in a Python dict (LRU eviction when full).
     For maximum performance, use the Rust-backed version when available.
 
+    A TTL of ``0`` means **never expires** — the same contract the native
+    core and every C-ABI SDK expose (a zero duration read as "already
+    stale" is a footgun for SDK callers).
+
     Args:
         capacity: Maximum number of cached entries.
-        default_ttl: Default time-to-live in seconds.
+        default_ttl: Default time-to-live in seconds (0 = never expires).
     """
 
     def __init__(self, capacity: int = 1000, default_ttl: int = 300) -> None:
@@ -141,7 +165,8 @@ class ResponseCache:
             entry = self._cache.get(key)
             if entry is None:
                 return None
-            if _time.monotonic() - entry.created > entry.ttl:
+            # ttl == 0 means NEVER expires (the native core's contract).
+            if entry.ttl != 0 and _time.monotonic() - entry.created > entry.ttl:
                 del self._cache[key]
                 return None
             # Move to end (most recently used)
@@ -340,16 +365,25 @@ class ASGICacheMiddleware:
 
 
 class BloomRateLimiter:
-    """Rate limiter using a bloom filter for efficient IP tracking.
+    """Rate limiter tracking the requests seen per IP in a sliding window.
 
-    Uses a bloom filter to quickly check if an IP has been seen recently.
-    False positives mean some requests might be incorrectly rate-limited
-    (but never incorrectly allowed).
+    The historical name says "Bloom", but the implementation is an EXACT
+    per-IP sliding window (a dict of timestamps): it never blocks a request
+    that should be allowed and never allows one that should be blocked.
+    The name is kept for API compatibility; the behaviour is exact.
+
+    The tracked IPs are bounded: an expired bucket is released and the
+    table never grows past ``max_tracked_ips`` (one entry per IP, forever,
+    would be an unbounded cache).
 
     Args:
         max_requests: Maximum requests per window per IP.
         window_seconds: Time window in seconds.
-        false_positive_rate: Bloom filter false positive rate.
+        false_positive_rate: Accepted for API compatibility and NOT used:
+            this implementation is exact (no false positives, no false
+            negatives), so it has no rate to tune.
+        max_tracked_ips: Maximum number of IPs tracked at once (memory
+            bound); the least recently used bucket is evicted first.
     """
 
     def __init__(
@@ -357,27 +391,66 @@ class BloomRateLimiter:
         max_requests: int = 100,
         window_seconds: int = 60,
         false_positive_rate: float = 0.01,
+        max_tracked_ips: int = 10_000,
     ) -> None:
         self._max_requests = max_requests
         self._window_seconds = window_seconds
         self._fp_rate = false_positive_rate
+        self._max_tracked_ips = max(1, int(max_tracked_ips))
         self._buckets: dict[str, list[float]] = {}
+        self._last_sweep = 0.0
         self._lock = threading.Lock()
 
     def allow_request(self, ip: str) -> bool:
         """Check if a request from this IP should be allowed."""
         now = _time.monotonic()
         with self._lock:
-            if ip not in self._buckets:
-                self._buckets[ip] = []
-            timestamps = self._buckets[ip]
+            self._sweep_expired(now)
+            timestamps = self._buckets.get(ip)
+            if timestamps is None:
+                timestamps = []
             # Remove expired entries
             cutoff = now - self._window_seconds
-            self._buckets[ip] = [t for t in timestamps if t > cutoff]
-            if len(self._buckets[ip]) >= self._max_requests:
+            fresh = [t for t in timestamps if t > cutoff]
+            if not fresh:
+                # The bucket is fully expired: release it instead of keeping
+                # an empty list per IP forever.
+                self._buckets.pop(ip, None)
+            if len(fresh) >= self._max_requests:
+                self._buckets[ip] = fresh
+                self._evict_if_needed()
                 return False
-            self._buckets[ip].append(now)
+            fresh.append(now)
+            # Re-insert so the dict order is the recency order (the eviction
+            # below drops the least recently used bucket).
+            self._buckets.pop(ip, None)
+            self._buckets[ip] = fresh
+            self._evict_if_needed()
             return True
+
+    def _evict_if_needed(self) -> None:
+        while len(self._buckets) > self._max_tracked_ips:
+            oldest = next(iter(self._buckets))
+            del self._buckets[oldest]
+
+    def _sweep_expired(self, now: float) -> None:
+        """Release the buckets whose window has expired.
+
+        Called on every request while the table is small (cheap), and at
+        most once per second once it grows (a full sweep per request would
+        be O(n) on the hot path).
+        """
+        if len(self._buckets) >= 256 and now - self._last_sweep < 1.0:
+            return
+        self._last_sweep = now
+        cutoff = now - self._window_seconds
+        expired = [
+            ip
+            for ip, stamps in self._buckets.items()
+            if not stamps or stamps[-1] <= cutoff
+        ]
+        for ip in expired:
+            del self._buckets[ip]
 
     def stats(self) -> dict:
         with self._lock:
@@ -413,6 +486,7 @@ class CircuitBreakerMiddleware:
         success_threshold: int = 2,
         timeout_seconds: int = 30,
         failure_check: Optional[Callable[[int], bool]] = None,
+        probe_timeout_seconds: float = 30.0,
     ) -> None:
         self.app = app
         self._failure_threshold = failure_threshold
@@ -423,6 +497,11 @@ class CircuitBreakerMiddleware:
         self._failure_count = 0
         self._success_count = 0
         self._last_failure = 0.0
+        # When the circuit is half-open, ONE probe request is in flight.
+        self._probe_started_at: Optional[float] = None
+        # How long a probe may stay in flight before a new one is allowed
+        # (a probe that never came back must not keep the breaker stuck).
+        self._probe_timeout = probe_timeout_seconds
         self._lock = threading.Lock()
 
     def _allow(self) -> bool:
@@ -434,13 +513,29 @@ class CircuitBreakerMiddleware:
                     self._state = "half_open"
                     self._success_count = 0
                     self._failure_count = 0
+                    self._probe_started_at = _time.monotonic()
                     return True
                 return False
-            return True  # half_open
+            # half_open: a PROBE is in flight — one request at a time. The
+            # whole traffic must not go back to the backend that just failed.
+            now = _time.monotonic()
+            if self._probe_started_at is None:
+                self._probe_started_at = now
+                return True
+            if now - self._probe_started_at > self._probe_timeout:
+                # The probe never came back: let a new one try.
+                self._probe_started_at = now
+                return True
+            return False
 
     def _record(self, status_code: int) -> None:
+        self._record_outcome(self._failure_check(status_code))
+
+    def _record_outcome(self, is_failure: bool) -> None:
         with self._lock:
-            if self._failure_check(status_code):
+            # Whatever the outcome, the probe is over.
+            self._probe_started_at = None
+            if is_failure:
                 if self._state == "half_open":
                     self._state = "open"
                     self._last_failure = _time.monotonic()
@@ -473,7 +568,15 @@ class CircuitBreakerMiddleware:
             captured["headers"] = headers
             captured["exc_info"] = exc_info
 
-        chunks = self.app(environ, _capture)
+        try:
+            chunks = self.app(environ, _capture)
+        except Exception:
+            # The backend RAISED — and that IS a failure: it is the most
+            # common failure mode in Python (connection refused, timeout, a
+            # bug). Counting only status codes meant the breaker never
+            # opened for a backend that fails by raising.
+            self._record_outcome(is_failure=True)
+            raise
         try:
             body = b"".join(chunks)
         finally:

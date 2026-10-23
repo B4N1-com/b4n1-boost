@@ -427,7 +427,7 @@ def run_benchmarks(iterations: Optional[int] = None) -> dict:
     return {"status": "pure-python-fallback", "native": False}
 
 
-__version__ = "0.4.1"
+__version__ = "0.4.2"
 
 
 # ── Batch JSON API ─────────────────────────────────────────────────────
@@ -442,7 +442,11 @@ def batch_dumps(objs: list) -> list[str]:
         import orjson as _oj
         return [_oj.dumps(obj).decode("utf-8") for obj in objs]
     except ImportError:
-        return [_json.dumps(obj, separators=(',', ':'), ensure_ascii=False) for obj in objs]
+        # Same semantics as the orjson path (a non-finite float is null, not
+        # the invalid JSON "NaN").
+        from b4n1_boost import json_compat
+
+        return [json_compat.dumps_str(obj) for obj in objs]
 
 
 def batch_loads(strs: list[str]) -> list[Any]:
@@ -604,6 +608,21 @@ def compress_static_file(path: str) -> dict:
     raise RuntimeError("native extension required for static file compression")
 
 
+# ── JSON parse (native objects) ────────────────────────────────────────
+
+def json_parse(text: str):
+    """Parse JSON text into native Python objects (b4n1-boost core).
+
+    Complements py_json_dumps/py_json_loads: str ->
+    dict/list/str/int/float/bool/None. Rejects follow the same reader
+    contract as the canonical writer ("invalid JSON: ..." wording).
+    """
+    if _NATIVE:
+        from ._core import py_json_parse
+        return py_json_parse(text)
+    raise RuntimeError("native extension required for json_parse")
+
+
 def compress_static_dir(dir_path: str) -> dict:
     """Compress a directory recursively with all three algorithms.
 
@@ -672,6 +691,7 @@ __all__ = [
     # Utility
     "canonicalize_json",
     "validate_json",
+    "json_parse",
     "ETagMiddleware",
     "ASGIETagMiddleware",
     "RateLimitMiddleware",

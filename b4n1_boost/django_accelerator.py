@@ -32,6 +32,9 @@ Usage::
 from __future__ import annotations
 
 import json as _json
+
+from b4n1_boost import json_compat
+from b4n1_boost.advanced import copy_escape
 from typing import Any, Optional, Sequence
 
 from b4n1_boost.middleware import _orjson
@@ -122,7 +125,7 @@ def _bulk_insert_pg_copy(model, data, batch_size, db_alias):
                 if v is None:
                     values.append('\\N')
                 else:
-                    values.append(str(v).replace('\t', '\\t').replace('\n', '\\n'))
+                    values.append(copy_escape(str(v)))
             buf.write('\t'.join(values) + '\n')
         buf.seek(0)
 
@@ -164,7 +167,9 @@ def fast_queryset_to_json(
         return _orjson.dumps(raw)
 
     sep = (',', ':') if compact else (', ', ': ')
-    return _json.dumps(raw, separators=sep, ensure_ascii=False).encode('utf-8')
+    # Same semantics as the orjson path above (a non-finite float is null,
+    # not the invalid JSON "NaN").
+    return json_compat.dumps_bytes(raw)
 
 
 def bulk_update_native(

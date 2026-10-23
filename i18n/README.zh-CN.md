@@ -6,8 +6,6 @@
 
 适用于 **Django**、**FastAPI** 和 **Flask** 的透明高性能加速引擎。
 
-`b4n1-boost` 为 Python Web 框架提供即插即用的硬件加速，显著提高 JSON 序列化、ORM 查询处理和 WebSocket 连接的吞吐量，无需修改任何应用代码。
-
 [![License](https://img.shields.io/badge/license-BUSL--1.1-blue.svg)](LICENSE)
 [![Docs](https://img.shields.io/badge/docs-mdBook-blue)](https://b4n1-com.github.io/b4n1-boost/)
 [![PyPI](https://badge.fury.io/py/b4n1-boost.svg)](https://pypi.org/project/b4n1-boost/)
@@ -23,13 +21,8 @@
 [![Packagist](https://img.shields.io/packagist/v/b4n1/boost.svg)](https://packagist.org/packages/b4n1/boost)
 [![Go Reference](https://pkg.go.dev/badge/github.com/B4N1-com/b4n1-boost/sdks/go.svg)](https://pkg.go.dev/github.com/B4N1-com/b4n1-boost/sdks/go)
 [![Tests](https://img.shields.io/badge/tests-948%20passing-brightgreen)](https://pypi.org/project/b4n1-boost/)
-(https://pypi.org/project/b4n1-boost/)
-(https://pypi.org/project/b4n1-boost/)
 
-(https://pypi.org/project/b4n1-boost/)
-(https://www.npmjs.com/package/b4n1-boost)
-(https://www.nuget.org/packages/B4N1.Boost)
-(https://pepy.tech/project/b4n1-boost)
+`b4n1-boost` 为 Python Web 框架提供即插即用的硬件加速，显著提高 JSON 序列化、ORM 查询处理和 WebSocket 连接的吞吐量，无需修改任何应用代码。
 
 ---
 

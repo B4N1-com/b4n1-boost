@@ -13,13 +13,6 @@
 [![NuGet](https://img.shields.io/nuget/v/B4n1<Name>)](https://www.nuget.org/packages/B4n1<Name>)
 [![Maven Central](https://img.shields.io/maven-central/v/com.b4n1/b4n1-<name>)](https://central.sonatype.com/artifact/com.b4n1/b4n1-<name>)
 
-<!-- Registry badges: include a store badge ONLY once the package is actually
-     published there. Regenerate the downloads aggregate with the B4N1 badges
-     tool before release. -->
-[![PyPI Downloads/month](https://img.shields.io/pypi/dm/b4n1-<name>)](https://pypi.org/project/b4n1-<name>/)
-[![npm Downloads/month](https://img.shields.io/npm/dm/b4n1-<name>)](https://www.npmjs.com/package/b4n1-<name>)
-[![NuGet Downloads](https://img.shields.io/nuget/dt/B4n1<Name>)](https://www.nuget.org/packages/B4n1<Name>)
-
 > **<description>** — Ultra-lightweight, zero-dependency, cross-platform.
 
 ---
@@ -166,3 +159,5 @@ For Enterprise B2B licensing, support SLA, or custom integrations:
 - **NuGet**: https://www.nuget.org/packages/B4n1<Name>
 - **Maven Central**: https://central.sonatype.com/artifact/com.b4n1/b4n1-<name>
 - **Documentation**: https://B4N1-com.github.io/b4n1-<name>/book/
+EOF
+echo "README_TEMPLATE.md creado"

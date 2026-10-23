@@ -6,8 +6,6 @@
 
 **El Acelerador de Python.** JSON 10x más rápido. Compresión 28x más rápida. Middleware transparente.
 
-`b4n1-boost` proporciona aceleración nativa Plug-and-Play para frameworks web de Python, aumentando significativamente el rendimiento de serialización JSON, compresión nativa (gzip/brotli/zstd) y soporte para Django, FastAPI y Flask.
-
 [![License](https://img.shields.io/badge/license-BUSL--1.1-blue.svg)](LICENSE)
 [![Docs](https://img.shields.io/badge/docs-mdBook-blue)](https://b4n1-com.github.io/b4n1-boost/)
 [![PyPI](https://badge.fury.io/py/b4n1-boost.svg)](https://pypi.org/project/b4n1-boost/)
@@ -23,13 +21,8 @@
 [![Packagist](https://img.shields.io/packagist/v/b4n1/boost.svg)](https://packagist.org/packages/b4n1/boost)
 [![Go Reference](https://pkg.go.dev/badge/github.com/B4N1-com/b4n1-boost/sdks/go.svg)](https://pkg.go.dev/github.com/B4N1-com/b4n1-boost/sdks/go)
 [![Tests](https://img.shields.io/badge/tests-948%20passing-brightgreen)](https://pypi.org/project/b4n1-boost/)
-(https://pypi.org/project/b4n1-boost/)
-(https://pypi.org/project/b4n1-boost/)
 
-(https://pypi.org/project/b4n1-boost/)
-(https://www.npmjs.com/package/b4n1-boost)
-(https://www.nuget.org/packages/B4N1.Boost)
-(https://pepy.tech/project/b4n1-boost)
+`b4n1-boost` proporciona aceleración nativa Plug-and-Play para frameworks web de Python, aumentando significativamente el rendimiento de serialización JSON, compresión nativa (gzip/brotli/zstd) y soporte para Django, FastAPI y Flask.
 
 ---
 

@@ -6,8 +6,6 @@
 
 Transparente Leistungsbeschleunigung für **Django**, **FastAPI** und **Flask**.
 
-`b4n1-boost` bietet Plug-and-Play-Hardwarebeschleunigung für Python-Web-Frameworks und erhöht den Durchsatz von JSON-Serialisierung, ORM-Abfragen und WebSocket-Verbindungen erheblich, ohne dass Codeänderungen erforderlich sind.
-
 [![License](https://img.shields.io/badge/license-BUSL--1.1-blue.svg)](LICENSE)
 [![Docs](https://img.shields.io/badge/docs-mdBook-blue)](https://b4n1-com.github.io/b4n1-boost/)
 [![PyPI](https://badge.fury.io/py/b4n1-boost.svg)](https://pypi.org/project/b4n1-boost/)
@@ -23,13 +21,8 @@ Transparente Leistungsbeschleunigung für **Django**, **FastAPI** und **Flask**.
 [![Packagist](https://img.shields.io/packagist/v/b4n1/boost.svg)](https://packagist.org/packages/b4n1/boost)
 [![Go Reference](https://pkg.go.dev/badge/github.com/B4N1-com/b4n1-boost/sdks/go.svg)](https://pkg.go.dev/github.com/B4N1-com/b4n1-boost/sdks/go)
 [![Tests](https://img.shields.io/badge/tests-948%20passing-brightgreen)](https://pypi.org/project/b4n1-boost/)
-(https://pypi.org/project/b4n1-boost/)
-(https://pypi.org/project/b4n1-boost/)
 
-(https://pypi.org/project/b4n1-boost/)
-(https://www.npmjs.com/package/b4n1-boost)
-(https://www.nuget.org/packages/B4N1.Boost)
-(https://pepy.tech/project/b4n1-boost)
+`b4n1-boost` bietet Plug-and-Play-Hardwarebeschleunigung für Python-Web-Frameworks und erhöht den Durchsatz von JSON-Serialisierung, ORM-Abfragen und WebSocket-Verbindungen erheblich, ohne dass Codeänderungen erforderlich sind.
 
 ---
 

@@ -32,6 +32,8 @@ Usage::
 from __future__ import annotations
 
 import json as _json
+
+from b4n1_boost import json_compat
 from typing import Any, Iterable, Optional, Sequence
 
 from b4n1_boost.middleware import NativeJson, _orjson
@@ -61,18 +63,26 @@ def fast_serialize(
     """
     if fields is not None:
         field_set = set(fields)
-        data = [{k: v for k, v in row.items() if k in field_set} for row in data]
+        if isinstance(data, dict):
+            # A mapping is a SINGLE record, not a sequence of records.
+            data = {k: v for k, v in data.items() if k in field_set}
+        else:
+            data = [{k: v for k, v in row.items() if k in field_set} for row in data]
 
-    # Convert to list if it's a queryset (lazy evaluation)
-    if hasattr(data, '__iter__') and not isinstance(data, list):
+    # Convert to list if it's a queryset (lazy evaluation). A MAPPING is
+    # iterable too, and list({"a": 1}) is ["a"]: the mapping would be
+    # replaced by its KEYS and every value silently lost. So mappings (and
+    # the sequences that are already materialized) are left alone.
+    if hasattr(data, '__iter__') and not isinstance(data, (list, tuple, dict)):
         data = list(data)
 
     # Use orjson for best performance (3-10x faster than stdlib)
     if _orjson is not None:
         return _orjson.dumps(data)
 
-    # Fallback to stdlib
-    return _json.dumps(data, separators=(',', ':'), ensure_ascii=False).encode('utf-8')
+    # Fallback to stdlib - with the SAME semantics as the fast path (a
+    # non-finite float is null, not the invalid JSON "NaN").
+    return json_compat.dumps_bytes(data)
 
 
 def fast_serialize_one(obj: dict, fields: Optional[Sequence[str]] = None) -> bytes:
@@ -91,7 +101,7 @@ def fast_serialize_one(obj: dict, fields: Optional[Sequence[str]] = None) -> byt
 
     if _orjson is not None:
         return _orjson.dumps(obj)
-    return _json.dumps(obj, separators=(',', ':'), ensure_ascii=False).encode('utf-8')
+    return json_compat.dumps_bytes(obj)
 
 
 class FastSerializerMixin:

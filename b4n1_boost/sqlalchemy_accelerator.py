@@ -23,6 +23,8 @@ from __future__ import annotations
 import io
 from typing import Any, Sequence
 
+from b4n1_boost.advanced import copy_escape
+
 
 def bulk_insert_sqlalchemy_native(
     bind: Any,
@@ -147,7 +149,9 @@ def _bulk_insert_sa_pg_copy(
                     if v is None:
                         values.append("\\N")
                     else:
-                        values.append(str(v).replace("\t", "\\t").replace("\n", "\\n"))
+                        # The backslash must be escaped FIRST (PostgreSQL's
+                        # text COPY format) - see copy_escape().
+                        values.append(copy_escape(str(v)))
                 buf.write("\t".join(values) + "\n")
 
             buf.seek(0)

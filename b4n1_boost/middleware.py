@@ -10,6 +10,10 @@ Python standard library otherwise.
 from __future__ import annotations
 
 import json as _json
+
+from b4n1_boost import json_compat
+import os
+import threading
 from typing import Any, Callable, Optional
 
 try:
@@ -55,6 +59,49 @@ _SKIP_COMPRESSION_TYPES = frozenset((
     "font/woff",
     "font/woff2",
 ))
+
+
+def _header_name(key: Any) -> str:
+    """Header name as text, whatever shape it arrives in.
+
+    The ASGI spec says bytes, but str headers show up in the wild (and in
+    tests): comparing a str key against a bytes literal silently never
+    matches, so the header would be IGNORED instead of handled.
+    """
+    if isinstance(key, (bytes, bytearray)):
+        return bytes(key).decode("latin-1", errors="replace")
+    return str(key)
+
+
+def _header_value(value: Any) -> str:
+    """Header value as text, whatever shape it arrives in."""
+    if isinstance(value, (bytes, bytearray)):
+        return bytes(value).decode("latin-1", errors="replace")
+    return str(value)
+
+
+def _find_vary(headers: list) -> str:
+    """Return the existing ``Vary`` value of a response, or an empty string."""
+    for k, v in headers:
+        if _header_name(k).lower() != "vary":
+            continue
+        return _header_value(v)
+    return ""
+
+
+def _merge_vary(existing: str) -> str:
+    """Union of the response's ``Vary`` values and ``Accept-Encoding``.
+
+    Replacing the header would tell a shared cache (CDN, reverse proxy)
+    that the response does NOT depend on Origin/Cookie — and then it
+    would serve one origin's response to another. The Django middleware
+    already merged the values; this makes the WSGI and ASGI ones behave
+    the same way, and never duplicates ``Accept-Encoding``.
+    """
+    values = [v.strip() for v in (existing or "").split(",") if v.strip()]
+    if not any(v.lower() == "accept-encoding" for v in values):
+        values.append("Accept-Encoding")
+    return ", ".join(values)
 
 
 def _should_compress(content_type: str) -> bool:
@@ -283,6 +330,40 @@ def _native_json_response(body: bytes) -> Optional[bytes]:
 # ── WSGI Middleware ──────────────────────────────────────────────────────
 
 
+def _forward_stream(
+    chunks: Any,
+    captured: dict,
+    start_response: Callable,
+) -> Any:
+    """Forward a streamed WSGI body as it comes, WITHOUT buffering it.
+
+    A WSGI app may answer with an iterator (a streamed body). Joining it
+    would hold the whole body in memory and delay the first byte until the
+    end; the Django middleware has always left streamed responses
+    untouched, and the ASGI one now does the same.
+    """
+    iterator = iter(chunks)
+    first = next(iterator, None)
+    if first is None:
+        start_response(
+            captured.get("status", "200 OK"),
+            captured.get("headers", []),
+            captured.get("exc_info"),
+        )
+        return []
+    start_response(
+        captured.get("status", "200 OK"),
+        captured.get("headers", []),
+        captured.get("exc_info"),
+    )
+
+    def _stream() -> Any:
+        yield first
+        yield from iterator
+
+    return _stream()
+
+
 class BoostWSGIMiddleware:
     """Generic WSGI middleware (Flask etc.) with native compression.
 
@@ -318,6 +399,9 @@ class BoostWSGIMiddleware:
             captured["exc_info"] = exc_info
 
         chunks = self.app(environ, _capture)
+        # A streamed body is forwarded as it comes (not joined).
+        if not isinstance(chunks, (list, tuple)):
+            return _forward_stream(chunks, captured, start_response)
         try:
             body = b"".join(chunks)
         finally:
@@ -368,6 +452,12 @@ class B4N1BoostCompressionMiddleware:
             captured["exc_info"] = exc_info
 
         chunks = self.app(environ, _capture)
+        # A STREAMED response (the app returns an iterator, not a list):
+        # forward it WITHOUT joining it. Joining would hold the whole body
+        # in memory and delay the first byte until the end - the Django
+        # middleware has always left streamed responses untouched.
+        if not isinstance(chunks, (list, tuple)):
+            return _forward_stream(chunks, captured, start_response)
         try:
             body = b"".join(chunks)
         finally:
@@ -375,6 +465,13 @@ class B4N1BoostCompressionMiddleware:
                 chunks.close()
 
         if len(body) < self.min_size:
+            start_response(captured["status"], captured["headers"], captured.get("exc_info"))
+            return [body]
+
+        # An already-encoded body belongs to the application: compressing it
+        # again would deliver gzip-of-gzip to the client (the Django
+        # middleware has always skipped this case).
+        if any(k.lower() == "content-encoding" for k, _ in captured["headers"]):
             start_response(captured["status"], captured["headers"], captured.get("exc_info"))
             return [body]
 
@@ -401,7 +498,7 @@ class B4N1BoostCompressionMiddleware:
         ]
         headers.append(("Content-Encoding", encoding))
         headers.append(("Content-Length", str(len(compressed))))
-        headers.append(("Vary", "Accept-Encoding"))
+        headers.append(("Vary", _merge_vary(_find_vary(captured["headers"]))))
         start_response(captured["status"], headers, captured.get("exc_info"))
         return [compressed]
 
@@ -497,6 +594,17 @@ class FastAPIBoostCompressionMiddleware:
                 start_message = dict(message)
                 return
             if message["type"] == "http.response.body":
+                if message.get("more_body", False):
+                    # A STREAMED response: forward it as it comes. Buffering
+                    # it would hold the whole stream in memory AND delay the
+                    # first byte until the stream ends (an SSE or NDJSON
+                    # stream would never arrive). The Django middleware has
+                    # always left streamed responses untouched.
+                    if start_message is not None:
+                        await send(start_message)
+                        start_message = None
+                    await send(message)
+                    return
                 body_messages.append(dict(message))
                 if message.get("more_body", False):
                     return
@@ -508,10 +616,22 @@ class FastAPIBoostCompressionMiddleware:
 
                 # Check content-type: skip compression for already-compressed data
                 headers_list = start_message.get("headers", [])
+                # An already-encoded body belongs to the application:
+                # compressing it again would deliver gzip-of-gzip (the
+                # Django middleware has always skipped this case).
+                if any(
+                    _header_name(k).lower() == "content-encoding"
+                    for k, _ in headers_list
+                ):
+                    await send(start_message)
+                    for pending in body_messages:
+                        await send(pending)
+                    body_messages.clear()
+                    return
                 content_type = ""
                 for k, v in headers_list:
-                    if k.lower() == b"content-type":
-                        content_type = v.decode("latin-1", errors="replace")
+                    if _header_name(k).lower() == "content-type":
+                        content_type = _header_value(v)
                         break
                 if not _should_compress(content_type):
                     await send(start_message)
@@ -527,13 +647,19 @@ class FastAPIBoostCompressionMiddleware:
                         new_headers = [
                             (k, v)
                             for k, v in headers_list
-                            if k.lower() not in (b"content-length", b"content-encoding", b"vary")
+                            if _header_name(k).lower()
+                            not in ("content-length", "content-encoding", "vary")
                         ]
                         new_headers.append((b"content-encoding", encoding.encode("latin-1")))
                         new_headers.append(
                             (b"content-length", str(len(compressed)).encode("latin-1"))
                         )
-                        new_headers.append((b"vary", b"Accept-Encoding"))
+                        new_headers.append(
+                            (
+                                b"vary",
+                                _merge_vary(_find_vary(headers_list)).encode("latin-1"),
+                            )
+                        )
                         start_message["headers"] = new_headers
                         await send(start_message)
                         final_message = dict(message)
@@ -684,14 +810,18 @@ def canonicalize_json(obj: Any) -> str:
     if isinstance(obj, str):
         if _NATIVE and py_json_dumps is not None:
             return str(py_json_dumps(obj))
-        return _json.dumps(_json.loads(obj), separators=(",", ":"))
+        # The canonical form is SORTED (the native path goes through the
+        # sorted reader), so the fallback must sort too.
+        return json_compat.dumps_str(_json.loads(obj), sort_keys=True)
     else:
         if _NATIVE and py_canonicalize_direct is not None:
             try:
                 return bytes(py_canonicalize_direct(obj)).decode("utf-8")
             except (TypeError, ValueError):
                 pass
-        return _json.dumps(obj, separators=(",", ":"))
+        # The canonical form is SORTED: the native canonical writer sorts
+        # the keys, so the fallback must too.
+        return json_compat.dumps_str(obj, sort_keys=True)
 
 
 # ── ETag / 304 Cache Middleware ────────────────────────────────────────
@@ -741,7 +871,19 @@ class ETagMiddleware:
 
         # 304 Not Modified
         if if_none_match and if_none_match.strip('"') == etag:
-            start_response("304 Not Modified", [], None)
+            # RFC 9110 §15.4.5: a 304 carries the header fields a 200 would
+            # carry (Cache-Control, ETag, Vary, ...). Dropping them leaves the
+            # client cache without a validator — and without the Vary, a
+            # shared cache may serve a variant to a client that must not get
+            # it. Only the body representation is dropped.
+            headers = [
+                (k, v)
+                for k, v in captured["headers"]
+                if k.lower()
+                not in ("content-length", "content-encoding", "content-type", "etag")
+            ]
+            headers.append(("ETag", f'"{etag}"'))
+            start_response("304 Not Modified", headers, captured.get("exc_info"))
             return [b""]
 
         # Add ETag header
@@ -803,7 +945,17 @@ class ASGIETagMiddleware:
 
                 # 304 Not Modified
                 if if_none_match and if_none_match.strip('"') == etag:
-                    await send({"type": "http.response.start", "status": 304, "headers": []})
+                    # RFC 9110 §15.4.5: keep the validators (ETag,
+                    # Cache-Control, Vary...), drop the body representation.
+                    headers_list = start_message.get("headers", [])
+                    keep = [
+                        (k, v)
+                        for k, v in headers_list
+                        if _header_name(k).lower()
+                        not in ("content-length", "content-encoding", "content-type", "etag")
+                    ]
+                    keep.append((b"etag", f'"{etag}"'.encode("latin-1")))
+                    await send({"type": "http.response.start", "status": 304, "headers": keep})
                     await send({"type": "http.response.body", "body": b"", "more_body": False})
                     body_messages.clear()
                     return
@@ -830,6 +982,69 @@ class ASGIETagMiddleware:
 # ── Rate Limiting Middleware ───────────────────────────────────────────
 
 
+class _TokenBucketLimiter:
+    """Token bucket per client IP, with the properties a limiter needs.
+
+    - **The client IP is not forgeable.** ``X-Forwarded-For`` is only
+      honoured when the deployment declares the proxy trustworthy
+      (``trust_forwarded_for``); by default the peer address is used, so a
+      client cannot buy a fresh bucket per request with a made-up header.
+    - **The bucket table is bounded.** One entry per client IP, evicted
+      (oldest first) when the table is full: an attacker with many source
+      addresses cannot grow the server's memory for free.
+    - **The token update is atomic.** Under a lock, so two concurrent
+      requests cannot spend the same token.
+    """
+
+    def __init__(
+        self,
+        rate: float,
+        burst: int,
+        max_buckets: int = 10_000,
+        trust_forwarded_for: bool = False,
+    ) -> None:
+        self.rate = max(0.0, float(rate))
+        self.burst = max(1, int(burst))
+        self.max_buckets = max(1, int(max_buckets))
+        self.trust_forwarded_for = trust_forwarded_for
+        self._buckets: dict[str, tuple[float, float]] = {}
+        self._lock = threading.Lock()
+
+    @property
+    def bucket_count(self) -> int:
+        """How many client buckets are currently tracked."""
+        return len(self._buckets)
+
+    def client_ip(self, remote_addr: str, forwarded_for: str = "") -> str:
+        """The client identity used for the bucket."""
+        if self.trust_forwarded_for and forwarded_for:
+            first = forwarded_for.split(",")[0].strip()
+            if first:
+                return first
+        return remote_addr or "0.0.0.0"
+
+    def allow(self, ip: str) -> bool:
+        """Consume one token for `ip`; False when the bucket is empty."""
+        import time
+
+        now = time.monotonic()
+        with self._lock:
+            tokens, last = self._buckets.get(ip, (float(self.burst), now))
+            elapsed = now - last
+            tokens = min(float(self.burst), tokens + elapsed * self.rate)
+            allowed = tokens >= 1.0
+            if allowed:
+                tokens -= 1.0
+            # Re-insert so the dict order is the recency order (the eviction
+            # below drops the least recently used bucket).
+            self._buckets.pop(ip, None)
+            self._buckets[ip] = (tokens, now)
+            while len(self._buckets) > self.max_buckets:
+                oldest = next(iter(self._buckets))
+                del self._buckets[oldest]
+            return allowed
+
+
 class RateLimitMiddleware:
     """WSGI middleware with rate limiting (token bucket).
 
@@ -837,31 +1052,44 @@ class RateLimitMiddleware:
         app: The WSGI application to wrap.
         rate: Maximum requests per second per IP.
         burst: Maximum burst size (tokens in bucket).
+        max_buckets: Maximum number of client buckets tracked (memory bound).
+        trust_forwarded_for: Honour ``X-Forwarded-For`` — ONLY behind a
+            trusted proxy. Off by default: a client that may forge the
+            header would get a fresh bucket per request.
     """
 
-    def __init__(self, app: Callable, rate: float = 100.0, burst: int = 200) -> None:
+    def __init__(
+        self,
+        app: Callable,
+        rate: float = 100.0,
+        burst: int = 200,
+        max_buckets: int = 10_000,
+        trust_forwarded_for: bool = False,
+    ) -> None:
         self.app = app
-        self.rate = rate
-        self.burst = burst
-        self._buckets: dict[str, tuple[float, float]] = {}
+        self.limiter = _TokenBucketLimiter(
+            rate=rate,
+            burst=burst,
+            max_buckets=max_buckets,
+            trust_forwarded_for=trust_forwarded_for,
+        )
+
+    @property
+    def _buckets(self) -> dict:
+        return self.limiter._buckets
+
+    @property
+    def bucket_count(self) -> int:
+        return self.limiter.bucket_count
 
     def _get_client_ip(self, environ: dict) -> str:
-        return (
-            environ.get("HTTP_X_FORWARDED_FOR", "").split(",")[0].strip()
-            or environ.get("REMOTE_ADDR", "0.0.0.0")
+        return self.limiter.client_ip(
+            environ.get("REMOTE_ADDR", "0.0.0.0"),
+            environ.get("HTTP_X_FORWARDED_FOR", ""),
         )
 
     def _allow_request(self, ip: str) -> bool:
-        import time
-        now = time.monotonic()
-        tokens, last = self._buckets.get(ip, (float(self.burst), now))
-        elapsed = now - last
-        tokens = min(float(self.burst), tokens + elapsed * self.rate)
-        if tokens >= 1.0:
-            self._buckets[ip] = (tokens - 1.0, now)
-            return True
-        self._buckets[ip] = (tokens, now)
-        return False
+        return self.limiter.allow(ip)
 
     def __call__(self, environ: dict, start_response: Callable) -> list:
         ip = self._get_client_ip(environ)
@@ -871,7 +1099,7 @@ class RateLimitMiddleware:
                 ("Retry-After", "1"),
             ], None)
             return [b'{"error":"rate_limit_exceeded","retry_after":1}']
-        return self.app(environ, start_response)# ── ASGI Rate Limiting Middleware ─────────────────────────────────────
+        return self.app(environ, start_response)
 
 
 class ASGIRateLimitMiddleware:
@@ -881,31 +1109,46 @@ class ASGIRateLimitMiddleware:
         app: The ASGI application to wrap.
         rate: Maximum requests per second per IP.
         burst: Maximum burst size (tokens in bucket).
+        max_buckets: Maximum number of client buckets tracked (memory bound).
+        trust_forwarded_for: Honour ``X-Forwarded-For`` — ONLY behind a
+            trusted proxy. Off by default.
     """
 
-    def __init__(self, app: Any, rate: float = 100.0, burst: int = 200) -> None:
+    def __init__(
+        self,
+        app: Any,
+        rate: float = 100.0,
+        burst: int = 200,
+        max_buckets: int = 10_000,
+        trust_forwarded_for: bool = False,
+    ) -> None:
         self.app = app
-        self.rate = rate
-        self.burst = burst
-        self._buckets: dict[str, tuple[float, float]] = {}
+        self.limiter = _TokenBucketLimiter(
+            rate=rate,
+            burst=burst,
+            max_buckets=max_buckets,
+            trust_forwarded_for=trust_forwarded_for,
+        )
+
+    @property
+    def _buckets(self) -> dict:
+        return self.limiter._buckets
+
+    @property
+    def bucket_count(self) -> int:
+        return self.limiter.bucket_count
 
     def _get_client_ip(self, scope: dict) -> str:
+        forwarded = ""
         for key, value in scope.get("headers", []):
-            if key == b"x-forwarded-for":
-                return value.decode("latin-1").split(",")[0].strip()
-        return scope.get("client", ("0.0.0.0", 0))[0]
+            if _header_name(key).lower() == "x-forwarded-for":
+                forwarded = _header_value(value)
+                break
+        client = scope.get("client") or ("0.0.0.0", 0)
+        return self.limiter.client_ip(client[0], forwarded)
 
     def _allow_request(self, ip: str) -> bool:
-        import time
-        now = time.monotonic()
-        tokens, last = self._buckets.get(ip, (float(self.burst), now))
-        elapsed = now - last
-        tokens = min(float(self.burst), tokens + elapsed * self.rate)
-        if tokens >= 1.0:
-            self._buckets[ip] = (tokens - 1.0, now)
-            return True
-        self._buckets[ip] = (tokens, now)
-        return False
+        return self.limiter.allow(ip)
 
     async def __call__(self, scope: dict, receive: Callable, send: Callable) -> None:
         if scope["type"] != "http":
@@ -1045,34 +1288,117 @@ class ASGISecurityHeadersMiddleware:
 
 # ── Request Decompression Middleware ───────────────────────────────────
 
+#: Default cap for a DECOMPRESSED request body (bytes). The compressed
+#: body is what the client declares; the expansion is what it gets. Without
+#: a cap, a 50 KB request body becomes 50 MB of server memory — and the
+#: framework's own body limit is checked LATER, when the body is already
+#: expanded. Override per deployment with B4N1_MAX_DECOMPRESS_BYTES.
+MAX_DECOMPRESSED_BODY_BYTES = 64 * 1024 * 1024
 
-def _decompress_body(body: bytes, encoding: str) -> Optional[bytes]:
-    """Decompress a request body based on Content-Encoding."""
+#: Chunk size used to feed the brotli decompressor: a small chunk bounds
+#: how much a single step can expand (brotli's ratio can reach ~1000x).
+_BROTLI_CHUNK = 4096
+
+
+def _max_decompressed_bytes() -> int:
+    """The cap in force, from the environment (same var as the native guard).
+
+    An invalid value is a LOUD error (never a silent fallback): a typo in
+    the deployment config must not quietly change the protection level.
+    """
+    raw = os.environ.get("B4N1_MAX_DECOMPRESS_BYTES", "").strip()
+    if not raw:
+        return MAX_DECOMPRESSED_BODY_BYTES
+    try:
+        value = int(raw)
+    except ValueError as exc:
+        raise ValueError(
+            f"invalid B4N1_MAX_DECOMPRESS_BYTES={raw!r} (expected a positive integer)"
+        ) from exc
+    if value <= 0:
+        raise ValueError(
+            f"invalid B4N1_MAX_DECOMPRESS_BYTES={value} (the cap must be positive)"
+        )
+    return value
+
+
+def _decompress_bounded(
+    body: bytes, encoding: str, max_bytes: int
+) -> Optional[bytes]:
+    """Decompress `body` refusing anything over `max_bytes` of output.
+
+    Returns None when the payload cannot be decompressed OR when it expands
+    past the cap: the caller then leaves the request untouched, so the
+    application fails loudly instead of the server exhausting its memory.
+    """
     encoding = encoding.lower().strip()
     if encoding == "gzip":
-        import gzip
+        import zlib
+
         try:
-            return gzip.decompress(body)
+            # wbits 16+MAX_WBITS = gzip container; max_length caps the
+            # output and keeps the rest buffered (we refuse it anyway).
+            decompressor = zlib.decompressobj(16 + zlib.MAX_WBITS)
+            out = decompressor.decompress(body, max_bytes + 1)
         except Exception:
             return None
+        if len(out) > max_bytes:
+            return None
+        return out
+    if encoding == "deflate":
+        import zlib
+
+        try:
+            decompressor = zlib.decompressobj()
+            out = decompressor.decompress(body, max_bytes + 1)
+        except Exception:
+            return None
+        if len(out) > max_bytes:
+            return None
+        return out
     if encoding == "br":
         try:
             import brotli
-            return brotli.decompress(body)
-        except Exception:
+        except ImportError:
             return None
-    if encoding == "deflate":
-        import zlib
         try:
-            return zlib.decompress(body)
+            decompressor = brotli.Decompressor()
+            chunks: list[bytes] = []
+            total = 0
+            for start in range(0, len(body), _BROTLI_CHUNK):
+                # The brotli package exposes `process` (not `decompress`).
+                piece = decompressor.process(body[start : start + _BROTLI_CHUNK])
+                if not piece:
+                    continue
+                total += len(piece)
+                if total > max_bytes:
+                    return None
+                chunks.append(piece)
+            return b"".join(chunks)
         except Exception:
             return None
     if encoding == "zstd" and _NATIVE and py_decompress_zstd is not None:
         try:
-            return bytes(py_decompress_zstd(body))
+            # The native guard already refuses an over-limit DECLARED size
+            # and streams with a hard cap; the length check below applies
+            # this middleware's (possibly tighter) cap.
+            out = bytes(py_decompress_zstd(body))
         except Exception:
             return None
+        if len(out) > max_bytes:
+            return None
+        return out
     return None
+
+
+def _decompress_body(body: bytes, encoding: str) -> Optional[bytes]:
+    """Decompress a request body based on Content-Encoding (bounded)."""
+    try:
+        cap = _max_decompressed_bytes()
+    except ValueError:
+        # Misconfiguration: fail loud, never silently decompress.
+        raise
+    return _decompress_bounded(body, encoding, cap)
 
 
 class DecompressionMiddleware:
@@ -1080,10 +1406,21 @@ class DecompressionMiddleware:
 
     Handles gzip, brotli, deflate, and zstd Content-Encoding on incoming
     requests. Useful when clients send compressed POST/PUT bodies.
+
+    The DECOMPRESSED size is bounded (``max_body_bytes``, default 64 MiB or
+    the B4N1_MAX_DECOMPRESS_BYTES override): a request body arrives
+    compressed, so the client decides how far it expands. A payload over the
+    cap is left untouched and the application fails loudly.
     """
 
-    def __init__(self, app: Callable) -> None:
+    def __init__(self, app: Callable, max_body_bytes: int | None = None) -> None:
         self.app = app
+        self.max_body_bytes = max_body_bytes
+
+    def _cap(self) -> int:
+        if self.max_body_bytes is not None:
+            return self.max_body_bytes
+        return _max_decompressed_bytes()
 
     def __call__(self, environ: dict, start_response: Callable) -> list:
         encoding = environ.get("HTTP_CONTENT_ENCODING", "")
@@ -1093,14 +1430,16 @@ class DecompressionMiddleware:
             except (ValueError, TypeError):
                 content_length = 0
 
+            cap = self._cap()
             if content_length > 0:
                 raw = environ["wsgi.input"].read(content_length)
-                decompressed = _decompress_body(raw, encoding)
-                if decompressed is not None:
-                    import io
-                    environ["wsgi.input"] = io.BytesIO(decompressed)
-                    environ["CONTENT_LENGTH"] = str(len(decompressed))
-                    environ.pop("HTTP_CONTENT_ENCODING", None)
+                if len(raw) <= cap:
+                    decompressed = _decompress_bounded(raw, encoding, cap)
+                    if decompressed is not None:
+                        import io
+                        environ["wsgi.input"] = io.BytesIO(decompressed)
+                        environ["CONTENT_LENGTH"] = str(len(decompressed))
+                        environ.pop("HTTP_CONTENT_ENCODING", None)
 
         return self.app(environ, start_response)
 
@@ -1187,6 +1526,25 @@ class ASGIHealthCheckMiddleware:
 # ── CORS Middleware ────────────────────────────────────────────────────
 
 
+def _validate_cors(origins: list[str], credentials: bool) -> None:
+    """Refuse an invalid CORS configuration, loudly, at construction.
+
+    The Fetch specification forbids ``Access-Control-Allow-Origin: *``
+    together with ``Access-Control-Allow-Credentials: true``: the browser
+    rejects the whole response. Emitting it anyway means a deployment
+    silently stops working in every browser - and the "obvious" fix
+    (echoing any origin with credentials) is a full CORS bypass. So the
+    operator has to name the allowed origins.
+    """
+    if credentials and "*" in origins:
+        raise ValueError(
+            "allow_credentials=True cannot be combined with the wildcard origin ('*'): "
+            "the Fetch spec rejects 'Access-Control-Allow-Origin: *' together with "
+            "'Access-Control-Allow-Credentials: true'. Name the allowed origins "
+            "explicitly (e.g. ['https://app.example.com'])."
+        )
+
+
 class CORSMiddleware:
     """WSGI middleware that adds CORS headers to responses.
 
@@ -1196,6 +1554,8 @@ class CORSMiddleware:
         allow_methods: List of allowed HTTP methods.
         allow_headers: List of allowed request headers.
         allow_credentials: Whether to include Access-Control-Allow-Credentials.
+            Requires explicit origins (the wildcard + credentials is invalid
+            per the Fetch spec and is refused at construction).
         max_age: Preflight cache duration in seconds.
     """
 
@@ -1218,6 +1578,7 @@ class CORSMiddleware:
         ]
         self._credentials = allow_credentials
         self._max_age = max_age
+        _validate_cors(self._origins, self._credentials)
 
     def _cors_headers(self, origin: str) -> list[tuple[str, str]]:
         headers = []
@@ -1236,8 +1597,15 @@ class CORSMiddleware:
         origin = environ.get("HTTP_ORIGIN", "")
         method = environ.get("REQUEST_METHOD", "")
 
-        # Handle preflight OPTIONS
-        if method == "OPTIONS" and origin:
+        # A CORS PREFLIGHT is an OPTIONS request that ASKS for a permission:
+        # it carries Access-Control-Request-Method. A plain OPTIONS request
+        # (a legitimate method some APIs expose) must still reach the app -
+        # answering every OPTIONS with a 204 silently swallowed them.
+        if (
+            method == "OPTIONS"
+            and origin
+            and "HTTP_ACCESS_CONTROL_REQUEST_METHOD" in environ
+        ):
             headers = self._cors_headers(origin)
             start_response("204 No Content", headers)
             return [b""]
@@ -1290,6 +1658,7 @@ class ASGICORSMiddleware:
         ]
         self._credentials = allow_credentials
         self._max_age = max_age
+        _validate_cors(self._origins, self._credentials)
 
     def _cors_headers(self, origin: str) -> list[tuple[bytes, bytes]]:
         headers = []
@@ -1315,8 +1684,14 @@ class ASGICORSMiddleware:
                 origin = value.decode("latin-1")
                 break
 
-        # Preflight
-        if scope.get("method") == "OPTIONS" and origin:
+        # A real CORS preflight asks for a permission (it carries
+        # Access-Control-Request-Method); a plain OPTIONS is a real request
+        # and must reach the app.
+        is_preflight = any(
+            _header_name(key).lower() == "access-control-request-method"
+            for key, _ in scope.get("headers", [])
+        )
+        if scope.get("method") == "OPTIONS" and origin and is_preflight:
             await send({
                 "type": "http.response.start",
                 "status": 204,
@@ -1603,7 +1978,6 @@ def detect_proxy(environ: dict) -> bool:
 # ── Atomic Compression Metrics ─────────────────────────────────────────
 
 
-import threading
 from dataclasses import dataclass, field
 
 

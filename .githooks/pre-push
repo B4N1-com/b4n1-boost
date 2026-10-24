@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+# pre-push — leak guard for the PUBLIC b4n1-boost mirror
+# (B4N1-Frameworks AGENTS.md §10h "Zero-Rust gate" + §10m showcase repo).
+#
+# Blocks a push that would publish anything private to the storefront:
+#   1. FILE PATHS in the outgoing commits: Rust source/manifests
+#      (*.rs, Cargo.toml/lock, *.ld), envs/credentials (.env*, .npmrc,
+#      .pypirc, .netrc), keys (*.pem, *.key, id_rsa*, id_ed25519*, *.p12).
+#   2. DIFF CONTENT: private-key blocks and registry-token assignments
+#      (the 8 b4n1-boost .env variables).
+#   3. DESTINATION: the push target must be the canonical
+#      github.com/B4N1-com/b4n1-boost (override per-push config with
+#      `git config --local --add b4n1.mirrorPushAllow <regexp>`).
+#
+# Deliberately ALLOWED (the vitrine ships them by design, §10m): shared
+# lib binaries (.so/.dylib/.dll), jars/zips consumed by the SDKs, and the
+# word "token" inside prose without an `=` assignment.
+#
+# Exit: 0 clean · 1 leak found · 2 internal error.
+# Activation (per clone): git config core.hooksPath .githooks
+set -euo pipefail
+
+zero="0000000000000000000000000000000000000000"
+remote="${1:-}"
+url="${2:-}"
+
+err()  { printf '%s\n' "$*" >&2; exit 1; }
+
+# ── (1) destination guard ────────────────────────────────────────────
+if [ -n "$url" ]; then
+    ok_push=0
+    case "$url" in
+        http*github.com/B4N1-com/b4n1-boost*|git@github.com:B4N1-com/b4n1-boost*) ok_push=1 ;;
+        */B4N1-com/b4n1-boost.git|*/B4N1-com/b4n1-boost)          ok_push=1 ;;
+    esac
+    if [ "$ok_push" = 0 ]; then
+        for pat in $(git config --get-all b4n1.mirrorPushAllow 2>/dev/null || true); do
+            printf '%s' "$url" | grep -Eq "$pat" && ok_push=1 && break
+        done
+    fi
+    if [ "$ok_push" = 0 ]; then
+        err "pre-push (b4n1-boost mirror): refusing to push to a non-canonical remote:
+    url: $url
+The public SDK lives at github.com/B4N1-com/b4n1-boost. If this remote is
+an intentional extra distribution target, authorize it once:
+    git config --local --add b4n1.mirrorPushAllow '<regexp matching its url>'"
+    fi
+fi
+
+# ── collect the outgoing commits (stdin: local_ref local_sha remote_ref remote_sha) ──
+commits=""
+while read -r _lref lsha _rref rsha; do
+    [ "$lsha" = "$zero" ] && continue                      # deleting a remote ref: nothing to scan
+    if [ "$rsha" = "$zero" ]; then
+        # new ref: only what is NOT already reachable from any local remote-tracking ref
+        extra=$(git for-each-ref refs/remotes --format='%(refname)' | sed 's/^/--not /' | tr '\n' ' ' || true)
+        # shellcheck disable=SC2086
+        new=$(git rev-list "$lsha" $extra 2>/dev/null || git rev-list "$lsha")
+    else
+        new=$(git rev-list "$rsha..$lsha")
+    fi
+    [ -n "$new" ] && commits="$commits $new"
+done
+
+# nothing outgoing → nothing to leak
+[ -z "$commits" ] && exit 0
+
+# ── (2a) path gate: union of added/modified/renamed file names per commit ──
+paths=$(for c in $commits; do
+            git diff-tree -r --no-commit-id --name-only --diff-filter=ACMR -m "$c" 2>/dev/null || true
+        done | sort -u | grep -Ev '\.so$|\.dylib$|\.dll$|\.jar$|\.node$|\.zip$|\.tar\.gz$' || true)
+leaks=$(printf '%s\n' "$paths" | grep -E '(^|/)(Cargo\.(toml|lock)[^/]*|[^/]*\.rs|[^/]*\.ld|\.env[^/]*|[^/]*\.env|\.npmrc|\.pypirc|\.netrc|[^/]*\.pem|[^/]*\.key|[^/]*\.p12|id_(rsa|ed25519|ecdsa)[^/]*)$' || true)
+if [ -n "$leaks" ]; then
+    err "pre-push (b4n1-boost mirror): PRIVATE file paths would go public (§10h/§10m):
+$(printf '%s\n' "$leaks" | sed 's/^/  ./')
+Commits:$(printf ' %s' $commits)
+Fix: drop them from the history (`git log --stat`), then run sync-public.sh,
+which never copies Rust/env sources on purpose. Push aborted."
+fi
+
+# ── (2b) content gate: secrets inside the outgoing diffs ──
+content=""
+for c in $commits; do
+    blob=$(git show --format='' --unified=1 "$c" 2>/dev/null || true)
+    [ -n "$blob" ] && content+="
+$blob"
+done
+if printf '%s' "$content" | grep -Eq -- '-----BEGIN [A-Z ]*PRIVATE KEY-----'; then
+    err "pre-push (b4n1-boost mirror): a PRIVATE KEY block would go public (§10h). Push aborted."
+fi
+secrets=$(printf '%s' "$content" | grep -E '(PYPI_TOKEN|NPM_TOKEN|NUGET_KEY|MAVEN_USERNAME|MAVEN_PASSWORD|GEM_HOST_API_KEY|PACKAGIST_TOKEN|PACKAGIST_USERNAME)[[:space:]]*=[[:space:]]*[A-Za-z0-9_.{}+/-]+' || true)
+if [ -n "$secrets" ]; then
+    err "pre-push (b4n1-boost mirror): registry-token assignments would go public:
+$(printf '%s\n' "$secrets" | sed 's/^/  /')
+Tokens live only in the private crate's gitignored .env. Push aborted."
+fi
+
+exit 0

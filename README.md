@@ -71,9 +71,14 @@ the Ruby/PHP/Go packages bundle the native lib for their platform.
 | Gzip / Zstd compression | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | HTML minification | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | JSON validation | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| HTTP middleware (compression, ETag, CORS, rate limit, security headers) | ✅ | Express | — | ASP.NET | Rack | Laravel | — |
+| HTTP middleware (compression, ETag, CORS, rate limit, security headers, decompression, health check) | ✅ | Express | — | ASP.NET | Rack | Laravel | — |
+| Zstd decompression | ✅ | ✅ | ✅ | ✅ | — | — | — |
+| Background tasks (no Redis, no Celery) | ✅ | ✅ | ✅ | ✅ | — | — | — |
+| Brotli compression | ✅ | — | — | — | — | — | — |
+| Minification (CSS / JS) + HTML→Markdown | ✅ | — | — | — | — | — | — |
+| JWT validation | ✅ | — | — | — | — | — | — |
 | JSON engine 3.1-5.0x faster | ✅ | — | — | — | — | — | — |
-| Django ORM / DRF accelerators | ✅ | — | — | — | — | — | — |
+| Django ORM / DRF / SQLAlchemy accelerators | ✅ | — | — | — | — | — | — |
 
 The compression + minification + JSON core is the **same native call in all
 seven languages** (one C-ABI, contract-tested per language). The cache, bloom

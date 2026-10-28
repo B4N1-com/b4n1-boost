@@ -8,6 +8,8 @@
 
 **The polyglot accelerator. One native core, seven SDKs — Python, Node.js, Ruby, PHP, Java, .NET and Go. JSON 3-5x faster, compression ~21x faster (measured), response cache, bloom filter and circuit breaker in every core SDK.**
 
+> **AI agents:** this repo ships an [AGENTS.md](AGENTS.md) (consumer contract: install, verify, capabilities, guardrails) and an [llms.txt](llms.txt) (machine index). Read those before acting.
+
 [![License](https://img.shields.io/badge/license-BUSL--1.1-blue.svg)](LICENSE)
 [![Docs](https://img.shields.io/badge/docs-mdBook-blue)](https://b4n1-com.github.io/b4n1-boost/)
 [![PyPI](https://badge.fury.io/py/b4n1-boost.svg)](https://pypi.org/project/b4n1-boost/)

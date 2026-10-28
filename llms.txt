@@ -1,0 +1,45 @@
+# b4n1-boost
+
+> The polyglot accelerator. One native core, seven SDKs — Python, Node.js, Ruby, PHP, Java, .NET and Go. JSON 3-5x faster, compression ~21x faster (measured), response cache, bloom filter and circuit breaker in every core SDK. License: BUSL-1.1 (library), EULA (binaries).
+
+## Install
+
+- [PyPI — Python 3.10+](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/docs/src/python.md): `pip install b4n1-boost`
+- [npm — Node.js](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/docs/src/node.md): `npm install b4n1-boost`
+- [NuGet — .NET / C#](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/docs/src/csharp.md): `dotnet add package B4N1.Boost`
+- [Maven Central — Java / Kotlin](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/docs/src/java.md): `implementation 'com.b4n1:boost:0.4.3'`
+- [RubyGems — Ruby / Rack](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/docs/src/ruby.md): `gem install b4n1-boost`
+- [Packagist — PHP / Laravel](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/docs/src/php.md): `composer require b4n1/boost`
+- [Go module — Go 1.23+](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/docs/src/go.md): `go get github.com/B4N1-com/b4n1-boost/sdks/go`
+
+## Capabilities
+
+- [Capabilities matrix](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/README.md): response cache (LRU + TTL), bloom filter, circuit breaker, gzip/zstd compression, HTML minification, JSON validation, HTTP middleware, zstd decompression, background tasks, brotli, minification (CSS/JS) + HTML→Markdown, JWT validation, JSON engine 3.1-5.0x faster, Django ORM/DRF/SQLAlchemy accelerators. Cache/bloom/circuit breaker contract-tested in Python, Node.js, Java, .NET; Ruby/PHP/Go wrappers on roadmap.
+
+## Per-language guides
+
+- [Python](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/docs/src/python.md)
+- [Node.js](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/docs/src/node.md)
+- [Java / Kotlin](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/docs/src/java.md)
+- [C# / .NET](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/docs/src/csharp.md)
+- [Go](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/docs/src/go.md)
+- [Ruby](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/docs/src/ruby.md)
+- [PHP](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/docs/src/php.md)
+
+## Performance
+
+- [Performance](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/docs/src/performance.md): JSON dumps 3.1-5.0x faster than stdlib json; Zstd ~21x faster than gzip level 4; Gzip ~1.0x vs stdlib; Brotli best ratio, ~1.6x slower than gzip; wheel size ~1.4MB native; 1253 tests passing (Rust 346 + Python 907 + SDK contract suite ×7).
+
+## FAQ
+
+- [FAQ](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/docs/src/faq.md)
+
+## License and EULA
+
+- [License](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/docs/src/license.md): library BUSL-1.1, binaries EULA. Redistribution rules for agents: do not redistribute source; binaries carry EULA; SDK wrappers are BUSL-1.1.
+
+## Optional
+
+- [Full manual (mdBook)](https://b4n1-com.github.io/b4n1-boost/): complete documentation site.
+- [AGENTS.md](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/AGENTS.md): consumer agent contract (install, verify, capabilities, guardrails).
+- [Source repository](https://github.com/B4N1-com/b4n1-boost): source, issues, releases.

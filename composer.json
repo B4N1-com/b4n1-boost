@@ -24,7 +24,8 @@
             "B4N1\\": "sdks/php/"
         },
         "files": [
-            "sdks/php/Middleware.php"
+            "sdks/php/Middleware.php",
+            "sdks/php/Core.php"
         ]
     }
 }

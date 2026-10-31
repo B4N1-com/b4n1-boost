@@ -25,7 +25,8 @@
       "B4N1\\": "./"
     },
     "files": [
-      "Middleware.php"
+      "Middleware.php",
+      "Core.php"
     ]
   }
 }

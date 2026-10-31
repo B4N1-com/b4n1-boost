@@ -157,6 +157,10 @@ try {
 
 check('absent: nonExistentMethodXyz not defined', method_exists(Boost::class, 'nonExistentMethodXyz') === false);
 
+// ── Core primitives (cache / bloom / circuit) ─────────────────────────────
+// Shares the check() helper and counters; the [CORE] summary below covers it.
+require __DIR__ . '/test_core.php';
+
 // ── Summary ───────────────────────────────────────────────────────────────
 
 echo "\n";

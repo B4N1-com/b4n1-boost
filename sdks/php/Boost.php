@@ -65,9 +65,29 @@ class Boost {
             char* b4n1_boost_minify_html(const char* input);
             int32_t b4n1_boost_json_validate(const char* input);
             void b4n1_boost_free_string(char* ptr);
+            uint64_t b4n1_cache_new(int32_t capacity);
+            int32_t b4n1_cache_get(uint64_t handle, const char* key, uint8_t** out_body, size_t* out_len, uint16_t* out_status);
+            int32_t b4n1_cache_set(uint64_t handle, const char* key, const char* body, size_t len, uint16_t status, uint64_t ttl_secs);
+            int32_t b4n1_cache_invalidate(uint64_t handle, const char* key);
+            void b4n1_cache_clear(uint64_t handle);
+            void b4n1_cache_free(uint64_t handle);
+            uint64_t b4n1_bloom_new(uint64_t expected_items, uint64_t fp_rate_bits);
+            int32_t b4n1_bloom_check_and_set(uint64_t handle, const char* item);
+            void b4n1_bloom_free(uint64_t handle);
+            uint64_t b4n1_circuit_new(int32_t threshold, int32_t success_threshold, uint64_t timeout_secs);
+            int32_t b4n1_circuit_allows(uint64_t handle);
+            void b4n1_circuit_record_success(uint64_t handle);
+            void b4n1_circuit_record_failure(uint64_t handle);
+            void b4n1_circuit_free(uint64_t handle);
         ";
 
         self::$ffi = FFI::cdef($cdef, $libPath);
+    }
+
+    /** The shared FFI instance (compression + core primitives). */
+    public static function ffi(): FFI {
+        self::init();
+        return self::$ffi;
     }
 
     public static function compressGzip(string $data, int $level = 4): string {

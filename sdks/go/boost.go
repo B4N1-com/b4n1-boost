@@ -22,6 +22,15 @@ import (
 	"unsafe"
 )
 
+// freeBuffer releases a native buffer returned by the C-ABI (compress/
+// decompress/cache). Lives here because cgo resolves C names per file: the
+// declaration of b4n1_boost_free_buffer is in THIS file's preamble, and
+// core.go reuses the helper instead of redeclaring it (inconsistent
+// definitions are a cgo build error, one function one declaration).
+func freeBuffer(ptr *C.uint8_t, n C.size_t) {
+	C.b4n1_boost_free_buffer(ptr, n)
+}
+
 // CompressGzip compresses byte slice using Rust flate2 engine
 func CompressGzip(data []byte, level uint32) ([]byte, error) {
 	if len(data) == 0 {

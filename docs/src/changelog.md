@@ -7,7 +7,7 @@ Notable changes per release, following
 The full detail lives in `CHANGELOG.md` in the repository. This page is the
 curated view.
 
-## [0.4.3] — current
+## [0.4.4] — current
 
 Seven registries, seven SDKs. Ruby (RubyGems), PHP (Packagist) and Go
 (module proxy) join PyPI, npm, NuGet and Maven Central — every SDK wraps the

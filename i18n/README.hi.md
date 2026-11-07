@@ -48,7 +48,7 @@
 | **पीईपीआई** | पायथन 3.10+ | `b4n1-boost` | `pip install b4n1-boost` |
 | **एनपीएम** | नोड.जे.एस | `b4n1-boost` | `npm install b4n1-boost` |
 | **न्यूगेट** | .नेट/सी# | `B4N1.Boost` | `dotnet add package B4N1.Boost` |
-| **मेवेन** | जावा/कोटलिन | `com.b4n1:boost` | `implementation 'com.b4n1:boost:0.4.6'` |
+| **मेवेन** | जावा/कोटलिन | `com.b4n1:boost` | `implementation 'com.b4n1:boost:0.4.7'` |
 | **रूबीजेम्स** | रूबी/रैक | `b4n1-boost` | `gem install b4n1-boost` |
 | **पैकेजिस्ट** | पीएचपी/लारवेल | `b4n1/boost` | `composer require b4n1/boost` |
 | **जाना** | 1.23+ जाओ | `b4n1-boost/sdks/go` | `go get github.com/B4N1-com/b4n1-boost/sdks/go` |
@@ -467,7 +467,7 @@ claims = worker_jwt_validate(token, secret)
 ```python
 import b4n1_boost
 print(b4n1_boost.status())
-# {'version': '0.4.6', 'native_extension': True, 'features': [...]}
+# {'version': '0.4.7', 'native_extension': True, 'features': [...]}
 ```
 
 ```python

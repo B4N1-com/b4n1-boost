@@ -48,7 +48,7 @@
 | **PyPI** | Pitón 3.10+ | `b4n1-boost` | `pip install b4n1-boost` |
 | **npm** | Nodo.js | `b4n1-boost` | `npm install b4n1-boost` |
 | **NuGet** | .NET/C# | `B4N1.Boost` | `dotnet add package B4N1.Boost` |
-| **Maven** | Java/Kotlin | `com.b4n1:boost` | `implementation 'com.b4n1:boost:0.4.6'` |
+| **Maven** | Java/Kotlin | `com.b4n1:boost` | `implementation 'com.b4n1:boost:0.4.7'` |
 | **RubíGemas** | Rubí / Estante | `b4n1-boost` | `gem install b4n1-boost` |
 | **Empaquetador** | PHP/Laravel | `b4n1/boost` | `composer require b4n1/boost` |
 | **Ir** | Ir 1.23+ | `b4n1-boost/sdks/go` | `go get github.com/B4N1-com/b4n1-boost/sdks/go` |
@@ -467,7 +467,7 @@ claims = worker_jwt_validate(token, secret)
 ```python
 import b4n1_boost
 print(b4n1_boost.status())
-# {'version': '0.4.6', 'native_extension': True, 'features': [...]}
+# {'version': '0.4.7', 'native_extension': True, 'features': [...]}
 ```
 
 ```python

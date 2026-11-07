@@ -12,11 +12,20 @@ first.
 
 | Platform | Wheel tag | Status |
 |---|---|---|
-| Linux x86_64 | `manylinux2014_x86_64` | ✅ precompiled |
+| Linux x86_64 | `manylinux_2_34_x86_64` | ✅ precompiled |
 | Linux aarch64 | `manylinux_2_17_aarch64` | ✅ precompiled |
 | macOS x86_64 | `macosx_10_13_x86_64` | ✅ precompiled |
 | macOS arm64 (Apple Silicon) | `macosx_11_0_arm64` | ✅ precompiled |
 | Windows x86_64 | `win_amd64` | ✅ precompiled |
+
+Those five wheels are the release contract: the publish step declares them
+(`PYPI_PLATFORMS`) and refuses to upload a version that is missing one, so a
+release cannot silently cover only Linux. There is no source distribution — a
+platform outside this table has no build path from PyPI, and `pip install`
+will resolve the newest version that *does* publish a wheel for it. Run
+`pip index versions b4n1-boost` to see what your interpreter can actually
+install, and `import b4n1_boost; b4n1_boost.status()` to confirm which
+version you got.
 
 ## Supported Python versions
 
@@ -48,7 +57,7 @@ If `native_extension` is `False`, pip fell back to a pure-Python path. See
 ## Pinning a version
 
 ```bash
-pip install b4n1-boost==0.4.4
+pip install b4n1-boost==0.4.7
 ```
 
 ## Upgrading

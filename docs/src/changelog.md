@@ -7,7 +7,37 @@ Notable changes per release, following
 The full detail lives in `CHANGELOG.md` in the repository. This page is the
 curated view.
 
-## [0.4.4] — current
+## [0.4.7] — current
+
+**PyPI ships every platform again.** 0.4.4, 0.4.5 and 0.4.6 were published with
+a single linux x86_64 wheel, so macOS, Windows and arm64 kept resolving 0.4.3
+while the documentation promised the full matrix. 0.4.7 publishes all five
+wheels (linux x64/arm64, macos x64/arm64, win x64) and the release step now
+refuses to upload a version missing one of them.
+
+## [0.4.6]
+
+- **`zstd decompression` in Ruby, PHP and Go.** The C symbol was already
+exported and declared in those bindings but never wrapped, so those SDKs could
+compress and not decompress what they produced. Round-trips are contract-tested.
+- **Ruby: documented entry points.** `require 'b4n1_boost'` and
+`require 'b4n1_boost/rack'` used to raise `LoadError` (the gem only shipped
+root files); both now load, and the middleware entry point no longer shadows
+the real `rack` gem.
+- **Docs corrected against the code:** the capability matrix marked Ruby, PHP
+and Go as missing cache/bloom/breaker (they shipped them) and claimed a Python
+bloom filter (its `BloomRateLimiter` is an exact per-IP window). The Go import
+path and the PHP class name in the docs were wrong too.
+
+## [0.4.5]
+
+Packagist and the Go module proxy index the published repository itself, not a
+copy: `public-repos/b4n1-boost` is now a submodule of
+`B4N1-com/b4n1-boost`, so the tag a registry reads and the tree the SDK is
+built from are the same commit. Before this, 0.4.5 announced the new version
+while PHP and Go served the previous one.
+
+## [0.4.4]
 
 Seven registries, seven SDKs. Ruby (RubyGems), PHP (Packagist) and Go
 (module proxy) join PyPI, npm, NuGet and Maven Central — every SDK wraps the

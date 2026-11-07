@@ -15,7 +15,7 @@ print(b4n1_boost.status())
 ```python
 {
     "native_extension": True,
-    "version": "0.4.4",
+    "version": "0.4.7",
     "features": {
         "json_acceleration": True,
         "json_canonicalize": True,
@@ -91,7 +91,7 @@ is shadowing the one you think you are testing.
 ```python
 import b4n1_boost
 assert b4n1_boost.status()["native_extension"] is True
-assert b4n1_boost.__version__ == "0.4.4"
+assert b4n1_boost.__version__ == "0.4.7"
 ```
 
 A cached extension from a previous version is a common source of confusing

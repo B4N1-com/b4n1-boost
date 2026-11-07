@@ -25,6 +25,7 @@ using B4N1.Boost;
 
 byte[] gz  = NativeBoost.CompressGzipManaged(data, level: 4);
 byte[] zst = NativeBoost.CompressZstdManaged(data, level: 3);
+byte[] raw = NativeBoost.DecompressZstdManaged(zst);   // round-trips CompressZstd
 ```
 
 The `Managed` overloads take and return plain `byte[]` and handle allocation

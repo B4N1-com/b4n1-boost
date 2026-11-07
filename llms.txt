@@ -14,7 +14,7 @@
 
 ## Capabilities
 
-- [Capabilities matrix](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/README.md): response cache (LRU + TTL), bloom filter, circuit breaker, gzip/zstd compression, HTML minification, JSON validation, HTTP middleware, zstd decompression, background tasks, brotli, minification (CSS/JS) + HTML→Markdown, JWT validation, JSON engine 3.1-5.0x faster, Django ORM/DRF/SQLAlchemy accelerators. Cache/bloom/circuit breaker contract-tested in Python, Node.js, Java, .NET; Ruby/PHP/Go wrappers on roadmap.
+- [Capabilities matrix](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/README.md): response cache (LRU + TTL), bloom filter, circuit breaker, gzip/zstd compression, HTML minification, JSON validation, HTTP middleware, zstd decompression, background tasks, brotli, minification (CSS/JS) + HTML→Markdown, JWT validation, JSON engine 3.1-5.0x faster, Django ORM/DRF/SQLAlchemy accelerators. Cache, bloom filter, circuit breaker and zstd decompression are contract-tested in every SDK that ships them (Ruby, PHP and Go included); Python ships no bloom filter — its BloomRateLimiter is an exact per-IP window.
 
 ## Per-language guides
 

@@ -48,7 +48,7 @@
 | **PyPI** | Python 3.10+ | `b4n1-boost` | `pip install b4n1-boost` |
 | **npm** | Node.js | `b4n1-boost` | `npm install b4n1-boost` |
 | **NuGet** | .NET / C# | `B4N1.Boost` | `dotnet add package B4N1.Boost` |
-| **马文** | Java / 科特林 | `com.b4n1:boost` | `implementation 'com.b4n1:boost:0.4.4'` |
+| **马文** | Java / 科特林 | `com.b4n1:boost` | `implementation 'com.b4n1:boost:0.4.5'` |
 | **红宝石** | 红宝石/机架 | `b4n1-boost` | `gem install b4n1-boost` |
 | **包装师** | PHP / Laravel | `b4n1/boost` | `composer require b4n1/boost` |
 | **去** | 去1.23+ | `b4n1-boost/sdks/go` | `go get github.com/B4N1-com/b4n1-boost/sdks/go` |
@@ -65,14 +65,14 @@ Ruby/PHP/Go 包捆绑了其平台的本机库。
 
 | 能力 | Python | Node.js | Java / 科特林 | 。网 | 红宝石 | PHP | 去 |
 |---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
-| 响应缓存（LRU + TTL） | ✅ | ✅ | ✅ | ✅ | — | — | — |
-| 布隆过滤器 | ✅ | ✅ | ✅ | ✅ | — | — | — |
-| 断路器 | ✅ | ✅ | ✅ | ✅ | — | — | — |
+| 响应缓存（LRU + TTL） | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 布隆过滤器 | — | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 断路器 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Gzip / Zstd 压缩 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | HTML 缩小 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | JSON验证 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | HTTP中间件（压缩、ETag、CORS、速率限制、安全标头、解压、健康检查） | ✅ | 表达 | — | 网络平台 | 架子 | 拉维尔 | — |
-| Zstd减压 | ✅ | ✅ | ✅ | ✅ | — | — | — |
+| Zstd减压 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | 后台任务（没有 Redis、没有 Celery） | ✅ | ✅ | ✅ | ✅ | — | — | — |
 | Brotli压缩 | ✅ | — | — | — | — | — | — |
 | 缩小（CSS / JS）+ HTML→Markdown | ✅ | — | — | — | — | — | — |
@@ -467,7 +467,7 @@ claims = worker_jwt_validate(token, secret)
 ```python
 import b4n1_boost
 print(b4n1_boost.status())
-# {'version': '0.4.4', 'native_extension': True, 'features': [...]}
+# {'version': '0.4.5', 'native_extension': True, 'features': [...]}
 ```
 
 ```python

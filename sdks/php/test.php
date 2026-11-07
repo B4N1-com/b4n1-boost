@@ -79,7 +79,9 @@ check('zstd: large payload compresses well', strlen($largeZs) < 100);
 for ($level = 1; $level <= 19; $level += 4) {
     $c = Boost::compressZstd($payload, $level);
     check("zstd: level $level produces output", strlen($c) > 0);
+    check("zstd: level $level round-trip", Boost::decompressZstd($c) === $payload);
 }
+check('zstd: decompress of empty payload', Boost::decompressZstd('') === '');
 
 // ── HTML minification ─────────────────────────────────────────────────────
 

@@ -48,7 +48,7 @@
 | **PyPI** | Python 3.10以降 | `b4n1-boost` | `pip install b4n1-boost` |
 | **npm** | Node.js | `b4n1-boost` | `npm install b4n1-boost` |
 | **NuGet** | .NET / C# | `B4N1.Boost` | `dotnet add package B4N1.Boost` |
-| **メイブン** | Java / コトリン | `com.b4n1:boost` | `implementation 'com.b4n1:boost:0.4.4'` |
+| **メイブン** | Java / コトリン | `com.b4n1:boost` | `implementation 'com.b4n1:boost:0.4.5'` |
 | **ルビージェム** | ルビー / ラック | `b4n1-boost` | `gem install b4n1-boost` |
 | **パッケージニスト** | PHP / ララベル | `b4n1/boost` | `composer require b4n1/boost` |
 | **行く** | ゴー 1.23+ | `b4n1-boost/sdks/go` | `go get github.com/B4N1-com/b4n1-boost/sdks/go` |
@@ -65,14 +65,14 @@ Ruby/PHP/Go パッケージには、プラットフォームのネイティブ �
 
 | 能力 | パイソン | Node.js | Java / コトリン | 。ネット | ルビー | PHP | 行く |
 |---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
-| レスポンスキャッシュ(LRU+TTL) | ✅ | ✅ | ✅ | ✅ | — | — | — |
-| ブルームフィルター | ✅ | ✅ | ✅ | ✅ | — | — | — |
-| サーキットブレーカー | ✅ | ✅ | ✅ | ✅ | — | — | — |
+| レスポンスキャッシュ(LRU+TTL) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| ブルームフィルター | — | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| サーキットブレーカー | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Gzip / Zstd 圧縮 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | HTML の縮小 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | JSON検証 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | HTTP ミドルウェア (圧縮、ETag、CORS、レート制限、セキュリティ ヘッダー、解凍、ヘルス チェック) | ✅ | 急行 | — | ASP.NET | ラック | ララベル | — |
-| Zstd解凍 | ✅ | ✅ | ✅ | ✅ | — | — | — |
+| Zstd解凍 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | バックグラウンド タスク (Redis、Celery なし) | ✅ | ✅ | ✅ | ✅ | — | — | — |
 | ブロトリ圧縮 | ✅ | — | — | — | — | — | — |
 | 縮小化(CSS/JS)+HTML→Markdown | ✅ | — | — | — | — | — | — |
@@ -467,7 +467,7 @@ claims = worker_jwt_validate(token, secret)
 ```python
 import b4n1_boost
 print(b4n1_boost.status())
-# {'version': '0.4.4', 'native_extension': True, 'features': [...]}
+# {'version': '0.4.5', 'native_extension': True, 'features': [...]}
 ```
 
 ```python

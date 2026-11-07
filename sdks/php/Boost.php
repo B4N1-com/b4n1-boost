@@ -126,6 +126,26 @@ class Boost {
         return $result;
     }
 
+    // Inverse of compressZstd. The cdef above already declared the symbol;
+    // without this method a PHP service could compress but not decompress.
+    public static function decompressZstd(string $data): string {
+        self::init();
+        $len = strlen($data);
+        if ($len === 0) return "";
+
+        $outPtr = self::$ffi->new("uint8_t*");
+        $outLen = self::$ffi->new("size_t");
+
+        $res = self::$ffi->b4n1_boost_decompress_zstd($data, $len, FFI::addr($outPtr), FFI::addr($outLen));
+        if ($res !== 0) {
+            throw new \RuntimeException("Zstd decompression failed");
+        }
+
+        $result = FFI::string($outPtr, $outLen->cdata);
+        self::$ffi->b4n1_boost_free_buffer($outPtr, $outLen->cdata);
+        return $result;
+    }
+
     public static function minifyHtml(string $html): string {
         self::init();
         $outStr = self::$ffi->b4n1_boost_minify_html($html);

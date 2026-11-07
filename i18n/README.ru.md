@@ -48,7 +48,7 @@
 | **ПиПИ** | Питон 3.10+ | `b4n1-boost` | `pip install b4n1-boost` |
 | **нпм** | Node.js | `b4n1-boost` | `npm install b4n1-boost` |
 | **НюГет** | .NET/С# | `B4N1.Boost` | `dotnet add package B4N1.Boost` |
-| **Мавен** | Ява/Котлин | `com.b4n1:boost` | `implementation 'com.b4n1:boost:0.4.4'` |
+| **Мавен** | Ява/Котлин | `com.b4n1:boost` | `implementation 'com.b4n1:boost:0.4.5'` |
 | **РубиДжемс** | Рубин / Стойка | `b4n1-boost` | `gem install b4n1-boost` |
 | **Упаковщик** | PHP/Ларавель | `b4n1/boost` | `composer require b4n1/boost` |
 | **Идти** | Перейти 1.23+ | `b4n1-boost/sdks/go` | `go get github.com/B4N1-com/b4n1-boost/sdks/go` |
@@ -65,14 +65,14 @@
 
 | Возможность | Питон | Node.js | Ява/Котлин | .СЕТЬ | Руби | PHP | Идти |
 |---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
-| Кэш ответов (LRU + TTL) | ✅ | ✅ | ✅ | ✅ | — | — | — |
-| Фильтр Блума | ✅ | ✅ | ✅ | ✅ | — | — | — |
-| Автоматический выключатель | ✅ | ✅ | ✅ | ✅ | — | — | — |
+| Кэш ответов (LRU + TTL) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Фильтр Блума | — | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Автоматический выключатель | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Сжатие Gzip/Zstd | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Минимизация HTML | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Проверка JSON | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Промежуточное ПО HTTP (сжатие, ETag, CORS, ограничение скорости, заголовки безопасности, распаковка, проверка работоспособности) | ✅ | Выражать | — | АСП.НЕТ | Стойка | Ларавел | — |
-| Zstd декомпрессия | ✅ | ✅ | ✅ | ✅ | — | — | — |
+| Zstd декомпрессия | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Фоновые задачи (без Redis, без Celery) | ✅ | ✅ | ✅ | ✅ | — | — | — |
 | Компрессия Бротли | ✅ | — | — | — | — | — | — |
 | Минимизация (CSS/JS) + HTML→Markdown | ✅ | — | — | — | — | — | — |
@@ -467,7 +467,7 @@ claims = worker_jwt_validate(token, secret)
 ```python
 import b4n1_boost
 print(b4n1_boost.status())
-# {'version': '0.4.4', 'native_extension': True, 'features': [...]}
+# {'version': '0.4.5', 'native_extension': True, 'features': [...]}
 ```
 
 ```python

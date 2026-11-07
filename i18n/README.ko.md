@@ -48,7 +48,7 @@
 | **PyPI** | 파이썬 3.10+ | `b4n1-boost` | `pip install b4n1-boost` |
 | **npm** | Node.js | `b4n1-boost` | `npm install b4n1-boost` |
 | **누겟** | .NET/C# | `B4N1.Boost` | `dotnet add package B4N1.Boost` |
-| **메이븐** | 자바/코틀린 | `com.b4n1:boost` | `implementation 'com.b4n1:boost:0.4.4'` |
+| **메이븐** | 자바/코틀린 | `com.b4n1:boost` | `implementation 'com.b4n1:boost:0.4.5'` |
 | **RubyGems** | 루비 / 랙 | `b4n1-boost` | `gem install b4n1-boost` |
 | **패키지 담당자** | PHP/라라벨 | `b4n1/boost` | `composer require b4n1/boost` |
 | **가다** | 1.23+로 이동 | `b4n1-boost/sdks/go` | `go get github.com/B4N1-com/b4n1-boost/sdks/go` |
@@ -65,14 +65,14 @@ Ruby/PHP/Go 패키지는 해당 플랫폼에 맞는 기본 lib를 번들로 제�
 
 | 능력 | 파이썬 | Node.js | 자바/코틀린 | .그물 | 루비 | PHP | 가다 |
 |---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
-| 응답 캐시(LRU + TTL) | ✅ | ✅ | ✅ | ✅ | — | — | — |
-| 블룸 필터 | ✅ | ✅ | ✅ | ✅ | — | — | — |
-| 회로 차단기 | ✅ | ✅ | ✅ | ✅ | — | — | — |
+| 응답 캐시(LRU + TTL) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 블룸 필터 | — | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 회로 차단기 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Gzip / Zstd 압축 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | HTML 축소 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | JSON 검증 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | HTTP 미들웨어(압축, ETag, CORS, 속도 제한, 보안 헤더, 압축 해제, 상태 확인) | ✅ | 표현하다 | — | ASP.NET | 고문 | 라라벨 | — |
-| Zstd 감압 | ✅ | ✅ | ✅ | ✅ | — | — | — |
+| Zstd 감압 | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | 백그라운드 작업(Redis 없음, Celery 없음) | ✅ | ✅ | ✅ | ✅ | — | — | — |
 | Brotli 압축 | ✅ | — | — | — | — | — | — |
 | 축소(CSS/JS) + HTML→마크다운 | ✅ | — | — | — | — | — | — |
@@ -467,7 +467,7 @@ claims = worker_jwt_validate(token, secret)
 ```python
 import b4n1_boost
 print(b4n1_boost.status())
-# {'version': '0.4.4', 'native_extension': True, 'features': [...]}
+# {'version': '0.4.5', 'native_extension': True, 'features': [...]}
 ```
 
 ```python

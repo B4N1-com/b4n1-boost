@@ -47,14 +47,14 @@ If a loop fails, do not retry blindly: capture the exact error and consult
 
 | Capability | Python | Node.js | Java / Kotlin | .NET | Ruby | PHP | Go |
 |---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
-| Response cache (LRU + TTL) | ✅ | ✅ | ✅ | ✅ | — | — | — |
-| Bloom filter | ✅ | ✅ | ✅ | ✅ | — | — | — |
-| Circuit breaker | ✅ | ✅ | ✅ | ✅ | — | — | — |
+| Response cache (LRU + TTL) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Bloom filter | — | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Circuit breaker | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Gzip / Zstd compression | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | HTML minification | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | JSON validation | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | HTTP middleware (compression, ETag, CORS, rate limit, security headers, decompression, health check) | ✅ | Express | — | ASP.NET | Rack | Laravel | — |
-| Zstd decompression | ✅ | ✅ | ✅ | ✅ | — | — | — |
+| Zstd decompression | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Background tasks (no Redis, no Celery) | ✅ | ✅ | ✅ | ✅ | — | — | — |
 | Brotli compression | ✅ | — | — | — | — | — | — |
 | Minification (CSS / JS) + HTML→Markdown | ✅ | — | — | — | — | — | — |
@@ -62,9 +62,10 @@ If a loop fails, do not retry blindly: capture the exact error and consult
 | JSON engine 3.1-5.0x faster | ✅ | — | — | — | — | — | — |
 | Django ORM / DRF / SQLAlchemy accelerators | ✅ | — | — | — | — | — | — |
 
-The cache, bloom filter and circuit breaker are contract-tested in Python,
-Node.js, Java and .NET; their Ruby, PHP and Go wrappers are on the roadmap.
-Do not claim a capability marked `—` for a language.
+The cache, bloom filter, circuit breaker and zstd decompression are contract-tested
+in every SDK that ships them (Ruby, PHP and Go included). The Python bloom row is
+`—` on purpose: its `BloomRateLimiter` is an exact per-IP window, not a bloom filter.
+Never claim a capability marked `—` for a language.
 
 ## (e) License note
 

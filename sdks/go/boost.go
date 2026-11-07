@@ -79,6 +79,30 @@ func CompressZstd(data []byte, level int32) ([]byte, error) {
 	return output, nil
 }
 
+// DecompressZstd reverses CompressZstd. The C symbol was already declared in
+// the preamble and never wrapped, so a Go service could compress but not
+// decompress what it produced.
+func DecompressZstd(data []byte) ([]byte, error) {
+	if len(data) == 0 {
+		return nil, nil
+	}
+	var outPtr *C.uint8_t
+	var outLen C.size_t
+
+	res := C.b4n1_boost_decompress_zstd(
+		(*C.uint8_t)(unsafe.Pointer(&data[0])),
+		C.size_t(len(data)),
+		&outPtr,
+		&outLen,
+	)
+	if res != 0 {
+		return nil, errors.New("b4n1-boost zstd decompression failed")
+	}
+	defer C.b4n1_boost_free_buffer(outPtr, outLen)
+
+	return C.GoBytes(unsafe.Pointer(outPtr), C.int(outLen)), nil
+}
+
 // MinifyHTML minifies raw HTML string
 func MinifyHTML(htmlStr string) string {
 	cStr := C.CString(htmlStr)

@@ -48,7 +48,7 @@
 | **PyPI** | Python 3.10+ | `b4n1-boost` | `pip install b4n1-boost` |
 | **npm** | Node.js | `b4n1-boost` | `npm install b4n1-boost` |
 | **NuGet** | .NET/C# | `B4N1.Boost` | `dotnet add package B4N1.Boost` |
-| **Maven** | Java/Kotlin | `com.b4n1:boost` | `implementation 'com.b4n1:boost:0.4.4'` |
+| **Maven** | Java/Kotlin | `com.b4n1:boost` | `implementation 'com.b4n1:boost:0.4.5'` |
 | **RubyGems** | Rubi / Rack | `b4n1-boost` | `gem install b4n1-boost` |
 | **Embalador** | PHP/Laravel | `b4n1/boost` | `composer require b4n1/boost` |
 | **Ir** | Vá para 1,23+ | `b4n1-boost/sdks/go` | `go get github.com/B4N1-com/b4n1-boost/sdks/go` |
@@ -65,14 +65,14 @@ os pacotes Ruby/PHP/Go agrupam a biblioteca nativa para sua plataforma.
 
 | Capacidade | Pitão | Node.js | Java/Kotlin | .LÍQUIDO | Rubi | PHP | Ir |
 |---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
-| Cache de resposta (LRU + TTL) | ✅ | ✅ | ✅ | ✅ | — | — | — |
-| Filtro de flor | ✅ | ✅ | ✅ | ✅ | — | — | — |
-| Disjuntor | ✅ | ✅ | ✅ | ✅ | — | — | — |
+| Cache de resposta (LRU + TTL) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Filtro de flor | — | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Disjuntor | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Compressão Gzip/Zstd | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Minificação de HTML | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Validação JSON | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Middleware HTTP (compactação, ETag, CORS, limite de taxa, cabeçalhos de segurança, descompactação, verificação de integridade) | ✅ | Expressar | — | ASP.NET | Prateleira | Laravel | — |
-| Descompressão Zstd | ✅ | ✅ | ✅ | ✅ | — | — | — |
+| Descompressão Zstd | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Tarefas em segundo plano (sem Redis, sem Celery) | ✅ | ✅ | ✅ | ✅ | — | — | — |
 | Compressão Brotli | ✅ | — | — | — | — | — | — |
 | Minificação (CSS/JS) + HTML→Markdown | ✅ | — | — | — | — | — | — |
@@ -467,7 +467,7 @@ claims = worker_jwt_validate(token, secret)
 ```python
 import b4n1_boost
 print(b4n1_boost.status())
-# {'version': '0.4.4', 'native_extension': True, 'features': [...]}
+# {'version': '0.4.5', 'native_extension': True, 'features': [...]}
 ```
 
 ```python

@@ -48,7 +48,7 @@
 | **PyPI** | Python 3.10+ | `b4n1-boost` | `pip install b4n1-boost` |
 | **npm** | Node.js | `b4n1-boost` | `npm install b4n1-boost` |
 | **NuGet** | .NET / C# | `B4N1.Boost` | `dotnet add package B4N1.Boost` |
-| **Maven** | Java / Kotlin | `com.b4n1:boost` | `implementation 'com.b4n1:boost:0.4.4'` |
+| **Maven** | Java / Kotlin | `com.b4n1:boost` | `implementation 'com.b4n1:boost:0.4.5'` |
 | **RubyGems** | Ruby / Rack | `b4n1-boost` | `gem install b4n1-boost` |
 | **Packagist** | PHP / Laravel | `b4n1/boost` | `composer require b4n1/boost` |
 | **Go** | Go 1.23+ | `b4n1-boost/sdks/go` | `go get github.com/B4N1-com/b4n1-boost/sdks/go` |
@@ -65,14 +65,14 @@ the Ruby/PHP/Go packages bundle the native lib for their platform.
 
 | Capability | Python | Node.js | Java / Kotlin | .NET | Ruby | PHP | Go |
 |---|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
-| Response cache (LRU + TTL) | ✅ | ✅ | ✅ | ✅ | — | — | — |
-| Bloom filter | ✅ | ✅ | ✅ | ✅ | — | — | — |
-| Circuit breaker | ✅ | ✅ | ✅ | ✅ | — | — | — |
+| Response cache (LRU + TTL) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Bloom filter | — | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Circuit breaker | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Gzip / Zstd compression | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | HTML minification | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | JSON validation | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | HTTP middleware (compression, ETag, CORS, rate limit, security headers, decompression, health check) | ✅ | Express | — | ASP.NET | Rack | Laravel | — |
-| Zstd decompression | ✅ | ✅ | ✅ | ✅ | — | — | — |
+| Zstd decompression | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Background tasks (no Redis, no Celery) | ✅ | ✅ | ✅ | ✅ | — | — | — |
 | Brotli compression | ✅ | — | — | — | — | — | — |
 | Minification (CSS / JS) + HTML→Markdown | ✅ | — | — | — | — | — | — |
@@ -82,8 +82,8 @@ the Ruby/PHP/Go packages bundle the native lib for their platform.
 
 The compression + minification + JSON core is the **same native call in all
 seven languages** (one C-ABI, contract-tested per language). The cache, bloom
-filter and circuit breaker are contract-tested in Python, Node.js, Java and
-.NET; their Ruby, PHP and Go wrappers are on the roadmap.
+filter, circuit breaker and zstd decompression are contract-tested in every
+SDK, Ruby, PHP and Go included — same core, same observably-tested behaviour.
 
 ---
 
@@ -467,7 +467,7 @@ claims = worker_jwt_validate(token, secret)
 ```python
 import b4n1_boost
 print(b4n1_boost.status())
-# {'version': '0.4.4', 'native_extension': True, 'features': [...]}
+# {'version': '0.4.5', 'native_extension': True, 'features': [...]}
 ```
 
 ```python

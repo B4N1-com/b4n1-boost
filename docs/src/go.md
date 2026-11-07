@@ -3,7 +3,7 @@
 A small, dependency-free wrapper over the shared native core.
 
 ```go
-import "github.com/B4N1-com/b4n1-boost/polyglot/go"
+import "github.com/B4N1-com/b4n1-boost/sdks/go"
 ```
 
 ## API
@@ -16,7 +16,7 @@ package main
 import (
     "fmt"
 
-    boost "github.com/B4N1-com/b4n1-boost/polyglot/go"
+    boost "github.com/B4N1-com/b4n1-boost/sdks/go"
 )
 
 func main() {
@@ -41,6 +41,7 @@ func main() {
 |---|---|
 | `CompressGzip` | `(data []byte, level uint32) ([]byte, error)` |
 | `CompressZstd` | `(data []byte, level int32) ([]byte, error)` |
+| `DecompressZstd` | `(data []byte) ([]byte, error)` |
 | `MinifyHTML` | `(htmlStr string) string` |
 | `IsJSONValid` | `(jsonStr string) bool` |
 
@@ -64,6 +65,27 @@ unchanged, and an invalid JSON string returns `false`.
 
 Levels outside the valid range produce an error rather than being clamped
 silently — a caller who asks for level `99` has a bug worth surfacing.
+
+## Response cache, Bloom filter, circuit breaker
+
+The primitives live in `core.go` and bind the same native core as the other
+SDKs. Every handle is a file descriptor-like resource: close it.
+
+```go
+cache, err := boost.NewResponseCache(1024)
+if err != nil { /* handle */ }
+_ = cache.Set("GET:/users", body, 200, 300)   // ttlSecs 0 = never expires
+hit, ok := cache.Get("GET:/users")
+cache.Close()
+
+bloom, err := boost.NewBloomFilter(10_000, 0.01)
+seen := bloom.CheckAndSet(item)
+bloom.Close()
+
+breaker, err := boost.NewCircuitBreaker(5, 1, 30)
+if breaker.Allows() { /* call upstream */ }
+breaker.Close()
+```
 
 ## Testing
 

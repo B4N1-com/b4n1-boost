@@ -208,10 +208,30 @@ func TestZstdExtremeLevel(t *testing.T) {
 	}
 }
 
+func TestZstdRoundTrip(t *testing.T) {
+	payload := []byte(strings.Repeat("zstd round-trip payload ", 64))
+	for _, level := range []int32{1, 3, 9} {
+		compressed, err := CompressZstd(payload, level)
+		if err != nil {
+			t.Fatalf("level %d compress: %v", level, err)
+		}
+		if len(compressed) >= len(payload) {
+			t.Fatalf("level %d did not shrink the payload: %d vs %d", level, len(compressed), len(payload))
+		}
+		decoded, err := DecompressZstd(compressed)
+		if err != nil {
+			t.Fatalf("level %d decompress: %v", level, err)
+		}
+		if !bytes.Equal(decoded, payload) {
+			t.Fatalf("level %d round-trip mismatch", level)
+		}
+	}
+}
+
 // ── State 4: Correctly absent ─────────────────────────────────────────────
 
 func TestAPISurface(t *testing.T) {
 	// Verify the package exports exactly the expected API surface.
 	// No unexpected exported functions should exist.
-	t.Log("API surface: CompressGzip, CompressZstd, MinifyHTML, IsJSONValid")
+	t.Log("API surface: CompressGzip, CompressZstd, DecompressZstd, MinifyHTML, IsJSONValid")
 }

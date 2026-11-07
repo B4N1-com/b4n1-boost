@@ -2,7 +2,14 @@
 
 High-performance native boost layer for PHP and Laravel: gzip/zstd
 compression, HTML minification and JSON validation through a bundled native
-core (no compiler needed — `ext-ffi` only).
+core (no compiler needed).
+
+Requires **PHP >= 8.3** with the `ext-ffi` extension. Both conditions are
+enforced by `composer.json`: 8.2 stops receiving security fixes in Dec 2026
+and 8.1 already has none, so the floor only admits branches that php.net
+still patches. Note that a minimal PHP build (`--disable-all
+--disable-shared`) has no FFI and cannot load it as a shared module either —
+the extension must be built in.
 
 ## Install
 

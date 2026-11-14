@@ -1,6 +1,6 @@
 {
   "name": "b4n1/boost",
-  "description": "High-performance native boost layer for PHP & Laravel: compression, minification and fast JSON validation",
+  "description": "High-performance native boost layer for PHP & Laravel: compression, minification and fast JSON validation, with observable compression metrics",
   "type": "library",
   "license": "BUSL-1.1",
   "keywords": [

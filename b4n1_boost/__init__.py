@@ -75,6 +75,8 @@ from b4n1_boost.advanced import (
 )
 
 from b4n1_boost.background import background, native_async, pending_tasks, thread_async
+from b4n1_boost.metrics_export import MetricsExporter
+from b4n1_boost.websocket import WebSocketCompressionMiddleware
 
 try:
     from b4n1_boost._core import (
@@ -427,7 +429,7 @@ def run_benchmarks(iterations: Optional[int] = None) -> dict:
     return {"status": "pure-python-fallback", "native": False}
 
 
-__version__ = "0.4.7"
+__version__ = "0.5.0"
 
 
 # ── Batch JSON API ─────────────────────────────────────────────────────
@@ -730,4 +732,8 @@ __all__ = [
     "ASGICacheMiddleware",
     "BloomRateLimiter",
     "CircuitBreakerMiddleware",
+    # WebSocket (RFC 7692 permessage-deflate)
+    "WebSocketCompressionMiddleware",
+    # Observability
+    "MetricsExporter",
 ]

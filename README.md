@@ -48,7 +48,7 @@
 | **PyPI** | Python 3.10+ | `b4n1-boost` | `pip install b4n1-boost` |
 | **npm** | Node.js | `b4n1-boost` | `npm install b4n1-boost` |
 | **NuGet** | .NET / C# | `B4N1.Boost` | `dotnet add package B4N1.Boost` |
-| **Maven** | Java / Kotlin | `com.b4n1:boost` | `implementation 'com.b4n1:boost:0.4.7'` |
+| **Maven** | Java / Kotlin | `com.b4n1:boost` | `implementation 'com.b4n1:boost:0.5.0'` |
 | **RubyGems** | Ruby / Rack | `b4n1-boost` | `gem install b4n1-boost` |
 | **Packagist** | PHP / Laravel | `b4n1/boost` | `composer require b4n1/boost` |
 | **Go** | Go 1.23+ | `b4n1-boost/sdks/go` | `go get github.com/B4N1-com/b4n1-boost/sdks/go` |
@@ -369,6 +369,35 @@ app.wsgi_app = HealthCheckMiddleware(app.wsgi_app, path="/health")
 # GET /health → 200 {"status": "ok"}
 ```
 
+### WebSocket Compression (RFC 7692 permessage-deflate)
+```python
+from b4n1_boost import WebSocketCompressionMiddleware
+
+# ASGI (FastAPI / Starlette): wrap the app
+app = WebSocketCompressionMiddleware(app, enabled=True)
+```
+Compresses text and binary frames above a threshold, only when the client
+offers `permessage-deflate`. Honours `server_max_window_bits` and
+`server_no_context_takeover`; never compresses control frames (close/ping/pong)
+and never touches small frames. If compression fails, the message is delivered
+raw rather than dropped. Toggle with `B4N1_BOOST_WS=false`.
+
+### Metrics (Prometheus / OpenTelemetry)
+```python
+from b4n1_boost import MetricsExporter
+from b4n1_boost.middleware import metrics
+
+exporter = MetricsExporter(metrics)          # or MetricsExporter(metrics, "otel")
+app.wsgi_app = exporter.wsgi_app(environ)    # mount at /metrics
+# ASGI: app.mount("/metrics", exporter.asgi_app)
+```
+`GET /metrics` returns the Prometheus text format; `GET /metrics?format=otel`
+returns a JSON snapshot. Exposes `total_compressions`, `total_bytes_in`,
+`total_bytes_out`, `compression_ratio`, `space_saved_pct` and
+`compressions_by_algorithm{algorithm=...}`. The label set is closed — an
+unexpected algorithm folds into `other`, so traffic cannot grow the series
+count.
+
 ### Cache Layer
 ```python
 from b4n1_boost.advanced import ResponseCache
@@ -467,7 +496,7 @@ claims = worker_jwt_validate(token, secret)
 ```python
 import b4n1_boost
 print(b4n1_boost.status())
-# {'version': '0.4.7', 'native_extension': True, 'features': [...]}
+# {'version': '0.5.0', 'native_extension': True, 'features': [...]}
 ```
 
 ```python

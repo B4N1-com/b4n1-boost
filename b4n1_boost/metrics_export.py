@@ -97,6 +97,20 @@ def _algorithm_counts(snapshot: dict) -> dict[str, int]:
     return counts
 
 
+def _failure_counts(snapshot: dict) -> dict[str, int]:
+    """Per-algorithm failure counts, same closed label set as the successes."""
+    raw = snapshot.get("failures_by_algorithm") or {}
+    counts = {}
+    for name in ALLOWED_ALGORITHMS:
+        value = int(raw.get(name, 0))
+        if value:
+            counts[name] = value
+    other = int(raw.get("other", 0))
+    if other:
+        counts["other"] = other
+    return counts
+
+
 def prometheus_text(metrics_source: Any) -> str:
     """Render the counters in the Prometheus text exposition format.
 
@@ -111,11 +125,15 @@ def prometheus_text(metrics_source: Any) -> str:
         ("total_compressions", "counter", "Total responses compressed."),
         ("total_bytes_in", "counter", "Uncompressed bytes seen."),
         ("total_bytes_out", "counter", "Compressed bytes emitted."),
+        ("failed_compressions", "counter",
+         "Compressions that raised and were served uncompressed."),
     )
     # Derived values are gauges: a ratio must never be a counter.
     gauges = (
         ("compression_ratio", "Ratio of compressed to uncompressed bytes."),
         ("space_saved_pct", "Percentage of bytes saved by compression."),
+        ("failure_rate_pct",
+         "Failed compressions as a percentage of attempts."),
     )
 
     lines: list[str] = []
@@ -141,6 +159,16 @@ def prometheus_text(metrics_source: Any) -> str:
             f'{METRIC_PREFIX}compressions_by_algorithm{{algorithm="{algorithm}"}} {count}'
         )
 
+    lines.append(
+        f"# HELP {METRIC_PREFIX}failures_by_algorithm "
+        "Failed compressions per algorithm (bounded label set)."
+    )
+    lines.append(f"# TYPE {METRIC_PREFIX}failures_by_algorithm counter")
+    for algorithm, count in _failure_counts(snapshot).items():
+        lines.append(
+            f'{METRIC_PREFIX}failures_by_algorithm{{algorithm="{algorithm}"}} {count}'
+        )
+
     return "\n".join(lines) + "\n"
 
 
@@ -158,7 +186,10 @@ def otel_snapshot(metrics_source: Any) -> dict:
         "total_bytes_out": int(snapshot.get("total_bytes_out", 0)),
         "compression_ratio": float(snapshot.get("compression_ratio", 0.0)),
         "space_saved_pct": float(snapshot.get("space_saved_pct", 0.0)),
+        "failed_compressions": int(snapshot.get("failed_compressions", 0)),
+        "failure_rate_pct": float(snapshot.get("failure_rate_pct", 0.0)),
         "compressions_by_algorithm": _algorithm_counts(snapshot),
+        "failures_by_algorithm": _failure_counts(snapshot),
     }
 
 

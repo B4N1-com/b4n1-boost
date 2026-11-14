@@ -232,6 +232,25 @@ def batch_validate(texts: list[str]) -> list[bool]:
 # ── Compression helpers ──────────────────────────────────────────────────
 
 
+# Where a native compressor failure is reported. It starts as the process-wide
+# instance and is swapped for the duration of a request by a middleware that was
+# given its own metrics, so an injected counter sees the failure too.
+_failure_sink: Any = None
+
+
+def _record_native_failure(algorithm: str) -> None:
+    """Count a native compressor that raised, without failing the request.
+
+    Deliberately guarded: if recording the failure itself broke, that must not
+    turn a degraded response into a 500.
+    """
+    target = _failure_sink if _failure_sink is not None else metrics
+    try:
+        target.record_failure(algorithm)
+    except Exception:
+        pass
+
+
 def _native_gzip(body: bytes) -> Optional[bytes]:
     """Gzip-compress ``body`` in Rust without holding the GIL."""
     if not _NATIVE or py_compress_gzip is None:
@@ -239,6 +258,7 @@ def _native_gzip(body: bytes) -> Optional[bytes]:
     try:
         return bytes(py_compress_gzip(body))
     except Exception:
+        _record_native_failure("gzip")
         return None
 
 
@@ -249,6 +269,7 @@ def _native_gzip_fast(body: bytes) -> Optional[bytes]:
     try:
         return bytes(py_compress_gzip_fast(body))
     except Exception:
+        _record_native_failure("gzip")
         return None
 
 
@@ -259,6 +280,7 @@ def _native_brotli(body: bytes) -> Optional[bytes]:
     try:
         return bytes(py_compress_brotli(body))
     except Exception:
+        _record_native_failure("brotli")
         return None
 
 
@@ -269,6 +291,7 @@ def _native_zstd(body: bytes) -> Optional[bytes]:
     try:
         return bytes(py_compress_zstd(body))
     except Exception:
+        _record_native_failure("zstd")
         return None
 
 
@@ -432,10 +455,14 @@ class B4N1BoostCompressionMiddleware:
         app: Callable,
         min_size: int = 1024,
         fast_mode: bool = False,
+        metrics: Any = None,
     ) -> None:
         self.app = app
         self.min_size = min_size
         self.fast_mode = fast_mode
+        # Injectable so a test can observe a failure in isolation; defaults to
+        # the process-wide instance, which is what production uses.
+        self.metrics = metrics
 
     def __call__(self, environ: dict, start_response: Callable) -> list:
         accept_encoding = environ.get("HTTP_ACCEPT_ENCODING", "")
@@ -443,7 +470,19 @@ class B4N1BoostCompressionMiddleware:
         compressor = pick(accept_encoding)
         if compressor is None:
             return self.app(environ, start_response)
+        # Route failures to this instance's counters for the WHOLE request,
+        # including the compression call at the end. Restoring before that call
+        # is what made the failure counter read zero while the codec raised.
+        global _failure_sink
+        previous_sink = _failure_sink
+        if self.metrics is not None:
+            _failure_sink = self.metrics
+        try:
+            return self._serve(environ, start_response, compressor)
+        finally:
+            _failure_sink = previous_sink
 
+    def _serve(self, environ: dict, start_response: Callable, compressor: Callable) -> list:
         captured: dict = {}
 
         def _capture(status: str, headers: list, exc_info: Any = None) -> None:
@@ -485,7 +524,15 @@ class B4N1BoostCompressionMiddleware:
             start_response(captured["status"], captured["headers"], captured.get("exc_info"))
             return [body]
 
-        compressed = compressor(body)
+        try:
+            compressed = compressor(body)
+        except Exception:
+            # The codec raised something its own guard did not catch (an
+            # unpatched binding, a future native build, a compressor swapped in
+            # by the app). Serving the response uncompressed is the whole point
+            # of an accelerator being optional; failing the request is not.
+            _record_native_failure(_encoding_name(compressor))
+            compressed = None
         if compressed is None:
             start_response(captured["status"], captured["headers"], captured.get("exc_info"))
             return [body]
@@ -1980,6 +2027,12 @@ def detect_proxy(environ: dict) -> bool:
 
 from dataclasses import dataclass, field
 
+# The label set is closed so traffic cannot grow the series count (§9f).
+# Mirrors ALLOWED_ALGORITHMS in metrics_export.py; duplicated rather than
+# imported because metrics_export imports THIS module, and a cycle here would
+# make the metrics endpoint fail at import time — the worst place to fail.
+_ALGORITHM_LABELS = ("gzip", "brotli", "zstd")
+
 
 @dataclass
 class CompressionMetrics:
@@ -1995,6 +2048,23 @@ class CompressionMetrics:
     gzip_count: int = 0
     brotli_count: int = 0
     zstd_count: int = 0
+    failed_compressions: int = 0
+    failures_by_algorithm: dict = field(default_factory=dict, repr=False)
+
+    def record_failure(self, algorithm: str) -> None:
+        """Count a compression that raised and was served uncompressed.
+
+        The request still succeeds — degrading to no compression beats failing
+        the response. But the event has to be countable: an accelerator whose
+        native path is broken would otherwise look identical to an idle one,
+        with every response silently larger than it should be.
+        """
+        key = algorithm if algorithm in _ALGORITHM_LABELS else "other"
+        with self._lock:
+            self.failed_compressions += 1
+            self.failures_by_algorithm[key] = (
+                self.failures_by_algorithm.get(key, 0) + 1
+            )
 
     def record(self, algorithm: str, bytes_in: int, bytes_out: int) -> None:
         with self._lock:
@@ -2024,6 +2094,20 @@ class CompressionMetrics:
                 "gzip_count": self.gzip_count,
                 "brotli_count": self.brotli_count,
                 "zstd_count": self.zstd_count,
+                "failed_compressions": self.failed_compressions,
+                "failures_by_algorithm": dict(self.failures_by_algorithm),
+                # Attempts = successes + failures. The rate is over attempts,
+                # not over successes: a facility that fails half the time must
+                # read 50%, which is impossible if failures are only compared
+                # against themselves.
+                "failure_rate_pct": round(
+                    100.0
+                    * self.failed_compressions
+                    / (self.total_compressions + self.failed_compressions),
+                    2,
+                )
+                if (self.total_compressions + self.failed_compressions) > 0
+                else 0.0,
             }
 
     def reset(self) -> None:
@@ -2034,6 +2118,8 @@ class CompressionMetrics:
             self.gzip_count = 0
             self.brotli_count = 0
             self.zstd_count = 0
+            self.failed_compressions = 0
+            self.failures_by_algorithm.clear()
 
 
 # Global metrics instance

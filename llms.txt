@@ -7,7 +7,7 @@
 - [PyPI — Python 3.10+](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/docs/src/python.md): `pip install b4n1-boost`
 - [npm — Node.js](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/docs/src/node.md): `npm install b4n1-boost`
 - [NuGet — .NET / C#](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/docs/src/csharp.md): `dotnet add package B4N1.Boost`
-- [Maven Central — Java / Kotlin](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/docs/src/java.md): `implementation 'com.b4n1:boost:0.4.3'`
+- [Maven Central — Java / Kotlin](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/docs/src/java.md): `implementation 'com.b4n1:boost:0.6.2'`
 - [RubyGems — Ruby / Rack](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/docs/src/ruby.md): `gem install b4n1-boost`
 - [Packagist — PHP / Laravel](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/docs/src/php.md): `composer require b4n1/boost`
 - [Go module — Go 1.23+](https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/docs/src/go.md): `go get github.com/B4N1-com/b4n1-boost/sdks/go`

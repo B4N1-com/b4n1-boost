@@ -22,7 +22,7 @@ convenience. See also [llms.txt](llms.txt) for the machine index and the
 | Python 3.10+ | `b4n1-boost` (PyPI) | `pip install b4n1-boost` |
 | Node.js | `b4n1-boost` (npm) | `npm install b4n1-boost` |
 | .NET / C# | `B4N1.Boost` (NuGet) | `dotnet add package B4N1.Boost` |
-| Java / Kotlin | `com.b4n1:boost` (Maven Central) | `implementation 'com.b4n1:boost:0.4.3'` |
+| Java / Kotlin | `com.b4n1:boost` (Maven Central) | `implementation 'com.b4n1:boost:0.6.2'` |
 | Ruby / Rack | `b4n1-boost` (RubyGems) | `gem install b4n1-boost` |
 | PHP / Laravel | `b4n1/boost` (Packagist) | `composer require b4n1/boost` |
 | Go 1.23+ | `b4n1-boost/sdks/go` (Go module) | `go get github.com/B4N1-com/b4n1-boost/sdks/go` |
@@ -32,13 +32,13 @@ convenience. See also [llms.txt](llms.txt) for the machine index and the
 After installing, verify the SDK works before claiming success. Each loop is
 `install -> import -> call one function -> check expected output`.
 
-- **Python:** `python -c "from b4n1_boost import status; assert status()['version'] == '0.4.3'; print('ok', status()['version'])"`
-- **Node.js:** `node -e "const b=require('b4n1-boost'); console.log(b.status().version);"` (expect `0.4.3`)
+- **Python:** `python -c "from b4n1_boost import status; assert status()['version'] == '0.6.2'; print('ok', status()['version'])"`
+- **Node.js:** `node -e "const b=require('b4n1-boost'); console.log(b.status().version);"` (expect `0.6.2`)
 - **Java/Kotlin:** run the published example `NativeResponseCache` smoke; expect exit 0.
-- **.NET/C#:** `dotnet run` on the smoke project; expect `0.4.3`.
-- **Ruby:** `ruby -e "require 'boost'; puts B4N1::Boost.version"` (expect `0.4.3`).
-- **PHP:** `php -r "require 'vendor/autoload.php'; echo B4N1\\Boost\\status()['version'];"` (expect `0.4.3`).
-- **Go:** `go run ./...` on the smoke; expect `0.4.3`.
+- **.NET/C#:** `dotnet run` on the smoke project; expect `0.6.2`.
+- **Ruby:** `ruby -e "require 'boost'; puts B4N1::Boost.version"` (expect `0.6.2`).
+- **PHP:** `php -r "require 'vendor/autoload.php'; echo B4N1\\Boost\\status()['version'];"` (expect `0.6.2`).
+- **Go:** `go run ./...` on the smoke; expect `0.6.2`.
 
 If a loop fails, do not retry blindly: capture the exact error and consult
 [docs/src/status.md](docs/src/status.md) and the per-language guide.

@@ -99,7 +99,7 @@ Ruby/PHP/Go 包捆绑了其平台的本机库。
 | **Django ORM** | PostgreSQL 复制 | 批量插入本机 |
 | **车轮尺寸** | 〜1.4MB | 原生，无需编译器 |
 | **无 GIL 就绪** | Python 3.13+ | 自由线程支持 |
-| **测试** | 1253 路过 | Rust 346 (lib + bin) + Python 907，加上 SDK 合约套件 ×7 |
+| **测试** | 1253 路过 | Core 346 + Python 907，加上 SDK 合约套件 ×7 |
 
 ---
 

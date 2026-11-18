@@ -99,7 +99,7 @@ El filtro y el disyuntor se prueban por contrato en Python, Node.js, Java y
 | **Django ORM** | COPIA de PostgreSQL | inserción masiva nativa |
 | **Tamaño de rueda** | ~1,4MB | nativo, no se necesita compilador |
 | **Listo para no GIL** | Pitón 3.13+ | Soporte de subprocesos gratuitos |
-| **Pruebas** | 1253 pasando | Rust 346 (lib + bin) + Python 907, más el conjunto de contratos SDK ×7 |
+| **Pruebas** | 1253 pasando | Core 346 + Python 907, más el conjunto de contratos SDK ×7 |
 
 ---
 

@@ -99,7 +99,7 @@ le filtre et le disjoncteur sont testés sous contrat en Python, Node.js, Java e
 | ** Django ORM ** | COPIE PostgreSQL | insertion groupée native |
 | **Taille des roues** | ~1,4 Mo | natif, aucun compilateur n'est nécessaire |
 | **Pas de GIL prêt** | Python3.13+ | Prise en charge du thread libre |
-| **Tests** | 1253 passage | Rust 346 (lib + bin) + Python 907, plus la suite de contrats SDK ×7 |
+| **Tests** | 1253 passage | Core 346 + Python 907, plus la suite de contrats SDK ×7 |
 
 ---
 

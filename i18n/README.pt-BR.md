@@ -99,7 +99,7 @@ filtro e disjuntor são testados em contrato em Python, Node.js, Java e
 | **Django ORM** | CÓPIA PostgreSQL | inserção em massa nativa |
 | **Tamanho da roda** | ~ 1,4 MB | nativo, nenhum compilador necessário |
 | **Não-GIL pronto** | Pitão 3.13+ | Suporte para threading grátis |
-| **Testes** | 1253 passagem | Rust 346 (lib + bin) + Python 907, mais o conjunto de contratos SDK ×7 |
+| **Testes** | 1253 passagem | Core 346 + Python 907, mais o conjunto de contratos SDK ×7 |
 
 ---
 

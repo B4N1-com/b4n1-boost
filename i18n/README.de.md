@@ -99,7 +99,7 @@ Filter und Leistungsschalter sind vertragsgeprüft in Python, Node.js, Java und
 | **Django ORM** | PostgreSQL-KOPIE | Masseneinfügung nativ |
 | **Radgröße** | ~1,4 MB | nativ, kein Compiler erforderlich |
 | **No-GIL-fähig** | Python 3.13+ | Free-Threading-Unterstützung |
-| **Tests** | 1253 vorbei | Rust 346 (lib + bin) + Python 907, plus die SDK-Vertragssuite ×7 |
+| **Tests** | 1253 vorbei | Core 346 + Python 907, plus die SDK-Vertragssuite ×7 |
 
 ---
 

@@ -99,7 +99,7 @@ il filtro e l'interruttore automatico sono testati a contratto in Python, Node.j
 | **Django ORM** | COPIA PostgreSQL | inserimento collettivo nativo |
 | **Misura della ruota** | ~1,4 MB | nativo, non è necessario alcun compilatore |
 | **No-GIL pronto** | Python 3.13+ | Supporto per threading libero |
-| **Test** | 1253 passaggio | Rust 346 (lib + bin) + Python 907, più la suite di contratti SDK ×7 |
+| **Test** | 1253 passaggio | Core 346 + Python 907, più la suite di contratti SDK ×7 |
 
 ---
 

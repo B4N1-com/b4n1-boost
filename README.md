@@ -99,7 +99,7 @@ SDK, Ruby, PHP and Go included — same core, same observably-tested behaviour.
 | **Django ORM** | PostgreSQL COPY | bulk insert native |
 | **Wheel size** | ~1.4MB | native, no compiler needed |
 | **No-GIL ready** | Python 3.13+ | Free-threading support |
-| **Tests** | 1253 passing | Rust 346 (lib + bin) + Python 907, plus the SDK contract suite ×7 |
+| **Tests** | 1253 passing | Core 346 + Python 907, plus the SDK contract suite ×7 |
 
 ---
 

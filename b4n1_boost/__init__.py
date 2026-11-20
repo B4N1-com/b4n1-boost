@@ -429,7 +429,7 @@ def run_benchmarks(iterations: Optional[int] = None) -> dict:
     return {"status": "pure-python-fallback", "native": False}
 
 
-__version__ = "0.6.2"
+__version__ = "0.6.3"
 
 
 # ── Batch JSON API ─────────────────────────────────────────────────────

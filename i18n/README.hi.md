@@ -494,7 +494,7 @@ report = b4n1_boost.run_benchmarks(iterations=100_000)
 - जाना: https://pkg.go.dev/github.com/B4N1-com/b4n1-boost/sdks/go
 - भंडार: https://github.com/B4N1-com/b4n1-boost
 - लाइसेंसिंग: https://b4n1.com/licensing या `b4n1@b4n1.com`
-- चेंजलॉग: [CHANGELOG.md](CHANGELOG.md)
+- चेंजलॉग: [docs/src/versions.md](docs/src/versions.md)
 
 ---
 

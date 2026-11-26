@@ -494,7 +494,7 @@ report = b4n1_boost.run_benchmarks(iterations=100_000)
 - Ir: https://pkg.go.dev/github.com/B4N1-com/b4n1-boost/sdks/go
 - Repositório: https://github.com/B4N1-com/b4n1-boost
 - Licenciamento: https://b4n1.com/licensing ou `b4n1@b4n1.com`
-- Registro de alterações: [CHANGELOG.md](CHANGELOG.md)
+- Registro de alterações: [docs/src/versions.md](docs/src/versions.md)
 
 ---
 

@@ -494,7 +494,7 @@ report = b4n1_boost.run_benchmarks(iterations=100_000)
 - 去： https://pkg.go.dev/github.com/B4N1-com/b4n1-boost/sdks/go
 - 存储库： https://github.com/B4N1-com/b4n1-boost
 - 许可： https://b4n1.com/licensing 或者 `b4n1@b4n1.com`
-- 变更日志：[CHANGELOG.md](CHANGELOG.md)
+- 变更日志：[docs/src/versions.md](docs/src/versions.md)
 
 ---
 

@@ -88,4 +88,4 @@ managed service delivery, or redistribution arrangements — contact
 
 - [Introduction](introduction.md)
 - [Installation](installation.md)
-- [Changelog](changelog.md)
+- [Release history](versions.md)

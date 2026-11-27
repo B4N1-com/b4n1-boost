@@ -1,0 +1,10 @@
+{
+  "version": "1.0",
+  "project_hash": "dcf9e8d14ced856f2e431bd7ef98d7a2c7696e14b839c2026894c683ed470f2d",
+  "identity_hash": "Bani Montoya <628374+BaniMontoya@users.noreply.github.com>",
+  "device_dna": "local-dev",
+  "timestamp_utc": 1795763046,
+  "calendar_url": "https://alice.btc.calendar.opentimestamps.org",
+  "ots_receipt_b64": "AE9wZW5UaW1lc3RhbXBzAABQcm9vZgC/ieLohOiSlAEI3Pno0UzthW8uQxvX75jXosdpbhS4OcICaJTGg+1HDy3wCFkIF8dpTzd7CPAQ3o0920QvnYE59ZWCr0yeLwjwIN1s8AakycV8ijHXEFL4Q74swLJAR5mefN+ATAl47b/oCPAgPUoi+Ss2zKvHy0tbyoDD43Xwql0PyqTFu3bideBGUowI8QRrCStm8AgBqpgjMt2RhgCD3+MNLvkMji4taHR0cHM6Ly9hbGljZS5idGMuY2FsZW5kYXIub3BlbnRpbWVzdGFtcHMub3Jn",
+  "status": "CalendarPending"
+}

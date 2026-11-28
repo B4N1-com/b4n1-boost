@@ -23,6 +23,8 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/B4N1-com/b4n1-boost/sdks/go.svg)](https://pkg.go.dev/github.com/B4N1-com/b4n1-boost/sdks/go)
 [![Tests](https://img.shields.io/badge/tests-1253%20passing-brightgreen)](https://pypi.org/project/b4n1-boost/)
 
+**SDK languages:** Python · JavaScript · Java · C# · Ruby · PHP · Go · [b4n1lang](https://b4n1.com/en/products/lang/) — thin wrappers over one native core, plus b4n1lang, our own compiled language for calling B4N1 capabilities directly.
+
 > 📚 **Full manual (installation, middleware, accelerators, performance):**
 > **[https://b4n1-com.github.io/b4n1-boost/](https://b4n1-com.github.io/b4n1-boost/)**
 

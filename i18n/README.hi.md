@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/cover.png" alt="B4N1 Boost — More speed. More power. Greater potential." width="100%" />
+  <img src="https://raw.githubusercontent.com/B4N1-com/b4n1-boost/master/docs/cover.png" alt="B4N1 Boost — More speed. More power. Greater potential." width="100%" />
 </p>
 
 <div align="center">
